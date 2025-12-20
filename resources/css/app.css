@@ -1,3 +1,93 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Variables CSS para temas dinámicos */
+@layer base {
+    /* Paleta 1 - Style 1 */
+    [data-theme="style1"] {
+        --color-primary: #62ff6d;
+        --color-primary-light: #9dffa3;
+        --color-primary-dark: #3dd949;
+        --color-secondary: #fffa3f;
+        --color-secondary-light: #fffb7f;
+        --color-secondary-dark: #e6df00;
+        --color-third: #112405;
+        --color-third-light: #2a4d12;
+        --color-third-dark: #000000;
+        --color-fourth: #868679;
+        --color-fourth-light: #a8a89f;
+        --color-fourth-dark: #5c5c52;
+        --color-five: #fffaf2;
+        --color-five-light: #ffffff;
+        --color-five-dark: #e6dfd0;
+    }
+
+    /* Paleta 2 - Style 2 */
+    [data-theme="style2"] {
+        --color-primary: #008c00;
+        --color-primary-light: #00b800;
+        --color-primary-dark: #006000;
+        --color-secondary: #6eb003;
+        --color-secondary-light: #8fd428;
+        --color-secondary-dark: #4d7c00;
+        --color-third: #d9db58;
+        --color-third-light: #e8ea87;
+        --color-third-dark: #b8ba30;
+        --color-fourth: #ffffa9;
+        --color-fourth-light: #ffffdd;
+        --color-fourth-dark: #e6e675;
+        --color-five: #fffff4;
+        --color-five-light: #ffffff;
+        --color-five-dark: #f2f2d9;
+    }
+}
+
+/* Clases de utilidad para usar variables CSS */
+@layer utilities {
+    .bg-theme-primary { background-color: var(--color-primary); }
+    .bg-theme-primary-light { background-color: var(--color-primary-light); }
+    .bg-theme-primary-dark { background-color: var(--color-primary-dark); }
+
+    .bg-theme-secondary { background-color: var(--color-secondary); }
+    .bg-theme-secondary-light { background-color: var(--color-secondary-light); }
+    .bg-theme-secondary-dark { background-color: var(--color-secondary-dark); }
+
+    .bg-theme-third { background-color: var(--color-third); }
+    .bg-theme-third-light { background-color: var(--color-third-light); }
+    .bg-theme-third-dark { background-color: var(--color-third-dark); }
+
+    .bg-theme-fourth { background-color: var(--color-fourth); }
+    .bg-theme-fourth-light { background-color: var(--color-fourth-light); }
+    .bg-theme-fourth-dark { background-color: var(--color-fourth-dark); }
+
+    .bg-theme-five { background-color: var(--color-five); }
+    .bg-theme-five-light { background-color: var(--color-five-light); }
+    .bg-theme-five-dark { background-color: var(--color-five-dark); }
+
+    .text-theme-primary { color: var(--color-primary); }
+    .text-theme-primary-light { color: var(--color-primary-light); }
+    .text-theme-primary-dark { color: var(--color-primary-dark); }
+
+    .text-theme-secondary { color: var(--color-secondary); }
+    .text-theme-secondary-light { color: var(--color-secondary-light); }
+    .text-theme-secondary-dark { color: var(--color-secondary-dark); }
+
+    .text-theme-third { color: var(--color-third); }
+    .text-theme-third-light { color: var(--color-third-light); }
+    .text-theme-third-dark { color: var(--color-third-dark); }
+
+    .text-theme-fourth { color: var(--color-fourth); }
+    .text-theme-fourth-light { color: var(--color-fourth-light); }
+    .text-theme-fourth-dark { color: var(--color-fourth-dark); }
+
+    .text-theme-five { color: var(--color-five); }
+    .text-theme-five-light { color: var(--color-five-light); }
+    .text-theme-five-dark { color: var(--color-five-dark); }
+
+    .border-theme-primary { border-color: var(--color-primary); }
+    .border-theme-secondary { border-color: var(--color-secondary); }
+    .border-theme-third { border-color: var(--color-third); }
+    .border-theme-fourth { border-color: var(--color-fourth); }
+    .border-theme-five { border-color: var(--color-five); }
+}
