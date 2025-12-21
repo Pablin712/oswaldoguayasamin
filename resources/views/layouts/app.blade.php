@@ -16,23 +16,21 @@
 
         <x-color-sistema />
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased" x-data="{ sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null }">
         <div class="min-h-screen bg-theme-five dark:bg-gray-900">
-            @include('layouts.navigation')
+            <!-- Sidebar -->
+            @include('layouts.sidebar')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+            <!-- Main Content Area -->
+            <div :class="sidebarOpen ? 'ml-64' : 'ml-20'" class="transition-all duration-300">
+                <!-- Top Navigation -->
+                @include('layouts.navigation')
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                <!-- Page Content -->
+                <main>
+                    {{ $slot }}
+                </main>
+            </div>
         </div>
     </body>
 </html>
