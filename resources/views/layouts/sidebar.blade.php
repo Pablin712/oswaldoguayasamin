@@ -124,6 +124,8 @@ class="fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gra
             </div>
             <div x-show="sidebarOpen" class="flex-1 min-w-0">
                 <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ Auth::user()->name }}</p>
+                {{-- roles con spatie --}}
+                <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ Auth::user()->roles()->pluck('name')->join(', ') }}</p>
                 <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ Auth::user()->email }}</p>
             </div>
         </div>
