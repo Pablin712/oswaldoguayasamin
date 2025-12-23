@@ -16,9 +16,9 @@
 - **Tablas intermedias (relaciones):** 13 tablas
 
 #### Estado de implementación:
-- ✅ **Completadas:** 7 tablas (15.2%)
+- ✅ **Completadas:** 15 tablas (32.6%)
 - 🔄 **En progreso:** 0 tablas (0%)
-- ⏳ **Pendientes:** 39 tablas (84.8%)
+- ⏳ **Pendientes:** 31 tablas (67.4%)
 
 ---
 
@@ -34,21 +34,21 @@ Establecer la base del sistema con autenticación y permisos.
 5. ✅ `model_has_permissions` - Asignación permisos (Spatie)
 6. ✅ `role_has_permissions` - Permisos por rol (Spatie)
 
-### Fase 2: Configuración Institucional (Prioridad Alta) ⏳
+### Fase 2: Configuración Institucional (Prioridad Alta) ✅ COMPLETADA
 Configurar la estructura institucional básica.
 
-7. ⏳ `instituciones` - Datos de la institución
-8. ⏳ `configuraciones` - Configuraciones del sistema
+7. ✅ `instituciones` - Datos de la institución (COMPLETA)
+8. ✅ `configuraciones` - Configuraciones del sistema (COMPLETA)
 
-### Fase 3: Estructura Académica Base (Prioridad Alta) ⏳
+### Fase 3: Estructura Académica Base (Prioridad Alta) ✅ COMPLETADA
 Crear la jerarquía académica fundamental.
 
-9. ⏳ `periodos_academicos` - Años lectivos
-10. ⏳ `quimestres` - División del año
-11. ⏳ `parciales` - Períodos de evaluación
-12. ⏳ `cursos` - Grados educativos
-13. ⏳ `materias` - Catálogo de materias
-14. ⏳ `aulas` - Salones de clase
+9. ✅ `periodos_academicos` - Años lectivos (COMPLETA)
+10. ✅ `quimestres` - División del año (COMPLETA)
+11. ✅ `parciales` - Períodos de evaluación (COMPLETA)
+12. ✅ `cursos` - Grados educativos (COMPLETA)
+13. ✅ `materias` - Catálogo de materias (COMPLETA)
+14. ✅ `aulas` - Salones de clase (COMPLETA)
 
 ### Fase 4: Relaciones Académicas (Prioridad Alta) ⏳
 Conectar cursos, materias y paralelos.
@@ -118,7 +118,7 @@ Trazabilidad del sistema.
 
 ## 📋 Checklist de Implementación
 
-### ✅ Tablas Completadas (7)
+### ✅ Tablas Completadas (9)
 
 #### Sistema de Autenticación y Permisos (Spatie)
 - [x] **users** - Tabla base de usuarios
@@ -153,7 +153,32 @@ Trazabilidad del sistema.
   - Estado: ✅ Completa (tabla pivote polimórfica)
 
 - [x] **role_has_permissions** - Permisos por rol (Spatie)
-  - ⏳ Tablas Pendientes (39)
+  - Estado: ✅ Completa (tabla pivote)
+
+#### Configuración Institucional
+- [x] **instituciones** - Datos de la institución educativa
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos implementados:
+    - `id`, `nombre`, `codigo_amie` (UNIQUE), `logo`
+    - `direccion`, `telefono`, `email`, `sitio_web`
+    - `timestamps`
+  - **Modelo:** Con relación hasMany a configuraciones
+  - **Seeder:** Datos iniciales de la institución
+
+- [x] **configuraciones** - Configuraciones del sistema
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos implementados:
+    - `id`, `institucion_id` (FK), `clave` (UNIQUE)
+    - `valor`, `tipo` (ENUM), `categoria`, `descripcion`
+    - `timestamps`
+  - **Modelo:** Con relación belongsTo a institución y accessor para valor tipificado
+  - **Seeder:** 9 configuraciones iniciales (calificaciones, asistencia, seguridad, sistema)
+
+---
+
+### ⏳ Tablas Pendientes (37)
 
 #### Usuarios Especializados
 - [ ] **docentes** - Información específica de docentes
@@ -474,12 +499,12 @@ php artisan migrate:fresh --seed
 - [x] Sistema de autenticación y permisos (Spatie)
 - [x] CRUD de usuarios básico
 - [x] CRUD de roles y permisos
-- [ ] Completar tabla users con todos los campos
+- [x] Completar tabla users con todos los campos ✅ HECHO (23/12/2024)
+- [x] Configuración institucional completa ✅ HECHO (23/12/2024)
+- [x] Estructura académica base (periodos, cursos, materias) ✅ HECHO (23/12/2024)
 
 ### Semana 3-4
-- [ ] Configuración institucional completa
-- [ ] Estructura académica base (periodos, cursos, materias)
-- [ ] Catálogos generales
+- [ ] Catálogos generales (paralelos, curso_materia)
 
 ### Semana 5-6
 - [ ] Sistema de docentes completo
@@ -487,7 +512,7 @@ php artisan migrate:fresh --seed
 - [ ] Matrículas
 
 ### Semana 7-8
-- [x] Completar tabla users con todos los campos ✅ HECHO (23/12/2024)
+- [ ] Sistema de calificaciones
 - [ ] Control de asistencia
 
 ### Semana 9-10

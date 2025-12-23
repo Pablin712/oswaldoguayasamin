@@ -15,7 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // correr el seeder de roles
-        $this->call(RoleSeeder::class);
+        // Correr seeders en orden de dependencias
+        $this->call([
+            RoleSeeder::class,
+            InstitucionSeeder::class,
+            ConfiguracionSeeder::class,
+            EstructuraAcademicaSeeder::class,
+        ]);
     }
 }
