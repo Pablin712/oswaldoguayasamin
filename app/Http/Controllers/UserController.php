@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Container\Attributes\Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -16,6 +18,9 @@ class UserController extends Controller
      */
     public function index()
     {
+        Gate::any(['gestionar usuarios', 'ver usuarios'], function () {
+            abort(403);
+        });
         $users = User::with('roles')->get();
         $roles = Role::all();
         return view('users.index', compact('users', 'roles'));
@@ -26,6 +31,10 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::any(['gestionar usuarios', 'crear usuarios'], function () {
+            abort(403);
+        });
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -60,6 +69,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        Gate::any(['gestionar usuarios', 'ver usuarios'], function () {
+            abort(403);
+        });
         $user->load('roles');
         return view('users.show', compact('user'));
     }
@@ -69,6 +81,9 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        Gate::any(['gestionar usuarios', 'editar usuarios'], function () {
+            abort(403);
+        });
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
@@ -83,8 +98,8 @@ class UserController extends Controller
         // Manejar la subida de foto
         if ($request->hasFile('foto')) {
             // Eliminar foto anterior si existe
-            if ($user->foto && \Storage::disk('public')->exists($user->foto)) {
-                \Storage::disk('public')->delete($user->foto);
+            if ($user->foto && Storage::disk('public')->exists($user->foto)) {
+                Storage::disk('public')->delete($user->foto);
             }
 
             $path = $request->file('foto')->store('fotos-usuarios', 'public');
@@ -110,8 +125,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        // tachar error de ide
-        if ($user->id === Auth::user()->id) {
+        Gate::any(['gestionar usuarios', 'eliminar usuarios'], function () {
+            abort(403);
+        });
+        if ($user->id === Auth::id()) {
             return redirect()->route('users.index')
                 ->with('error', 'No puedes eliminar tu propio usuario.');
         }
