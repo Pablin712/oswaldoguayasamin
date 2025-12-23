@@ -16,9 +16,9 @@
 - **Tablas intermedias (relaciones):** 13 tablas
 
 #### Estado de implementación:
-- ✅ **Completadas:** 17 tablas (37%)
+- ✅ **Completadas:** 21 tablas (45.7%)
 - 🔄 **En progreso:** 0 tablas (0%)
-- ⏳ **Pendientes:** 29 tablas (63%)
+- ⏳ **Pendientes:** 25 tablas (54.3%)
 
 ---
 
@@ -56,13 +56,13 @@ Conectar cursos, materias y paralelos.
 15. ✅ `paralelos` - Secciones de cursos (COMPLETA)
 16. ✅ `curso_materia` - Materias por curso (COMPLETA)
 
-### Fase 5: Usuarios Especializados (Prioridad Media) ⏳
+### Fase 5: Usuarios Especializados (Prioridad Media) ✅ COMPLETADA
 Extender users con información específica.
 
-17. ⏳ `docentes` - Información de profesores
-18. ⏳ `estudiantes` - Información de alumnos
-19. ⏳ `padres` - Información de tutores
-20. ⏳ `estudiante_padre` - Relación tutor-estudiante
+17. ✅ `docentes` - Información de profesores (COMPLETA)
+18. ✅ `estudiantes` - Información de alumnos (COMPLETA)
+19. ✅ `padres` - Información de tutores (COMPLETA)
+20. ✅ `estudiante_padre` - Relación tutor-estudiante (COMPLETA)
 
 ### Fase 6: Asignaciones Académicas (Prioridad Media) ⏳
 Asignar docentes y matricular estudiantes.
@@ -118,7 +118,7 @@ Trazabilidad del sistema.
 
 ## 📋 Checklist de Implementación
 
-### ✅ Tablas Completadas (9)
+### ✅ Tablas Completadas (21)
 
 #### Sistema de Autenticación y Permisos (Spatie)
 - [x] **users** - Tabla base de usuarios
@@ -135,12 +135,12 @@ Trazabilidad del sistema.
     - `ultimo_acceso` (TIMESTAMP) ✅
     - `intentos_fallidos` (INT, DEFAULT 0) ✅
     - `remember_token`, `timestamps`
-  - **Modelo actualizado:** Fillable, casts y accessor implementados
+  - **Modelo actualizado:** Fillable, casts, accessor y relaciones hasOne implementados
   - **Factory actualizado:** Genera datos de prueba completos
 
 - [x] **roles** - Roles del sistema (Spatie)
   - Estado: ✅ Completa
-  - Roles definidos: administrador, docente, padre, estudiante, admin_tecnico
+  - Roles definidos: administrador, profesor, representante, estudiante
 
 - [x] **permissions** - Permisos del sistema (Spatie)
   - Estado: ✅ Completa
@@ -176,92 +176,113 @@ Trazabilidad del sistema.
   - **Modelo:** Con relación belongsTo a institución y accessor para valor tipificado
   - **Seeder:** 9 configuraciones iniciales (calificaciones, asistencia, seguridad, sistema)
 
----
+#### Estructura Académica Base
+- [x] **periodos_academicos** - Años lectivos
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos: `id`, `nombre`, `fecha_inicio`, `fecha_fin`, `estado`, `timestamps`
+  - **Modelo:** Con relaciones y scopes implementados
+  - **Seeder:** Período 2024-2025 creado
 
-### ⏳ Tablas Pendientes (37)
+- [x] **quimestres** - División del año lectivo
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos: `id`, `periodo_academico_id` (FK), `nombre`, `numero`, `fecha_inicio`, `fecha_fin`, `timestamps`
+  - **Modelo:** Con belongsTo PeriodoAcademico y hasMany Parciales
+  - **Seeder:** 2 quimestres creados
+
+- [x] **parciales** - Períodos de evaluación
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos: `id`, `quimestre_id` (FK), `nombre`, `numero`, `fecha_inicio`, `fecha_fin`, `permite_edicion`, `timestamps`
+  - **Modelo:** Con belongsTo Quimestre
+  - **Seeder:** 6 parciales creados (3 por quimestre)
+
+- [x] **cursos** - Grados educativos
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos: `id`, `nombre`, `nivel`, `orden`, `timestamps`
+  - **Modelo:** Con belongsToMany Materias, hasMany Paralelos
+  - **Seeder:** 13 cursos creados (1ro-10mo Básica, 1ro-3ro Bachillerato)
+
+- [x] **materias** - Catálogo de materias
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos: `id`, `codigo` (UNIQUE), `nombre`, `area`, `color`, `timestamps`
+  - **Modelo:** Con belongsToMany Cursos
+  - **Seeder:** 12 materias creadas con códigos y colores
+
+- [x] **aulas** - Salones de clase
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos: `id`, `nombre`, `capacidad`, `edificio`, `piso`, `timestamps`
+  - **Modelo:** Con hasMany Paralelos
+  - **Seeder:** 10 aulas creadas
+
+#### Relaciones Académicas
+- [x] **paralelos** - Secciones de cursos (A, B, C)
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos: `id`, `curso_id` (FK), `periodo_academico_id` (FK), `aula_id` (FK), `nombre`, `cupo_maximo`, `timestamps`
+  - **Modelo:** Con relaciones belongsTo y belongsToMany
+  - **Seeder:** 36 paralelos creados (A, B, C por curso)
+
+- [x] **curso_materia** - Materias asignadas a cursos
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos: `id`, `curso_id` (FK), `materia_id` (FK), `periodo_academico_id` (FK), `horas_semanales`, `timestamps`
+  - **Modelo:** Con belongsTo Curso, Materia, PeriodoAcademico
+  - **Seeder:** 100 asignaciones creadas con diferenciaciónpor nivel
 
 #### Usuarios Especializados
-- [ ] **docentes** - Información específica de docentes
-  - Estado: ⏳ **Pendiente crear migración**
-  - Depende de: `users` ✅
-  - Campos: `user_id`, `codigo_docente`, `titulo_profesional`, `especialidad`, etc.
+- [x] **docentes** - Información específica de docentes
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos implementados:
+    - `id`, `user_id` (FK UNIQUE), `codigo_docente` (UNIQUE)
+    - `titulo_profesional`, `especialidad`, `fecha_ingreso`
+    - `tipo_contrato` (ENUM: nombramiento/contrato)
+    - `estado` (ENUM: activo/inactivo/licencia, DEFAULT 'activo')
+    - `timestamps`
+  - **Modelo:** belongsTo User, scope activos(), accessor nombreCompleto
+  - **Seeder:** 8 docentes creados con especialidades diversas
+
+- [x] **estudiantes** - Información de alumnos
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos implementados:
+    - `id`, `user_id` (FK UNIQUE), `codigo_estudiante` (UNIQUE)
+    - `fecha_ingreso`, `tipo_sangre`, `alergias`
+    - `contacto_emergencia`, `telefono_emergencia`
+    - `estado` (ENUM: activo/inactivo/retirado, DEFAULT 'activo')
+    - `timestamps`
+  - **Modelo:** belongsTo User, belongsToMany Padres, scope activos(), accessor nombreCompleto
+  - **Seeder:** 40 estudiantes creados con datos médicos
+
+- [x] **padres** - Información de tutores
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos implementados:
+    - `id`, `user_id` (FK UNIQUE)
+    - `ocupacion`, `lugar_trabajo`, `telefono_trabajo`
+    - `timestamps`
+  - **Modelo:** belongsTo User, belongsToMany Estudiantes, accessor nombreCompleto
+  - **Seeder:** 20 padres/madres creados
+
+- [x] **estudiante_padre** - Relación tutor-estudiante
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos implementados:
+    - `id`, `estudiante_id` (FK), `padre_id` (FK)
+    - `parentesco` (ENUM: padre/madre/tutor/otro)
+    - `es_principal` (BOOLEAN, DEFAULT FALSE)
+    - `timestamps`
+    - UNIQUE constraint (estudiante_id, padre_id)
+  - **Seeder:** 80 relaciones creadas (cada estudiante vinculado a 2 padres)
 
 ---
 
-### ⏳ Tablas Pendientes por Implementargo_docente`, `titulo_profesional`, `especialidad`, etc.
-
----
-
-### ⏳ Tablas Pendientes (39)
-
-#### 🏢 Configuración Institucional (2 tablas)
-- [ ] **instituciones** - Datos de la institución
-  - Prioridad: Alta
-  - Dependencias: Ninguna (tabla independiente)
-  - Campos: nombre, codigo_amie, logo, dirección, contactos
-
-- [ ] **configuraciones** - Configuraciones del sistema
-  - Prioridad: Alta
-  - Depende de: `instituciones`
-  - Campos: clave-valor para configuraciones generales
-
-#### 📚 Estructura Académica Base (6 tablas - Principales)
-- [ ] **periodos_academicos** - Años lectivos
-  - Prioridad: Alta
-  - Dependencias: Ninguna (tabla principal)
-  - Campos: nombre ("2024-2025"), fecha_inicio, fecha_fin, estado
-
-- [ ] **quimestres** - División del año lectivo
-  - Prioridad: Alta
-  - Depende de: `periodos_academicos`
-  - Campos: nombre, número (1 o 2), fechas
-
-- [ ] **parciales** - Períodos de evaluación
-  - Prioridad: Alta
-  - Depende de: `quimestres`
-  - Campos: nombre, número (1, 2 o 3), fechas, permite_edicion
-
-- [ ] **cursos** - Grados educativos
-  - Prioridad: Alta
-  - Dependencias: Ninguna (tabla principal)
-  - Campos: nombre, nivel (Inicial/Básica/Bachillerato), orden
-
-- [ ] **materias** - Catálogo de materias
-  - Prioridad: Alta
-  - Dependencias: Ninguna (tabla principal)
-  - Campos: nombre, código, área, color
-
-- [ ] **aulas** - Salones de clase
-  - Prioridad: Alta
-  - Dependencias: Ninguna (tabla principal)
-  - Campos: nombre, capacidad, edificio, piso
-
-#### 🔗 Relaciones Académicas (2 tablas - Intermedias)
-- [ ] **paralelos** - Secciones de cursos (A, B, C)
-  - Prioridad: Alta
-  - Depende de: `cursos`, `aulas`
-  - Campos: nombre, cupo_maximo, aula_id
-
-- [ ] **curso_materia** - Materias asignadas a cursos
-  - Prioridad: Alta
-  - Depende de: `cursos`, `materias`, `periodos_academicos`
-  - Tabla intermedia: Muchos a Muchos
-
-#### 👥 Usuarios Especializados (3 tablas - Secundarias)
-- [ ] **estudiantes** - Información de estudiantes
-  - Prioridad: Media
-  - Depende de: `users`
-  - Campos: codigo_estudiante, fecha_ingreso, tipo_sangre, alergias
-
-- [ ] **padres** - Información de padres/tutores
-  - Prioridad: Media
-  - Depende de: `users`
-  - Campos: ocupacion, lugar_trabajo, telefono_trabajo
-
-- [ ] **estudiante_padre** - Relación tutor-estudiante
-  - Prioridad: Media
-  - Depende de: `estudiantes`, `padres`
-  - Tabla intermedia: Muchos a Muchos con parentesco
+### ⏳ Tablas Pendientes (25)
 
 #### 🎓 Asignaciones Académicas (2 tablas - Intermedias)
 - [ ] **docente_materia** - Asignación docente-materia-paralelo
