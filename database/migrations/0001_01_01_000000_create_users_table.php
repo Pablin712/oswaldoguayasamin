@@ -17,7 +17,14 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('cedula', 10)->unique()->nullable();
+            $table->string('telefono', 20)->nullable();
+            $table->text('direccion')->nullable();
             $table->string('foto')->nullable();
+            $table->date('fecha_nacimiento')->nullable();
+            $table->enum('estado', ['activo', 'inactivo', 'bloqueado'])->default('activo');
+            $table->timestamp('ultimo_acceso')->nullable();
+            $table->integer('intentos_fallidos')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

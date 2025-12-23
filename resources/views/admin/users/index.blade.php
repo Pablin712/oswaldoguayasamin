@@ -29,9 +29,12 @@
                             ['label' => 'ID', 'type' => 'number'],
                             ['label' => 'Foto', 'type' => 'string'],
                             ['label' => 'Nombre', 'type' => 'string'],
+                            ['label' => 'Cédula', 'type' => 'string'],
                             ['label' => 'Email', 'type' => 'string'],
+                            ['label' => 'Teléfono', 'type' => 'string'],
+                            ['label' => 'Estado', 'type' => 'string'],
                             ['label' => 'Roles', 'type' => 'string'],
-                            ['label' => 'Fecha de Registro', 'type' => 'date'],
+                            ['label' => 'Último Acceso', 'type' => 'date'],
                             ['label' => 'Acciones', 'type' => 'actions'],
                         ]"
                         :csv="auth()->user()->canany(['generar reporte usuarios', 'generar reportes'])"
@@ -74,7 +77,37 @@
                                         {{ $user->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                                        {{ $user->cedula ?? 'N/A' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                         {{ $user->email }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                                        {{ $user->telefono ?? 'N/A' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        @if($user->estado === 'activo')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                                                <svg class="w-2 h-2 mr-1" fill="currentColor" viewBox="0 0 8 8">
+                                                    <circle cx="4" cy="4" r="3"/>
+                                                </svg>
+                                                Activo
+                                            </span>
+                                        @elseif($user->estado === 'inactivo')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
+                                                <svg class="w-2 h-2 mr-1" fill="currentColor" viewBox="0 0 8 8">
+                                                    <circle cx="4" cy="4" r="3"/>
+                                                </svg>
+                                                Inactivo
+                                            </span>
+                                        @elseif($user->estado === 'bloqueado')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
+                                                <svg class="w-2 h-2 mr-1" fill="currentColor" viewBox="0 0 8 8">
+                                                    <circle cx="4" cy="4" r="3"/>
+                                                </svg>
+                                                Bloqueado
+                                            </span>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                         <div class="flex flex-wrap gap-1">
@@ -88,7 +121,13 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                                        {{ $user->created_at->format('d/m/Y') }}
+                                        @if($user->ultimo_acceso)
+                                            <span title="{{ $user->ultimo_acceso->format('d/m/Y H:i:s') }}">
+                                                {{ $user->ultimo_acceso->diffForHumans() }}
+                                            </span>
+                                        @else
+                                            <span class="text-gray-400 dark:text-gray-500">Nunca</span>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex items-center gap-2">
@@ -138,7 +177,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                    <td colspan="10" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
                                         No hay usuarios registrados.
                                     </td>
                                 </tr>

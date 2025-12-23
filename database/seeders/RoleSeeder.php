@@ -54,6 +54,14 @@ class RoleSeeder extends Seeder
             'name' => 'Pablo Jiménez',
             'email' => 'admin@example.com',
             'password' => bcrypt('password'), // Cambia esto por una contraseña segura
+            'cedula' => '1004549976',
+            'telefono' => '123-456-7890',
+            'direccion' => 'Dirección de ejemplo',
+            'foto' => null,
+            'fecha_nacimiento' => '2003-12-07',
+            'estado' => 'activo',
+            'ultimo_acceso' => null,
+            'intentos_fallidos' => 0,
         ]);
 
         $adminUser->assignRole($adminRole);
