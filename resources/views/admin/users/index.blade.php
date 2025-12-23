@@ -34,11 +34,11 @@
                             ['label' => 'Fecha de Registro', 'type' => 'date'],
                             ['label' => 'Acciones', 'type' => 'actions'],
                         ]"
-                        :csv="auth()->user()->canany('generar reporte usuarios', 'generar reportes')"
-                        :excel="auth()->user()->canany('generar reporte usuarios', 'generar reportes')"
-                        :pdf="auth()->user()->canany('generar reporte usuarios', 'generar reportes')"
-                        :print="auth()->user()->canany('generar reporte usuarios', 'generar reportes')"
-                        :json="auth()->user()->canany('generar reporte usuarios', 'generar reportes')"
+                        :csv="auth()->user()->canany(['generar reporte usuarios', 'generar reportes'])"
+                        :excel="auth()->user()->canany(['generar reporte usuarios', 'generar reportes'])"
+                        :pdf="auth()->user()->canany(['generar reporte usuarios', 'generar reportes'])"
+                        :print="auth()->user()->canany(['generar reporte usuarios', 'generar reportes'])"
+                        :json="auth()->user()->canany(['generar reporte usuarios', 'generar reportes'])"
                     >
                         <x-slot name="buttons">
                             @canany(['gestionar usuarios', 'ver usuarios'])

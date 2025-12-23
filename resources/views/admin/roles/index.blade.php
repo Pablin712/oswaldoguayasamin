@@ -32,11 +32,11 @@
                             ['label' => 'Fecha de Creación', 'type' => 'date'],
                             ['label' => 'Acciones', 'type' => 'actions'],
                         ]"
-                        :csv="auth()->user()->canany('generar reporte roles y permisos', 'generar reportes')"
-                        :excel="auth()->user()->canany('generar reporte roles y permisos', 'generar reportes')"
-                        :pdf="auth()->user()->canany('generar reporte roles y permisos', 'generar reportes')"
-                        :print="auth()->user()->canany('generar reporte roles y permisos', 'generar reportes')"
-                        :json="auth()->user()->canany('generar reporte roles y permisos', 'generar reportes')"
+                        :csv="auth()->user()->canany(['generar reporte roles y permisos', 'generar reportes'])"
+                        :excel="auth()->user()->canany(['generar reporte roles y permisos', 'generar reportes'])"
+                        :pdf="auth()->user()->canany(['generar reporte roles y permisos', 'generar reportes'])"
+                        :print="auth()->user()->canany(['generar reporte roles y permisos', 'generar reportes'])"
+                        :json="auth()->user()->canany(['generar reporte roles y permisos', 'generar reportes'])"
                     >
                         <x-slot name="buttons">
                             @canany(['gestionar roles y permisos', 'crear roles'])
