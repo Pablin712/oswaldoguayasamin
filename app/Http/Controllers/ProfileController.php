@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -33,8 +34,8 @@ class ProfileController extends Controller
         // Manejar la subida de foto
         if ($request->hasFile('foto')) {
             // Eliminar foto anterior si existe
-            if ($user->foto && \Storage::disk('public')->exists($user->foto)) {
-                \Storage::disk('public')->delete($user->foto);
+            if ($user->foto && Storage::disk('public')->exists($user->foto)) {
+                Storage::disk('public')->delete($user->foto);
             }
 
             // Guardar nueva foto
