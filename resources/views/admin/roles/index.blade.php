@@ -32,14 +32,14 @@
                             ['label' => 'Fecha de Creación', 'type' => 'date'],
                             ['label' => 'Acciones', 'type' => 'actions'],
                         ]"
-                        :csv="auth()->user()->canany('generar reporte roles', 'generar reportes')"
-                        :excel="auth()->user()->canany('generar reporte roles', 'generar reportes')"
-                        :pdf="auth()->user()->canany('generar reporte roles', 'generar reportes')"
-                        :print="auth()->user()->canany('generar reporte roles', 'generar reportes')"
-                        :json="auth()->user()->canany('generar reporte roles', 'generar reportes')"
+                        :csv="auth()->user()->canany('generar reporte roles y permisos', 'generar reportes')"
+                        :excel="auth()->user()->canany('generar reporte roles y permisos', 'generar reportes')"
+                        :pdf="auth()->user()->canany('generar reporte roles y permisos', 'generar reportes')"
+                        :print="auth()->user()->canany('generar reporte roles y permisos', 'generar reportes')"
+                        :json="auth()->user()->canany('generar reporte roles y permisos', 'generar reportes')"
                     >
                         <x-slot name="buttons">
-                            @canany(['gestionar roles', 'ver roles'])
+                            @canany(['gestionar roles y permisos', 'crear roles'])
                                 <button x-data
                                         @click="$dispatch('open-modal', 'create-role')"
                                         class="inline-flex items-center px-4 py-2 bg-theme-primary dark:bg-theme-third border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-theme-primary-dark dark:hover:bg-theme-secondary focus:bg-theme-primary-dark active:bg-theme-primary-dark focus:outline-none focus:ring-2 focus:ring-theme-primary focus:ring-offset-2 transition ease-in-out duration-150">
@@ -98,7 +98,7 @@
                                                     </svg>
                                                 </button>
                                             @endcanany
-                                            @canany(['gestionar roles', 'eliminar roles'])
+                                            @canany(['gestionar roles y permisos', 'eliminar roles'])
                                                 <button x-data
                                                         @click="$dispatch('open-delete-modal', {
                                                             id: {{ $role->id }},
@@ -129,13 +129,13 @@
     </div>
 
     {{-- Incluir modales --}}
-    @canany(['gestionar roles', 'crear roles'])
+    @canany(['gestionar roles y permisos', 'crear roles'])
         @include('admin.roles.create')
     @endcanany
-    @canany(['gestionar roles', 'editar roles'])
+    @canany(['gestionar roles y permisos', 'editar roles'])
         @include('admin.roles.edit')
     @endcanany
-    @canany(['gestionar roles', 'eliminar roles'])
+    @canany(['gestionar roles y permisos', 'eliminar roles'])
         @include('admin.roles.delete')
     @endcanany
 </x-app-layout>

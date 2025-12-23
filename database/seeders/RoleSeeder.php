@@ -33,12 +33,12 @@ class RoleSeeder extends Seeder
             'eliminar usuarios',
             'generar reporte usuarios',
 
-            'gestionar roles',
-            'ver roles',
+            'gestionar roles y permisos',
+            'ver roles y permisos',
             'crear roles',
             'editar roles',
             'eliminar roles',
-            'generar reporte roles',
+            'generar reporte roles y permisos',
         ];
 
         foreach ($permissions as $permission) {

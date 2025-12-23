@@ -14,7 +14,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        Gate::any(['gestionar roles', 'ver roles'], function () {
+        Gate::any(['gestionar roles y permisos', 'ver roles y permisos'], function () {
             abort(403);
         });
         $roles = Role::with('permissions')->get();
@@ -27,7 +27,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        Gate::any(['gestionar roles', 'crear roles'], function () {
+        Gate::any(['gestionar roles y permisos', 'crear roles'], function () {
             abort(403);
         });
 
@@ -52,7 +52,7 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        Gate::any(['gestionar roles', 'ver roles'], function () {
+        Gate::any(['gestionar roles y permisos', 'ver roles y permisos'], function () {
             abort(403);
         });
 
@@ -66,7 +66,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        Gate::any(['gestionar roles', 'editar roles'], function () {
+        Gate::any(['gestionar roles y permisos', 'editar roles'], function () {
             abort(403);
         });
 
@@ -93,7 +93,7 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        Gate::any(['gestionar roles', 'eliminar roles'], function () {
+        Gate::any(['gestionar roles y permisos', 'eliminar roles'], function () {
             abort(403);
         });
 
@@ -107,5 +107,33 @@ class RoleController extends Controller
 
         return redirect()->route('roles.index')
             ->with('success', 'Rol eliminado exitosamente.');
+    }
+
+    /**
+     * Display a listing of permissions.
+     */
+    public function indexPermissions()
+    {
+        Gate::any(['gestionar roles y permisos', 'ver roles y permisos'], function () {
+            abort(403);
+        });
+
+        $permissions = Permission::withCount('roles')->get();
+
+        return view('admin.roles.permissions-index', compact('permissions'));
+    }
+
+    /**
+     * Display the specified permission.
+     */
+    public function showPermission(Permission $permission)
+    {
+        Gate::any(['gestionar roles y permisos', 'ver roles y permisos'], function () {
+            abort(403);
+        });
+
+        $permission->load(['roles.users']);
+
+        return view('admin.roles.permissions-show', compact('permission'));
     }
 }

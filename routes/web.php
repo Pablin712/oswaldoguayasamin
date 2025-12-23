@@ -20,6 +20,10 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('users', UserController::class)->except(['create', 'edit']);
     Route::resource('roles', RoleController::class)->except(['create', 'edit']);
+
+    // Rutas para permisos (solo index y show)
+    Route::get('permissions', [RoleController::class, 'indexPermissions'])->name('permissions.index');
+    Route::get('permissions/{permission}', [RoleController::class, 'showPermission'])->name('permissions.show');
 });
 
 require __DIR__.'/auth.php';
