@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Materia extends Model
 {
@@ -14,6 +15,13 @@ class Materia extends Model
         'color',
         'estado',
     ];
+
+    public function cursos(): BelongsToMany
+    {
+        return $this->belongsToMany(Curso::class, 'curso_materia')
+                    ->withPivot('periodo_academico_id', 'horas_semanales')
+                    ->withTimestamps();
+    }
 
     public function scopeActivas($query)
     {

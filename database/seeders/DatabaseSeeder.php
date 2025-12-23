@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             InstitucionSeeder::class,
             ConfiguracionSeeder::class,
             EstructuraAcademicaSeeder::class,
+            RelacionesAcademicasSeeder::class,
         ]);
     }
 }

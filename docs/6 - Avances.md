@@ -16,9 +16,9 @@
 - **Tablas intermedias (relaciones):** 13 tablas
 
 #### Estado de implementación:
-- ✅ **Completadas:** 15 tablas (32.6%)
+- ✅ **Completadas:** 17 tablas (37%)
 - 🔄 **En progreso:** 0 tablas (0%)
-- ⏳ **Pendientes:** 31 tablas (67.4%)
+- ⏳ **Pendientes:** 29 tablas (63%)
 
 ---
 
@@ -50,11 +50,11 @@ Crear la jerarquía académica fundamental.
 13. ✅ `materias` - Catálogo de materias (COMPLETA)
 14. ✅ `aulas` - Salones de clase (COMPLETA)
 
-### Fase 4: Relaciones Académicas (Prioridad Alta) ⏳
+### Fase 4: Relaciones Académicas (Prioridad Alta) ✅ COMPLETADA
 Conectar cursos, materias y paralelos.
 
-15. ⏳ `paralelos` - Secciones de cursos
-16. ⏳ `curso_materia` - Materias por curso
+15. ✅ `paralelos` - Secciones de cursos (COMPLETA)
+16. ✅ `curso_materia` - Materias por curso (COMPLETA)
 
 ### Fase 5: Usuarios Especializados (Prioridad Media) ⏳
 Extender users con información específica.
@@ -502,9 +502,11 @@ php artisan migrate:fresh --seed
 - [x] Completar tabla users con todos los campos ✅ HECHO (23/12/2024)
 - [x] Configuración institucional completa ✅ HECHO (23/12/2024)
 - [x] Estructura académica base (periodos, cursos, materias) ✅ HECHO (23/12/2024)
+- [x] Relaciones académicas (paralelos, curso_materia) ✅ HECHO (23/12/2024)
 
 ### Semana 3-4
-- [ ] Catálogos generales (paralelos, curso_materia)
+- [ ] Sistema de docentes completo
+- [ ] Sistema de estudiantes y padres
 
 ### Semana 5-6
 - [ ] Sistema de docentes completo

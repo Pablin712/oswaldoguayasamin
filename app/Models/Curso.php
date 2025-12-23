@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Curso extends Model
 {
@@ -19,6 +21,18 @@ class Curso extends Model
         return [
             'orden' => 'integer',
         ];
+    }
+
+    public function paralelos(): HasMany
+    {
+        return $this->hasMany(Paralelo::class);
+    }
+
+    public function materias(): BelongsToMany
+    {
+        return $this->belongsToMany(Materia::class, 'curso_materia')
+                    ->withPivot('periodo_academico_id', 'horas_semanales')
+                    ->withTimestamps();
     }
 
     public function scopeActivos($query)
