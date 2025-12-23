@@ -24,6 +24,12 @@ class RoleSeeder extends Seeder
         // Crear permisos
         $permissions = [
             'ver dashboard',
+
+            'gestionar usuarios',
+            'ver usuarios',
+            'crear usuarios',
+            'editar usuarios',
+            'eliminar usuarios',
         ];
 
         foreach ($permissions as $permission) {

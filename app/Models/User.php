@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'foto',
     ];
 
     /**
@@ -45,5 +46,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Construir la URL completa de la foto del usuario
+    public function getFotoUrlAttribute(): ?string
+    {
+        if ($this->foto) {
+            return asset('storage/fotos/' . $this->foto);
+        }
+
+        return null;
     }
 }
