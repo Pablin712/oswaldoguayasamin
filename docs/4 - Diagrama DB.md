@@ -19,8 +19,12 @@
 
 ```mermaid
 erDiagram
-    users ||--o{ role_user : "tiene"
-    roles ||--o{ role_user : "asignado a"
+    users ||--o{ model_has_roles : "tiene"
+    roles ||--o{ model_has_roles : "asignado a"
+    roles ||--o{ role_has_permissions : "tiene"
+    permissions ||--o{ role_has_permissions : "asignado a"
+    users ||--o{ model_has_permissions : "tiene permisos directos"
+    permissions ||--o{ model_has_permissions : "asignado a modelo"
     users ||--o{ estudiantes : "puede ser"
     users ||--o{ docentes : "puede ser"
     users ||--o{ padres : "puede ser"
@@ -86,10 +90,10 @@ erDiagram
 
 ## Descripción de Tablas
 
-### 👤 **Gestión de Usuarios y Roles**
+### 👤 **Gestión de Usuarios y Roles (Spatie Laravel Permission)**
 
 #### `users`
-Tabla principal de usuarios del sistema.
+Tabla principal de usuarios del sistema (autenticable, guard: 'web').
 
 | Campo | Tipo | Descripción | Constraints |
 |-------|------|-------------|-------------|
@@ -110,33 +114,73 @@ Tabla principal de usuarios del sistema.
 | created_at | TIMESTAMP | Fecha de creación | NULL |
 | updated_at | TIMESTAMP | Fecha de actualización | NULL |
 
-#### `roles`
+**Nota**: Esta tabla puede tener registros sin tabla hija (estudiantes/docentes/padres) para usuarios administrativos.
+
+#### `roles` (Spatie)
 Catálogo de roles del sistema.
 
 | Campo | Tipo | Descripción | Constraints |
 |-------|------|-------------|-------------|
 | id | BIGINT | ID único del rol | PK, AUTO_INCREMENT |
-| nombre | VARCHAR(50) | Nombre del rol | UNIQUE, NOT NULL |
-| slug | VARCHAR(50) | Slug del rol | UNIQUE, NOT NULL |
-| descripcion | TEXT | Descripción del rol | NULL |
-| permisos | JSON | Permisos del rol | NULL |
+| name | VARCHAR(255) | Nombre del rol | NOT NULL |
+| guard_name | VARCHAR(255) | Guard name (web) | NOT NULL |
 | created_at | TIMESTAMP | Fecha de creación | NULL |
 | updated_at | TIMESTAMP | Fecha de actualización | NULL |
 
+**UNIQUE**: (name, guard_name)
+
 **Roles predefinidos**: `administrador`, `docente`, `padre`, `estudiante`, `admin_tecnico`
 
-#### `role_user`
-Tabla pivote para relación muchos a muchos entre usuarios y roles.
+#### `permissions` (Spatie)
+Catálogo de permisos del sistema.
 
 | Campo | Tipo | Descripción | Constraints |
 |-------|------|-------------|-------------|
-| id | BIGINT | ID único | PK, AUTO_INCREMENT |
-| user_id | BIGINT | ID del usuario | FK users.id |
-| role_id | BIGINT | ID del rol | FK roles.id |
-| created_at | TIMESTAMP | Fecha de asignación | NULL |
+| id | BIGINT | ID único del permiso | PK, AUTO_INCREMENT |
+| name | VARCHAR(255) | Nombre del permiso | NOT NULL |
+| guard_name | VARCHAR(255) | Guard name (web) | NOT NULL |
+| created_at | TIMESTAMP | Fecha de creación | NULL |
 | updated_at | TIMESTAMP | Fecha de actualización | NULL |
 
-**UNIQUE**: (user_id, role_id)
+**UNIQUE**: (name, guard_name)
+
+**Ejemplos**: `ver_calificaciones`, `registrar_calificaciones`, `crear_tareas`, `enviar_mensajes_masivos`
+
+#### `model_has_roles` (Spatie)
+Relación polimórfica entre modelos y roles.
+
+| Campo | Tipo | Descripción | Constraints |
+|-------|------|-------------|-------------|
+| role_id | BIGINT | ID del rol | FK roles.id |
+| model_type | VARCHAR(255) | Tipo de modelo | NOT NULL |
+| model_id | BIGINT | ID del modelo | NOT NULL |
+| team_id | BIGINT | ID del equipo | NULL |
+
+**PRIMARY KEY**: (role_id, model_id, model_type)  
+**INDEX**: (model_id, model_type)
+
+#### `model_has_permissions` (Spatie)
+Relación polimórfica entre modelos y permisos directos.
+
+| Campo | Tipo | Descripción | Constraints |
+|-------|------|-------------|-------------|
+| permission_id | BIGINT | ID del permiso | FK permissions.id |
+| model_type | VARCHAR(255) | Tipo de modelo | NOT NULL |
+| model_id | BIGINT | ID del modelo | NOT NULL |
+| team_id | BIGINT | ID del equipo | NULL |
+
+**PRIMARY KEY**: (permission_id, model_id, model_type)  
+**INDEX**: (model_id, model_type)
+
+#### `role_has_permissions` (Spatie)
+Relación entre roles y permisos.
+
+| Campo | Tipo | Descripción | Constraints |
+|-------|------|-------------|-------------|
+| permission_id | BIGINT | ID del permiso | FK permissions.id |
+| role_id | BIGINT | ID del rol | FK roles.id |
+
+**PRIMARY KEY**: (permission_id, role_id)
 
 ---
 
@@ -699,11 +743,13 @@ Registro de auditoría de accesos.
 
 ### Cardinalidades Principales
 
-#### Usuarios y Roles
-- **users** ↔ **roles**: Muchos a Muchos (un usuario puede tener múltiples roles)
-- **users** → **docentes**: Uno a Uno (opcional)
-- **users** → **estudiantes**: Uno a Uno (opcional)
-- **users** → **padres**: Uno a Uno (opcional)
+#### Usuarios y Roles (Spatie)
+- **users** ↔ **roles**: Muchos a Muchos polimórfica (a través de model_has_roles)
+- **users** ↔ **permissions**: Muchos a Muchos polimórfica (a través de model_has_permissions)
+- **roles** ↔ **permissions**: Muchos a Muchos (a través de role_has_permissions)
+- **users** → **docentes**: Uno a Uno (opcional, solo si rol = docente)
+- **users** → **estudiantes**: Uno a Uno (opcional, solo si rol = estudiante)
+- **users** → **padres**: Uno a Uno (opcional, solo si rol = padre)
 
 #### Estructura Académica
 - **periodos_academicos** → **quimestres**: Uno a Muchos
@@ -744,7 +790,8 @@ Todas las tablas tienen un índice primario en el campo `id`.
 ### Índices Únicos (Unique Keys)
 - `users.email`
 - `users.cedula`
-- `roles.nombre`, `roles.slug`
+- `roles.name` + `roles.guard_name` (combinado)
+- `permissions.name` + `permissions.guard_name` (combinado)
 - `instituciones.codigo_amie`
 - `docentes.codigo_docente`
 - `estudiantes.codigo_estudiante`
@@ -834,7 +881,8 @@ Todas las tablas incluyen `created_at` y `updated_at` para auditoría básica.
 ### 4. **Seguridad**
 - Las contraseñas en `users` deben hashearse con bcrypt (Laravel lo hace por defecto)
 - Implementar políticas de acceso (Laravel Policies)
-- Validar permisos en base a `roles` y `role_user`
+- Validar permisos con Spatie: `$user->hasRole('docente')`, `$user->can('registrar_calificaciones')`
+- Usar middleware de Spatie: `role:admin`, `permission:crear_tareas`
 
 ### 5. **Rendimiento**
 - Implementar caché para consultas frecuentes (listado de cursos, materias, etc.)
@@ -844,16 +892,16 @@ Todas las tablas incluyen `created_at` y `updated_at` para auditoría básica.
 
 ### 6. **Escalabilidad**
 - La estructura permite agregar nuevas funcionalidades sin afectar las existentes
-- JSON en `roles.permisos` y `configuraciones.valor` permite flexibilidad
+- Spatie permite permisos granulares y roles jerárquicos sin modificar estructura
+- JSON en `configuraciones.valor` permite flexibilidad
 - Tablas pivote facilitan relaciones muchos a muchos
+- Los permisos directos permiten excepciones sin crear roles nuevos
 
 ### 7. **Integridad Referencial**
 ```sql
--- Ejemplo de foreign keys con cascada
-ALTER TABLE role_user 
-  ADD CONSTRAINT fk_role_user_user 
-  FOREIGN KEY (user_id) REFERENCES users(id) 
-  ON DELETE CASCADE;
+-- Spatie crea automáticamente las foreign keys
+-- model_has_roles tiene FK a roles.id con CASCADE
+-- role_has_permissions tiene FK a roles.id y permissions.id con CASCADE
 
 -- Para datos importantes, usar RESTRICT
 ALTER TABLE calificaciones 
@@ -872,14 +920,33 @@ INSERT INTO configuraciones (clave, valor, tipo, categoria) VALUES
 ('limite_inasistencias', '25', 'numero', 'asistencia'),
 ('minutos_sesion', '30', 'numero', 'seguridad'),
 ('intentos_login', '5', 'numero', 'seguridad');
+```
 
--- Roles iniciales
-INSERT INTO roles (nombre, slug, descripcion) VALUES
-('Administrador', 'administrador', 'Acceso completo al sistema'),
-('Docente', 'docente', 'Profesor de la institución'),
-('Padre', 'padre', 'Padre o tutor de estudiante'),
-('Estudiante', 'estudiante', 'Estudiante matriculado'),
-('Administrador Técnico', 'admin_tecnico', 'Soporte técnico del sistema');
+**Roles y Permisos (Spatie)**: Se crearán mediante seeders de Laravel:
+```php
+// database/seeders/RolePermissionSeeder.php
+
+// Crear roles
+$admin = Role::create(['name' => 'administrador', 'guard_name' => 'web']);
+$docente = Role::create(['name' => 'docente', 'guard_name' => 'web']);
+$padre = Role::create(['name' => 'padre', 'guard_name' => 'web']);
+$estudiante = Role::create(['name' => 'estudiante', 'guard_name' => 'web']);
+$adminTecnico = Role::create(['name' => 'admin_tecnico', 'guard_name' => 'web']);
+
+// Crear permisos por módulo
+Permission::create(['name' => 'gestionar_usuarios', 'guard_name' => 'web']);
+Permission::create(['name' => 'ver_calificaciones', 'guard_name' => 'web']);
+Permission::create(['name' => 'registrar_calificaciones', 'guard_name' => 'web']);
+Permission::create(['name' => 'registrar_asistencia', 'guard_name' => 'web']);
+Permission::create(['name' => 'crear_tareas', 'guard_name' => 'web']);
+Permission::create(['name' => 'enviar_mensajes_masivos', 'guard_name' => 'web']);
+// ... más permisos
+
+// Asignar permisos a roles
+$admin->givePermissionTo(Permission::all());
+$docente->givePermissionTo(['registrar_calificaciones', 'registrar_asistencia', 'crear_tareas']);
+$padre->givePermissionTo(['ver_calificaciones', 'justificar_inasistencia']);
+$estudiante->givePermissionTo(['ver_calificaciones', 'entregar_tareas']);
 ```
 
 ### 9. **Particionamiento de Tablas Grandes**
@@ -953,25 +1020,31 @@ DELIMITER ;
 
 | Categoría | Cantidad |
 |-----------|----------|
-| **Total de Tablas** | 38 |
+| **Total de Tablas** | 41 |
 | **Tablas de Entidades Principales** | 15 |
-| **Tablas Pivote/Relación** | 10 |
+| **Tablas Pivote/Relación** | 13 |
+| **Tablas de Roles y Permisos (Spatie)** | 5 |
 | **Tablas de Auditoría/Configuración** | 4 |
 | **Tablas de Archivos Adjuntos** | 3 |
-| **Foreign Keys** | ~60 |
-| **Índices Recomendados** | ~40 |
+| **Foreign Keys** | ~65 |
+| **Índices Recomendados** | ~45 |
 
 ---
 
 ## Diagrama Simplificado por Módulos
 
-### Módulo de Usuarios
+### Módulo de Usuarios (Spatie)
 ```
-users ← role_user → roles
+users ← model_has_roles → roles → role_has_permissions → permissions
+  ↓                                                            ↑
+  └─ model_has_permissions ────────────────────────────────────┘
   ↓
-  ├─ docentes
-  ├─ estudiantes ← estudiante_padre → padres
+  ├─ docentes (opcional: solo si rol = docente)
+  ├─ estudiantes (opcional: solo si rol = estudiante) ← estudiante_padre → padres
+  ├─ padres (opcional: solo si rol = padre)
   └─ auditoria_accesos
+  
+Nota: users puede no tener tabla hija si es administrador/admin_tecnico
 ```
 
 ### Módulo Académico
@@ -1005,5 +1078,6 @@ users → mensajes → mensaje_adjuntos
 **Proyecto**: Sistema de Gestión Académica y Comunicación Escolar  
 **Motor de Base de Datos**: MySQL 8.0+  
 **ORM**: Laravel Eloquent  
-**Total de Tablas**: 38  
-**Última actualización**: 20 de diciembre de 2025
+**Sistema de Roles y Permisos**: Spatie Laravel Permission  
+**Total de Tablas**: 41 (incluye 5 tablas de Spatie)  
+**Última actualización**: 22 de diciembre de 2025
