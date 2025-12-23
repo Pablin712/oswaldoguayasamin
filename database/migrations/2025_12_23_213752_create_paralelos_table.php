@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::create('paralelos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('curso_id')->constrained('cursos')->onDelete('cascade');
+            $table->foreignId('periodo_academico_id')->constrained('periodos_academicos')->onDelete('cascade');
             $table->string('nombre', 10);
             $table->integer('cupo_maximo')->nullable();
             $table->foreignId('aula_id')->nullable()->constrained('aulas')->onDelete('set null');
             $table->timestamps();
 
-            // Índice único para curso + nombre (ej: 1ro Básica + A)
-            $table->unique(['curso_id', 'nombre']);
+            // Índice único para curso + nombre + período (ej: 1ro Básica + A + 2024-2025)
+            $table->unique(['curso_id', 'nombre', 'periodo_academico_id']);
         });
     }
 

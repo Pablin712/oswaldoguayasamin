@@ -16,9 +16,9 @@
 - **Tablas intermedias (relaciones):** 13 tablas
 
 #### Estado de implementación:
-- ✅ **Completadas:** 21 tablas (45.7%)
+- ✅ **Completadas:** 25 tablas (54.3%)
 - 🔄 **En progreso:** 0 tablas (0%)
-- ⏳ **Pendientes:** 25 tablas (54.3%)
+- ⏳ **Pendientes:** 21 tablas (45.7%)
 
 ---
 
@@ -64,17 +64,17 @@ Extender users con información específica.
 19. ✅ `padres` - Información de tutores (COMPLETA)
 20. ✅ `estudiante_padre` - Relación tutor-estudiante (COMPLETA)
 
-### Fase 6: Asignaciones Académicas (Prioridad Media) ⏳
+### Fase 6: Asignaciones Académicas (Prioridad Media) ✅ COMPLETADA
 Asignar docentes y matricular estudiantes.
 
-21. ⏳ `docente_materia` - Asignación docente-materia-paralelo
-22. ⏳ `matriculas` - Matrícula de estudiantes
+21. ✅ `docente_materia` - Asignación docente-materia-paralelo (COMPLETA)
+22. ✅ `matriculas` - Matrícula de estudiantes (COMPLETA)
 
-### Fase 7: Sistema de Calificaciones (Prioridad Media) ⏳
+### Fase 7: Sistema de Calificaciones (Prioridad Media) ✅ COMPLETADA
 Gestión completa de notas.
 
-23. ⏳ `calificaciones` - Registro de notas
-24. ⏳ `componentes_calificacion` - Desglose de notas
+23. ✅ `calificaciones` - Registro de notas (COMPLETA)
+24. ✅ `componentes_calificacion` - Desglose de notas (COMPLETA)
 
 ### Fase 8: Control de Asistencia (Prioridad Media) ⏳
 Registro y justificaciones.
@@ -280,31 +280,56 @@ Trazabilidad del sistema.
     - UNIQUE constraint (estudiante_id, padre_id)
   - **Seeder:** 80 relaciones creadas (cada estudiante vinculado a 2 padres)
 
+#### Asignaciones Académicas
+- [x] **docente_materia** - Asignación docente-materia-paralelo
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos implementados:
+    - `id`, `docente_id` (FK), `curso_materia_id` (FK)
+    - `paralelo_id` (FK), `periodo_academico_id` (FK)
+    - `timestamps`
+    - UNIQUE constraint (docente_id, curso_materia_id, paralelo_id, periodo_academico_id)
+  - **Modelo:** belongsTo Docente, CursoMateria, Paralelo, PeriodoAcademico
+  - **Seeder:** 270 asignaciones creadas
+
+- [x] **matriculas** - Matrícula de estudiantes por período
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos implementados:
+    - `id`, `estudiante_id` (FK), `paralelo_id` (FK), `periodo_academico_id` (FK)
+    - `numero_matricula` (UNIQUE), `fecha_matricula`, `estado` (ENUM: activa/retirada/trasladada/finalizada)
+    - `observaciones`, `timestamps`
+    - UNIQUE constraint (estudiante_id, paralelo_id, periodo_academico_id)
+  - **Modelo:** belongsTo Estudiante, Paralelo, PeriodoAcademico; hasMany Calificaciones; scope activas()
+  - **Seeder:** 40 matrículas creadas
+
+#### Sistema de Calificaciones
+- [x] **calificaciones** - Registro de calificaciones
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos implementados:
+    - `id`, `matricula_id` (FK), `curso_materia_id` (FK), `parcial_id` (FK), `docente_id` (FK)
+    - `nota_final` (DECIMAL 5,2), `observaciones`, `fecha_registro`
+    - `estado` (ENUM: registrada/modificada/aprobada/publicada, DEFAULT 'registrada')
+    - `timestamps`
+    - UNIQUE constraint (matricula_id, curso_materia_id, parcial_id)
+  - **Modelo:** belongsTo Matricula, CursoMateria, Parcial, Docente; hasMany Componentes; scopes aprobadas/publicadas
+  - **Seeder:** Calificaciones generadas por estudiante, materia y parcial (6 parciales × materias × 40 estudiantes)
+
+- [x] **componentes_calificacion** - Desglose de notas
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 23/12/2024
+  - Campos implementados:
+    - `id`, `calificacion_id` (FK)
+    - `nombre` (VARCHAR 100), `tipo` (ENUM: tarea/leccion/examen/proyecto/participacion/otro)
+    - `nota` (DECIMAL 5,2), `porcentaje` (DECIMAL 5,2)
+    - `descripcion`, `timestamps`
+  - **Modelo:** belongsTo Calificacion
+  - **Seeder:** 4 componentes por calificación (Tareas 20%, Lecciones 20%, Trabajo en Clase 20%, Examen Parcial 40%)
+
 ---
 
-### ⏳ Tablas Pendientes (25)
-
-#### 🎓 Asignaciones Académicas (2 tablas - Intermedias)
-- [ ] **docente_materia** - Asignación docente-materia-paralelo
-  - Prioridad: Media
-  - Depende de: `docentes`, `curso_materia`, `paralelos`, `periodos_academicos`
-  - Tabla intermedia compleja
-
-- [ ] **matriculas** - Matrícula de estudiantes por período
-  - Prioridad: Media
-  - Depende de: `estudiantes`, `paralelos`, `periodos_academicos`
-  - Campos: numero_matricula, fecha_matricula, estado
-
-#### 📊 Sistema de Calificaciones (2 tablas - Secundarias)
-- [ ] **calificaciones** - Registro de calificaciones
-  - Prioridad: Media
-  - Depende de: `matriculas`, `materias`, `parciales`, `docentes`
-  - Campos: nota_final, observaciones, fecha_registro
-
-- [ ] **componentes_calificacion** - Desglose de notas
-  - Prioridad: Media
-  - Depende de: `calificaciones`
-  - Campos: nombre (Tareas/Lecciones), tipo, nota, porcentaje
+### ⏳ Tablas Pendientes (21)
 
 #### ✅ Control de Asistencia (2 tablas - Secundarias)
 - [ ] **asistencias** - Registro diario de asistencia

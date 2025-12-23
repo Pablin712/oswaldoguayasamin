@@ -27,12 +27,14 @@ class RelacionesAcademicasSeeder extends Seeder
             // Crear paralelos A, B y C para cada curso
             Paralelo::create([
                 'curso_id' => $curso->id,
+                'periodo_academico_id' => $periodo->id,
                 'nombre' => 'A',
                 'cupo_maximo' => 30,
             ]);
 
             Paralelo::create([
                 'curso_id' => $curso->id,
+                'periodo_academico_id' => $periodo->id,
                 'nombre' => 'B',
                 'cupo_maximo' => 30,
             ]);
@@ -41,6 +43,7 @@ class RelacionesAcademicasSeeder extends Seeder
             if ($curso->orden <= 10) { // Solo Básica
                 Paralelo::create([
                     'curso_id' => $curso->id,
+                    'periodo_academico_id' => $periodo->id,
                     'nombre' => 'C',
                     'cupo_maximo' => 30,
                 ]);

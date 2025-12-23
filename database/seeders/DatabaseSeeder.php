@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             EstructuraAcademicaSeeder::class,
             RelacionesAcademicasSeeder::class,
             UsuariosEspecializadosSeeder::class,
+            AsignacionesAcademicasSeeder::class,
         ]);
     }
 }
