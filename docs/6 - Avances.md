@@ -16,9 +16,9 @@
 - **Tablas intermedias (relaciones):** 13 tablas
 
 #### Estado de implementación:
-- ✅ **Completadas:** 27 tablas (58.7%)
+- ✅ **Completadas:** 30 tablas (65.2%)
 - 🔄 **En progreso:** 0 tablas (0%)
-- ⏳ **Pendientes:** 19 tablas (41.3%)
+- ⏳ **Pendientes:** 16 tablas (34.8%)
 
 ---
 
@@ -82,12 +82,12 @@ Registro y justificaciones.
 25. ✅ `asistencias` - Registro diario (COMPLETA)
 26. ✅ `justificaciones` - Justificaciones de ausencias (COMPLETA)
 
-### Fase 9: Tareas y Deberes (Prioridad Media) ⏳
+### Fase 9: Tareas y Deberes (Prioridad Media) ✅ COMPLETADA
 Sistema de asignación de tareas.
 
-27. ⏳ `tareas` - Tareas asignadas
-28. ⏳ `archivos_tarea` - Archivos de tareas
-29. ⏳ `tarea_estudiante` - Seguimiento individual
+27. ✅ `tareas` - Tareas asignadas (COMPLETA)
+28. ✅ `archivos_tarea` - Archivos de tareas (COMPLETA)
+29. ✅ `tarea_estudiante` - Seguimiento individual (COMPLETA)
 
 ### Fase 10: Comunicación (Prioridad Baja) ⏳
 Sistema de mensajería y notificaciones.
@@ -329,9 +329,9 @@ Trazabilidad del sistema.
 
 ---
 
-### ✅ Tablas Completadas (27)
+### ✅ Tablas Completadas (30)
 
-### ⏳ Tablas Pendientes (19)
+### ⏳ Tablas Pendientes (16)
 
 #### Control de Asistencia
 - [x] **asistencias** - Registro diario de asistencia
@@ -361,21 +361,49 @@ Trazabilidad del sistema.
     - belongsTo: Asistencia, Padre, User (revisor)
     - Scopes: porEstado, pendientes, aprobadas, rechazadas
 
-#### 📝 Tareas y Deberes (3 tablas - Secundarias)
-- [ ] **tareas** - Tareas asignadas por docentes
-  - Prioridad: Media
-  - Depende de: `docentes`, `materias`, `paralelos`
-  - Campos: titulo, descripcion, fechas, es_calificada
+#### Tareas y Deberes
+- [x] **tareas** - Tareas asignadas por docentes
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 24/12/2024
+  - Campos implementados:
+    - `id`, `docente_id` (FK), `materia_id` (FK), `paralelo_id` (FK nullable)
+    - `titulo` (VARCHAR 255), `descripcion` (TEXT nullable)
+    - `fecha_asignacion` (DATE), `fecha_entrega` (DATE)
+    - `es_calificada` (BOOLEAN, DEFAULT false), `puntaje_maximo` (DECIMAL 4,2 nullable)
+    - `timestamps`
+  - **Modelo:**
+    - belongsTo: Docente, Materia, Paralelo
+    - hasMany: ArchivoTarea, TareaEstudiante
+    - Scopes: proximasAVencer, vencidas, activas, deDocente, deParalelo
+    - Accessors: estaVencida, diasRestantes
+  - **Índices:** (docente_id, fecha_asignacion), (paralelo_id, fecha_entrega)
 
-- [ ] **archivos_tarea** - Archivos adjuntos a tareas
-  - Prioridad: Media
-  - Depende de: `tareas`
-  - Campos: nombre_archivo, ruta, tipo_mime, tamaño
+- [x] **archivos_tarea** - Archivos adjuntos a tareas
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 24/12/2024
+  - Campos implementados:
+    - `id`, `tarea_id` (FK)
+    - `nombre_archivo` (VARCHAR 255), `ruta_archivo` (VARCHAR 255)
+    - `tipo_mime` (VARCHAR 100 nullable), `tamanio` (INT nullable)
+    - `created_at` (TIMESTAMP)
+  - **Modelo:**
+    - belongsTo: Tarea
+    - Accessor: tamanioFormateado
 
-- [ ] **tarea_estudiante** - Seguimiento individual de tareas
-  - Prioridad: Media
-  - Depende de: `tareas`, `estudiantes`
-  - Tabla intermedia con seguimiento
+- [x] **tarea_estudiante** - Seguimiento individual de tareas
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 24/12/2024
+  - Campos implementados:
+    - `id`, `tarea_id` (FK), `estudiante_id` (FK)
+    - `estado` (ENUM: pendiente/completada/revisada, DEFAULT 'pendiente')
+    - `fecha_completada` (TIMESTAMP nullable), `calificacion` (DECIMAL 4,2 nullable)
+    - `comentarios_docente` (TEXT nullable), `fecha_revision` (TIMESTAMP nullable)
+    - `timestamps`
+    - UNIQUE constraint (tarea_id, estudiante_id)
+  - **Modelo:**
+    - belongsTo: Tarea, Estudiante
+    - Scopes: porEstado, pendientes, completadas, revisadas, deEstudiante
+    - Accessor: completadaATiempo
 
 #### 💬 Comunicación (4 tablas - Secundarias)
 - [ ] **mensajes** - Mensajes entre usuarios

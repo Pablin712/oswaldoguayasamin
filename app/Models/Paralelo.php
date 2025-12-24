@@ -41,6 +41,14 @@ class Paralelo extends Model
     }
 
     /**
+     * Relación con Tareas
+     */
+    public function tareas(): HasMany
+    {
+        return $this->hasMany(Tarea::class);
+    }
+
+    /**
      * Obtener el nombre completo del paralelo (ej: "1ro Básica - A")
      */
     public function getNombreCompletoAttribute(): string

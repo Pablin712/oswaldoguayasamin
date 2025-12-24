@@ -38,6 +38,14 @@ class Docente extends Model
         return $this->hasMany(Asistencia::class);
     }
 
+    /**
+     * Relación con Tareas creadas
+     */
+    public function tareas(): HasMany
+    {
+        return $this->hasMany(Tarea::class);
+    }
+
     public function scopeActivos($query)
     {
         return $query->where('estado', 'activo');

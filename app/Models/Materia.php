@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Materia extends Model
 {
@@ -21,6 +22,14 @@ class Materia extends Model
         return $this->belongsToMany(Curso::class, 'curso_materia')
                     ->withPivot('periodo_academico_id', 'horas_semanales')
                     ->withTimestamps();
+    }
+
+    /**
+     * Relación con Tareas
+     */
+    public function tareas(): HasMany
+    {
+        return $this->hasMany(Tarea::class);
     }
 
     public function scopeActivas($query)

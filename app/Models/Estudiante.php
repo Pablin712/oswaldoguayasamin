@@ -47,6 +47,14 @@ class Estudiante extends Model
         return $this->hasMany(Asistencia::class);
     }
 
+    /**
+     * Relación con Tareas asignadas
+     */
+    public function tareaEstudiantes(): HasMany
+    {
+        return $this->hasMany(TareaEstudiante::class);
+    }
+
     public function scopeActivos($query)
     {
         return $query->where('estado', 'activo');
