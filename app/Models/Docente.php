@@ -46,6 +46,14 @@ class Docente extends Model
         return $this->hasMany(Tarea::class);
     }
 
+    /**
+     * Relación con Horarios asignados
+     */
+    public function horarios(): HasMany
+    {
+        return $this->hasMany(Horario::class);
+    }
+
     public function scopeActivos($query)
     {
         return $query->where('estado', 'activo');

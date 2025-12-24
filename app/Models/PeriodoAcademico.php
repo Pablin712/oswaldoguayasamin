@@ -37,6 +37,14 @@ class PeriodoAcademico extends Model
         return $this->hasMany(Evento::class);
     }
 
+    /**
+     * Relación con Horarios
+     */
+    public function horarios(): HasMany
+    {
+        return $this->hasMany(Horario::class);
+    }
+
     public function scopeActivos($query)
     {
         return $query->where('estado', 'activo');

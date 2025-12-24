@@ -32,6 +32,14 @@ class Materia extends Model
         return $this->hasMany(Tarea::class);
     }
 
+    /**
+     * Relación con Horarios
+     */
+    public function horarios(): HasMany
+    {
+        return $this->hasMany(Horario::class);
+    }
+
     public function scopeActivas($query)
     {
         return $query->where('estado', 'activa');

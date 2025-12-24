@@ -59,6 +59,14 @@ class Paralelo extends Model
     }
 
     /**
+     * Relación con Horarios
+     */
+    public function horarios(): HasMany
+    {
+        return $this->hasMany(Horario::class);
+    }
+
+    /**
      * Obtener el nombre completo del paralelo (ej: "1ro Básica - A")
      */
     public function getNombreCompletoAttribute(): string

@@ -119,6 +119,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Relación con Auditoría de accesos
+     */
+    public function auditoriasAccesos(): HasMany
+    {
+        return $this->hasMany(AuditoriaAcceso::class);
+    }
+
+    /**
      * Relación con Notificaciones
      */
     public function notificaciones(): HasMany

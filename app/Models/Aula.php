@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Aula extends Model
 {
@@ -20,6 +21,14 @@ class Aula extends Model
             'capacidad' => 'integer',
             'piso' => 'integer',
         ];
+    }
+
+    /**
+     * Relación con Horarios
+     */
+    public function horarios(): HasMany
+    {
+        return $this->hasMany(Horario::class);
     }
 
     public function scopeDisponibles($query)
