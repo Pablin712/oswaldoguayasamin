@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             AsistenciaSeeder::class, // Fase 8
             TareaSeeder::class, // Fase 9
             ComunicacionSeeder::class, // Fase 10
+            EventoSeeder::class, // Fase 11
         ]);
     }
 }

@@ -29,6 +29,14 @@ class PeriodoAcademico extends Model
         return $this->hasMany(Quimestre::class);
     }
 
+    /**
+     * Relación con Eventos
+     */
+    public function eventos(): HasMany
+    {
+        return $this->hasMany(Evento::class);
+    }
+
     public function scopeActivos($query)
     {
         return $query->where('estado', 'activo');

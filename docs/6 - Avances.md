@@ -1,6 +1,6 @@
 # 📊 Avances del Sistema de Gestión Académica
 
-**Última actualización:** 24 de diciembre de 2024
+**Última actualización:** 24 de diciembre de 2025
 
 ---
 
@@ -16,9 +16,9 @@
 - **Tablas intermedias (relaciones):** 13 tablas
 
 #### Estado de implementación:
-- ✅ **Completadas:** 34 tablas (73.9%)
+- ✅ **Completadas:** 37 tablas (80.4%)
 - 🔄 **En progreso:** 0 tablas (0%)
-- ⏳ **Pendientes:** 12 tablas (26.1%)
+- ⏳ **Pendientes:** 9 tablas (19.6%)
 
 ---
 
@@ -97,12 +97,12 @@ Sistema de mensajería y notificaciones.
 32. ✅ `mensaje_destinatarios` - Destinatarios múltiples (COMPLETA)
 33. ✅ `notificaciones` - Notificaciones del sistema (COMPLETA)
 
-### Fase 11: Eventos y Calendario (Prioridad Baja) ⏳
+### Fase 11: Eventos y Calendario (Prioridad Baja) ✅ COMPLETADA
 Gestión de eventos académicos.
 
-34. ⏳ `eventos` - Eventos institucionales
-35. ⏳ `evento_curso` - Eventos por curso
-36. ⏳ `evento_confirmacion` - Confirmaciones de asistencia
+34. ✅ `eventos` - Eventos institucionales (COMPLETA)
+35. ✅ `evento_curso` - Eventos por curso (COMPLETA)
+36. ✅ `evento_confirmacion` - Confirmaciones de asistencia (COMPLETA)
 
 ### Fase 12: Horarios (Prioridad Baja) ⏳
 Programación de clases.
@@ -409,9 +409,9 @@ Trazabilidad del sistema.
 - [ ] **mensajes** - Mensajes entre usuarios
 ---
 
-### ✅ Tablas Completadas (34)
+### ✅ Tablas Completadas (37)
 
-### ⏳ Tablas Pendientes (12)
+### ⏳ Tablas Pendientes (9)
 
 #### Comunicación
 - [x] **mensajes** - Mensajes entre usuarios
@@ -471,20 +471,55 @@ Trazabilidad del sistema.
   - **Índices:** (user_id, es_leida), tipo
 
 #### 📅 Eventos y Calendario (3 tablas - Secundarias)
-- [ ] **eventos** - Eventos académicos y actividades
-  - Prioridad: Baja
-  - Depende de: `periodos_academicos`, `users`
-  - Campos: tipo (examen/reunion/actividad/feriado), fechas, ubicación
+- [x] **eventos** - Eventos académicos y actividades
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 24/12/2024
+  - Campos implementados:
+    - `id`, `periodo_academico_id` (FK)
+    - `tipo` (ENUM: examen/reunion/actividad/feriado/ceremonia/otro, DEFAULT 'actividad')
+    - `titulo` (VARCHAR 255), `descripcion` (TEXT nullable)
+    - `fecha_inicio` (DATE), `fecha_fin` (DATE nullable)
+    - `hora_inicio` (TIME nullable), `hora_fin` (TIME nullable)
+    - `ubicacion` (VARCHAR 255 nullable)
+    - `requiere_confirmacion` (BOOLEAN DEFAULT false), `es_publico` (BOOLEAN DEFAULT true)
+    - `timestamps`
+  - **Modelo:**
+    - belongsTo: PeriodoAcademico
+    - belongsToMany: Paralelos
+    - hasMany: Confirmaciones
+    - Scopes: proximos, pasados, enCurso, porTipo, publicos, delPeriodo, delParalelo
+    - Accessors: estaEnCurso, duracionDias, porcentajeConfirmacion
+  - **Índices:** (periodo_academico_id, fecha_inicio), (tipo, fecha_inicio)
+  - **Seeder:** 20 eventos generados (6 exámenes, 4 reuniones, 5 actividades, 2 ceremonias, 3 feriados)
 
-- [ ] **evento_curso** - Eventos dirigidos a cursos específicos
-  - Prioridad: Baja
-  - Depende de: `eventos`, `paralelos`
-  - Tabla intermedia: Muchos a Muchos
+- [x] **evento_curso** - Eventos dirigidos a cursos específicos
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 24/12/2024
+  - Campos implementados:
+    - `id`, `evento_id` (FK), `paralelo_id` (FK)
+    - `timestamps`
+    - UNIQUE constraint (evento_id, paralelo_id)
+  - **Modelo:**
+    - belongsTo: Evento, Paralelo
+  - **Índices:** paralelo_id
+  - **Seeder:** Relaciones generadas automáticamente con eventos
 
-- [ ] **evento_confirmacion** - Confirmaciones de asistencia
-  - Prioridad: Baja
-  - Depende de: `eventos`, `users`, `estudiantes`
-  - Campos: confirmado, fecha_confirmacion
+- [x] **evento_confirmacion** - Confirmaciones de asistencia
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 24/12/2024
+  - Campos implementados:
+    - `id`, `evento_id` (FK), `user_id` (FK), `estudiante_id` (FK nullable)
+    - `confirmado` (BOOLEAN DEFAULT false)
+    - `fecha_confirmacion` (TIMESTAMP nullable)
+    - `observaciones` (TEXT nullable)
+    - `timestamps`
+    - UNIQUE constraint (evento_id, user_id, estudiante_id)
+  - **Modelo:**
+    - belongsTo: Evento, Usuario (User), Estudiante
+    - Scopes: confirmados, pendientes, delEvento, delUsuario
+    - Método: confirmar()
+  - **Índices:** (evento_id, confirmado), user_id
+  - **Seeder:** 640 confirmaciones generadas (465 confirmadas, 72.7% tasa)
 
 #### ⏰ Horarios (1 tabla - Secundaria)
 - [ ] **horarios** - Horarios de clases

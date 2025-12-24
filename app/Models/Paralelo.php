@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Paralelo extends Model
@@ -46,6 +47,15 @@ class Paralelo extends Model
     public function tareas(): HasMany
     {
         return $this->hasMany(Tarea::class);
+    }
+
+    /**
+     * Relación con Eventos
+     */
+    public function eventos(): BelongsToMany
+    {
+        return $this->belongsToMany(Evento::class, 'evento_curso')
+            ->withTimestamps();
     }
 
     /**

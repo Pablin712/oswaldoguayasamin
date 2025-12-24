@@ -55,6 +55,14 @@ class Estudiante extends Model
         return $this->hasMany(TareaEstudiante::class);
     }
 
+    /**
+     * Relación con Confirmaciones de Eventos
+     */
+    public function eventosConfirmados(): HasMany
+    {
+        return $this->hasMany(EventoConfirmacion::class);
+    }
+
     public function scopeActivos($query)
     {
         return $query->where('estado', 'activo');

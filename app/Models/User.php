@@ -95,6 +95,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Relación con Confirmaciones de Eventos
+     */
+    public function eventosConfirmados(): HasMany
+    {
+        return $this->hasMany(EventoConfirmacion::class);
+    }
+
+    /**
      * Relación con Mensajes enviados
      */
     public function mensajesEnviados(): HasMany
