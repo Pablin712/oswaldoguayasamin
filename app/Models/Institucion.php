@@ -16,10 +16,20 @@ class Institucion extends Model
         'nombre',
         'codigo_amie',
         'logo',
+        'tipo',
+        'nivel',
+        'jornada',
+        'provincia',
+        'ciudad',
+        'canton',
+        'parroquia',
         'direccion',
         'telefono',
         'email',
         'sitio_web',
+        'rector',
+        'vicerrector',
+        'inspector',
     ];
 
     /**

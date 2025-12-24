@@ -1,3 +1,13 @@
+@php
+    $user = auth()->user();
+    $logoUrl = $user && $user->institucion && $user->institucion->logo
+        ? Storage::url($user->institucion->logo)
+        : null;
+@endphp
+
+@if($logoUrl)
+    <img src="{{ $logoUrl }}" alt="Logo Institución" {{ $attributes }} style="object-fit: contain;" />
+@else
 <!-- Logo escolar estilo emoji: libro abierto con birrete de graduación -->
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" {{ $attributes }}>
     <!-- Sombra del libro -->
@@ -61,3 +71,4 @@
         <circle cx="61" cy="6" r="0.8" fill="#6B8FFF" opacity="0.9"/>
     </g>
 </svg>
+@endif

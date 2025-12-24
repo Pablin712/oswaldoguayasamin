@@ -130,6 +130,42 @@ class="fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gra
                 <div class="border-t border-gray-200 dark:border-gray-700"></div>
             </div>
 
+            <!-- Configuración Institucional -->
+            @canany(['gestionar institución', 'ver institución', 'gestionar configuraciones', 'ver configuraciones'])
+            <div class="space-y-1">
+                <div class="px-3 py-2" x-show="sidebarOpen">
+                    <span class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Configuración</span>
+                </div>
+
+                @canany(['gestionar institución', 'ver institución'])
+                <!-- Institución -->
+                <a href="{{ route('instituciones.show') }}"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('instituciones.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-900 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    <span x-show="sidebarOpen" class="font-medium">Institución</span>
+                </a>
+                @endcanany
+
+                @canany(['gestionar configuraciones', 'ver configuraciones'])
+                <!-- Configuraciones -->
+                <a href="{{ route('configuraciones.index') }}"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('configuraciones.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-900 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                    <span x-show="sidebarOpen" class="font-medium">Configuraciones</span>
+                </a>
+                @endcanany
+            </div>
+            @endcanany
+
+            <!-- Divider -->
+            <div class="pt-4 pb-2" x-show="sidebarOpen">
+                <div class="border-t border-gray-200 dark:border-gray-700"></div>
+            </div>
+
             <!-- Administración Dropdown -->
             <div class="space-y-1">
                 <button @click="toggleDropdown('administracion')"
@@ -182,14 +218,7 @@ class="fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gra
                         </a>
                     @endcanany
 
-                    <!-- Configuración -->
-                    <a href="#"
-                       class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300">
-                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
-                        </svg>
-                        <span class="text-sm">Configuración</span>
-                    </a>
+                    <!-- Ya no necesitamos este enlace individual de Configuración -->
                 </div>
             </div>
         </div>

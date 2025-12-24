@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\InstitucionController;
+use App\Http\Controllers\ConfiguracionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,6 +26,16 @@ Route::middleware('auth')->group(function () {
     // Rutas para permisos (solo index y show)
     Route::get('permissions', [RoleController::class, 'indexPermissions'])->name('permissions.index');
     Route::get('permissions/{permission}', [RoleController::class, 'showPermission'])->name('permissions.show');
+
+    // Fase 2: Instituciones
+    Route::get('instituciones', [InstitucionController::class, 'show'])->name('instituciones.show');
+    Route::get('instituciones/edit', [InstitucionController::class, 'edit'])->name('instituciones.edit');
+    Route::put('instituciones', [InstitucionController::class, 'update'])->name('instituciones.update');
+
+    // Fase 2: Configuraciones
+    Route::get('configuraciones', [ConfiguracionController::class, 'index'])->name('configuraciones.index');
+    Route::put('configuraciones', [ConfiguracionController::class, 'update'])->name('configuraciones.update');
+    Route::post('configuraciones/test-email', [ConfiguracionController::class, 'testEmail'])->name('configuraciones.test-email');
 });
 
 require __DIR__.'/auth.php';

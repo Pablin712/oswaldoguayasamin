@@ -16,10 +16,20 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('codigo_amie', 20)->unique()->nullable();
             $table->string('logo')->nullable();
+            $table->enum('tipo', ['Fiscal', 'Fiscomisional', 'Municipal', 'Particular'])->nullable();
+            $table->string('nivel')->nullable(); // Ej: "EGB y BGU"
+            $table->enum('jornada', ['Matutina', 'Vespertina', 'Nocturna', 'Ambas'])->nullable();
+            $table->string('provincia')->nullable();
+            $table->string('ciudad')->nullable();
+            $table->string('canton')->nullable();
+            $table->string('parroquia')->nullable();
             $table->text('direccion')->nullable();
             $table->string('telefono', 20)->nullable();
             $table->string('email')->nullable();
             $table->string('sitio_web')->nullable();
+            $table->string('rector')->nullable();
+            $table->string('vicerrector')->nullable();
+            $table->string('inspector')->nullable();
             $table->timestamps();
         });
     }

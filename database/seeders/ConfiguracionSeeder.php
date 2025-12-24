@@ -3,8 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Configuracion;
-use App\Models\Institucion;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\PeriodoAcademico;
 use Illuminate\Database\Seeder;
 
 class ConfiguracionSeeder extends Seeder
@@ -14,94 +13,64 @@ class ConfiguracionSeeder extends Seeder
      */
     public function run(): void
     {
-        $institucion = Institucion::first();
+        // Verificar que exista al menos un período académico
+        $periodo = PeriodoAcademico::first();
 
-        if (!$institucion) {
-            $this->command->warn('No hay instituciones registradas. Ejecuta InstitucionSeeder primero.');
+        if (!$periodo) {
+            $this->command->warn('No hay períodos académicos registrados. Crea uno primero.');
             return;
         }
 
-        $configuraciones = [
-            // Calificaciones
-            [
-                'institucion_id' => $institucion->id,
-                'clave' => 'escala_calificacion_minima',
-                'valor' => '0',
-                'tipo' => 'numero',
-                'categoria' => 'calificaciones',
-                'descripcion' => 'Nota mínima en la escala de calificación',
-            ],
-            [
-                'institucion_id' => $institucion->id,
-                'clave' => 'escala_calificacion_maxima',
-                'valor' => '10',
-                'tipo' => 'numero',
-                'categoria' => 'calificaciones',
-                'descripcion' => 'Nota máxima en la escala de calificación',
-            ],
-            [
-                'institucion_id' => $institucion->id,
-                'clave' => 'nota_minima_aprobacion',
-                'valor' => '7',
-                'tipo' => 'numero',
-                'categoria' => 'calificaciones',
-                'descripcion' => 'Nota mínima para aprobar una materia',
-            ],
-            [
-                'institucion_id' => $institucion->id,
-                'clave' => 'dias_edicion_calificaciones',
-                'valor' => '7',
-                'tipo' => 'numero',
-                'categoria' => 'calificaciones',
-                'descripcion' => 'Días permitidos para editar calificaciones después de registrarlas',
-            ],
-            // Asistencia
-            [
-                'institucion_id' => $institucion->id,
-                'clave' => 'limite_inasistencias',
-                'valor' => '25',
-                'tipo' => 'numero',
-                'categoria' => 'asistencia',
-                'descripcion' => 'Porcentaje máximo de inasistencias permitidas',
-            ],
-            // Seguridad
-            [
-                'institucion_id' => $institucion->id,
-                'clave' => 'minutos_inactividad_sesion',
-                'valor' => '30',
-                'tipo' => 'numero',
-                'categoria' => 'seguridad',
-                'descripcion' => 'Minutos de inactividad antes de cerrar sesión automáticamente',
-            ],
-            [
-                'institucion_id' => $institucion->id,
-                'clave' => 'intentos_maximos_login',
-                'valor' => '5',
-                'tipo' => 'numero',
-                'categoria' => 'seguridad',
-                'descripcion' => 'Número máximo de intentos fallidos de inicio de sesión',
-            ],
-            // Sistema
-            [
-                'institucion_id' => $institucion->id,
-                'clave' => 'modo_mantenimiento',
-                'valor' => 'false',
-                'tipo' => 'booleano',
-                'categoria' => 'sistema',
-                'descripcion' => 'Activar modo de mantenimiento del sistema',
-            ],
-            [
-                'institucion_id' => $institucion->id,
-                'clave' => 'registros_por_pagina',
-                'valor' => '15',
-                'tipo' => 'numero',
-                'categoria' => 'sistema',
-                'descripcion' => 'Número de registros a mostrar por página',
-            ],
-        ];
+        // Crear configuración por defecto
+        Configuracion::create([
+            // Académico
+            'periodo_actual_id' => $periodo->id,
+            'numero_quimestres' => 2,
+            'numero_parciales' => 3,
+            'fecha_inicio_clases' => now()->startOfYear()->addMonths(8), // Septiembre
+            'fecha_fin_clases' => now()->startOfYear()->addYear()->addMonths(6), // Julio siguiente
+            'fecha_inicio_q1' => now()->startOfYear()->addMonths(8),
+            'fecha_fin_q1' => now()->startOfYear()->addMonths(12),
+            'fecha_inicio_q2' => now()->startOfYear()->addYear()->addMonths(1),
+            'fecha_fin_q2' => now()->startOfYear()->addYear()->addMonths(6),
+            'porcentaje_minimo_asistencia' => 75.00,
 
-        foreach ($configuraciones as $configuracion) {
-            Configuracion::create($configuracion);
-        }
+            // Calificaciones
+            'calificacion_minima' => 0.00,
+            'calificacion_maxima' => 10.00,
+            'nota_minima_aprobacion' => 7.00,
+            'decimales' => 2,
+            'ponderacion_examen' => 20.00,
+            'ponderacion_parciales' => 80.00,
+            'permitir_supletorio' => true,
+            'permitir_remedial' => true,
+            'permitir_gracia' => false,
+            'redondear_calificaciones' => false,
+
+            // Horarios
+            'duracion_periodo' => 40,
+            'duracion_recreo' => 15,
+            'periodos_por_dia' => 8,
+            'dias_laborales' => ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'],
+
+            // Correo
+            'smtp_host' => 'smtp.gmail.com',
+            'smtp_port' => 587,
+            'smtp_encriptacion' => 'tls',
+            'smtp_usuario' => null,
+            'smtp_password' => null,
+            'remitente_nombre' => 'Sistema Académico',
+            'remitente_email' => null,
+
+            // Notificaciones
+            'notificar_calificaciones' => true,
+            'notificar_asistencia' => true,
+            'notificar_eventos' => true,
+            'resumen_semanal_padres' => false,
+            'resumen_mensual_docentes' => false,
+            'plantilla_correo' => 'Estimado/a @{{nombre}},\n\n@{{mensaje}}\n\nSaludos cordiales,\n@{{institucion}}',
+        ]);
+
+        $this->command->info('Configuración por defecto creada exitosamente.');
     }
 }

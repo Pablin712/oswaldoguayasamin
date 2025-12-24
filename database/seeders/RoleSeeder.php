@@ -39,6 +39,16 @@ class RoleSeeder extends Seeder
             'editar roles',
             'eliminar roles',
             'generar reporte roles y permisos',
+
+            // Fase 2: Instituciones
+            'gestionar institución',
+            'ver institución',
+            'editar institución',
+
+            // Fase 2: Configuraciones
+            'gestionar configuraciones',
+            'ver configuraciones',
+            'editar configuraciones',
         ];
 
         foreach ($permissions as $permission) {
@@ -50,19 +60,42 @@ class RoleSeeder extends Seeder
         $profesorRole->givePermissionTo(['ver dashboard']);
         $representanteRole->givePermissionTo(['ver dashboard']);
 
-        $adminUser = User::create([
-            'name' => 'Pablo Jiménez',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('password'), // Cambia esto por una contraseña segura
-            'cedula' => '1004549976',
-            'telefono' => '123-456-7890',
-            'direccion' => 'Dirección de ejemplo',
-            'foto' => null,
-            'fecha_nacimiento' => '2003-12-07',
-            'estado' => 'activo',
-            'ultimo_acceso' => null,
-            'intentos_fallidos' => 0,
-        ]);
+        $adminUser = User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'institucion_id' => 1,
+                'name' => 'Pablo Jiménez',
+                'password' => bcrypt('password'), // Cambia esto por una contraseña segura
+                'cedula' => '1004549976',
+                'telefono' => '123-456-7890',
+                'direccion' => 'Dirección de ejemplo',
+                'foto' => null,
+                'fecha_nacimiento' => '2003-12-07',
+                'estado' => 'activo',
+                'ultimo_acceso' => null,
+                'intentos_fallidos' => 0,
+            ]
+        );
+
+        // Usuario de prueba para la segunda institución
+        $adminUser2 = User::firstOrCreate(
+            ['email' => 'admin2@example.com'],
+            [
+                'institucion_id' => 2,
+                'name' => 'Laura Vélez',
+                'password' => bcrypt('password'),
+                'cedula' => '1004549977',
+                'telefono' => '098-765-4321',
+                'direccion' => 'San Cristóbal, Galápagos',
+                'foto' => null,
+                'fecha_nacimiento' => '1985-03-15',
+                'estado' => 'activo',
+                'ultimo_acceso' => null,
+                'intentos_fallidos' => 0,
+            ]
+        );
+
+        $adminUser2->assignRole($adminRole);
 
         $adminUser->assignRole($adminRole);
     }

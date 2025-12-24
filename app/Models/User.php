@@ -21,6 +21,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'institucion_id',
         'name',
         'email',
         'password',
@@ -68,6 +69,14 @@ class User extends Authenticatable
         }
 
         return null;
+    }
+
+    /**
+     * Relación con Institución
+     */
+    public function institucion()
+    {
+        return $this->belongsTo(Institucion::class);
     }
 
     /**
