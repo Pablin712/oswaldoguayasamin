@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('configuraciones', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('institucion_id')->constrained('instituciones')->onDelete('cascade')->unique();
 
             // Configuración Académica
             $table->unsignedBigInteger('periodo_actual_id')->nullable();

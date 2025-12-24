@@ -19,6 +19,9 @@
 
 ```mermaid
 erDiagram
+    instituciones ||--o{ users : "tiene"
+    instituciones ||--o| configuraciones : "tiene"
+    
     users ||--o{ model_has_roles : "tiene"
     roles ||--o{ model_has_roles : "asignado a"
     roles ||--o{ role_has_permissions : "tiene"
@@ -82,8 +85,6 @@ erDiagram
     mensajes }o--|| users : "de remitente"
     mensajes }o--|| users : "para destinatario"
     mensajes ||--o{ mensaje_adjuntos : "tiene adjuntos"
-    
-    configuraciones ||--|| instituciones : "pertenece a"
 ```
 
 ---
@@ -98,6 +99,7 @@ Tabla principal de usuarios del sistema (autenticable, guard: 'web').
 | Campo | Tipo | Descripción | Constraints |
 |-------|------|-------------|-------------|
 | id | BIGINT | ID único del usuario | PK, AUTO_INCREMENT |
+| institucion_id | BIGINT | ID de la institución | FK instituciones.id, NULL |
 | name | VARCHAR(255) | Nombre completo | NOT NULL |
 | email | VARCHAR(255) | Correo electrónico | UNIQUE, NOT NULL |
 | email_verified_at | TIMESTAMP | Fecha verificación email | NULL |
@@ -697,27 +699,53 @@ Horarios de clases.
 ### ⚙️ **Configuración y Auditoría**
 
 #### `configuraciones`
-Configuraciones del sistema.
+Configuraciones del sistema por institución (cada institución tiene su propia configuración).
 
 | Campo | Tipo | Descripción | Constraints |
 |-------|------|-------------|-------------|
 | id | BIGINT | ID único | PK, AUTO_INCREMENT |
-| institucion_id | BIGINT | ID institución | FK instituciones.id |
-| clave | VARCHAR(100) | Clave configuración | UNIQUE, NOT NULL |
-| valor | TEXT | Valor configuración | NULL |
-| tipo | ENUM | texto/numero/booleano/json | DEFAULT 'texto' |
-| categoria | VARCHAR(50) | Categoría config | NULL |
-| descripcion | TEXT | Descripción | NULL |
+| institucion_id | BIGINT | ID institución | FK instituciones.id, UNIQUE |
+| periodo_actual_id | BIGINT | Período académico activo | FK periodos_academicos.id, NULL |
+| numero_quimestres | INT | Número de quimestres | DEFAULT 2 |
+| numero_parciales | INT | Número de parciales | DEFAULT 3 |
+| fecha_inicio_clases | DATE | Inicio de clases | NULL |
+| fecha_fin_clases | DATE | Fin de clases | NULL |
+| fecha_inicio_q1 | DATE | Inicio quimestre 1 | NULL |
+| fecha_fin_q1 | DATE | Fin quimestre 1 | NULL |
+| fecha_inicio_q2 | DATE | Inicio quimestre 2 | NULL |
+| fecha_fin_q2 | DATE | Fin quimestre 2 | NULL |
+| porcentaje_minimo_asistencia | INT | % mínimo asistencia | DEFAULT 75 |
+| calificacion_minima | DECIMAL(5,2) | Nota mínima | DEFAULT 0 |
+| calificacion_maxima | DECIMAL(5,2) | Nota máxima | DEFAULT 10 |
+| nota_minima_aprobacion | DECIMAL(5,2) | Nota para aprobar | DEFAULT 7 |
+| decimales | INT | Decimales en notas | DEFAULT 2 |
+| ponderacion_examen | INT | % peso examen | DEFAULT 20 |
+| ponderacion_parciales | INT | % peso parciales | DEFAULT 80 |
+| permitir_supletorio | BOOLEAN | Habilitar supletorio | DEFAULT true |
+| permitir_remedial | BOOLEAN | Habilitar remedial | DEFAULT true |
+| permitir_gracia | BOOLEAN | Habilitar gracia | DEFAULT false |
+| redondear_calificaciones | BOOLEAN | Redondear notas | DEFAULT false |
+| duracion_periodo | INT | Minutos por período | DEFAULT 45 |
+| duracion_recreo | INT | Minutos recreo | DEFAULT 15 |
+| periodos_por_dia | INT | Períodos por día | DEFAULT 6 |
+| dias_laborales | JSON | Días laborables | NULL |
+| smtp_host | VARCHAR | Host SMTP | NULL |
+| smtp_port | INT | Puerto SMTP | DEFAULT 587 |
+| smtp_encriptacion | ENUM | TLS/SSL | DEFAULT 'TLS' |
+| smtp_usuario | VARCHAR | Usuario SMTP | NULL |
+| smtp_password | VARCHAR | Contraseña SMTP | NULL |
+| remitente_nombre | VARCHAR | Nombre remitente | NULL |
+| remitente_email | VARCHAR | Email remitente | NULL |
+| notificar_calificaciones | BOOLEAN | Notificar notas | DEFAULT true |
+| notificar_asistencia | BOOLEAN | Notificar asistencia | DEFAULT true |
+| notificar_eventos | BOOLEAN | Notificar eventos | DEFAULT true |
+| resumen_semanal_padres | BOOLEAN | Resumen semanal | DEFAULT false |
+| resumen_mensual_docentes | BOOLEAN | Resumen mensual | DEFAULT false |
+| plantilla_correo | TEXT | Plantilla emails | NULL |
 | created_at | TIMESTAMP | Fecha de creación | NULL |
 | updated_at | TIMESTAMP | Fecha de actualización | NULL |
 
-**Ejemplos de configuraciones**:
-- `escala_calificacion_minima`: 0
-- `escala_calificacion_maxima`: 10
-- `nota_minima_aprobacion`: 7
-- `limite_inasistencias`: 25
-- `minutos_inactividad_sesion`: 30
-- `dias_edicion_calificaciones`: 7
+**Nota**: Cada institución tiene una única configuración. Esta tabla centraliza todas las configuraciones académicas, de calificaciones, horarios, correo y notificaciones.
 
 #### `auditoria_accesos`
 Registro de auditoría de accesos.

@@ -13,6 +13,9 @@ class Configuracion extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        // Relaciones
+        'institucion_id',
+
         // Académica
         'periodo_actual_id',
         'numero_quimestres',
@@ -94,6 +97,14 @@ class Configuracion extends Model
      * @var string
      */
     protected $table = 'configuraciones';
+
+    /**
+     * Relación con institución.
+     */
+    public function institucion(): BelongsTo
+    {
+        return $this->belongsTo(Institucion::class);
+    }
 
     /**
      * Relación con periodo académico actual.

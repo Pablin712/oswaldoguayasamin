@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
     {
         // Correr seeders en orden de dependencias
         $this->call([
-            RoleSeeder::class,
             InstitucionSeeder::class,
-            ConfiguracionSeeder::class,
+            RoleSeeder::class,
             EstructuraAcademicaSeeder::class,
+            ConfiguracionSeeder::class,
             RelacionesAcademicasSeeder::class,
             UsuariosEspecializadosSeeder::class,
             AsignacionesAcademicasSeeder::class,

@@ -21,8 +21,13 @@ class ConfiguracionSeeder extends Seeder
             return;
         }
 
-        // Crear configuración por defecto
-        Configuracion::create([
+        // Crear configuración para cada institución
+        $instituciones = \App\Models\Institucion::all();
+
+        foreach ($instituciones as $institucion) {
+            Configuracion::updateOrCreate(
+                ['institucion_id' => $institucion->id],
+                [
             // Académico
             'periodo_actual_id' => $periodo->id,
             'numero_quimestres' => 2,
@@ -69,8 +74,9 @@ class ConfiguracionSeeder extends Seeder
             'resumen_semanal_padres' => false,
             'resumen_mensual_docentes' => false,
             'plantilla_correo' => 'Estimado/a @{{nombre}},\n\n@{{mensaje}}\n\nSaludos cordiales,\n@{{institucion}}',
-        ]);
+            ]);
+        }
 
-        $this->command->info('Configuración por defecto creada exitosamente.');
+        $this->command->info('Configuraciones creadas para ' . $instituciones->count() . ' institución(es).');
     }
 }

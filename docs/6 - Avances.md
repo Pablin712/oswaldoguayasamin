@@ -1,11 +1,27 @@
 # 📊 Avances del Sistema de Gestión Académica
 
-**Última actualización:** 24 de diciembre de 2025
-**Estado:** ✅ SISTEMA COMPLETADO AL 100%
+**Última actualización:** 24 de diciembre de 2025  
+**Estado:** ✅ SISTEMA COMPLETADO AL 100% + ACTUALIZACIÓN MULTI-INSTITUCIÓN
 
 ---
 
-## 🎉 PROYECTO COMPLETADO
+## 🎉 PROYECTO COMPLETADO + MEJORAS
+
+### ✨ Actualización Reciente (24/12/2025)
+
+**Sistema Multi-Institución Implementado:**
+- ✅ Tabla `configuraciones` ahora tiene `institucion_id` (FK a instituciones, UNIQUE)
+- ✅ Tabla `users` ahora tiene `institucion_id` (FK a instituciones)
+- ✅ Cada institución tiene su propia configuración independiente
+- ✅ Los usuarios están afiliados a una institución específica
+- ✅ Seeders actualizados para crear configuración por cada institución
+- ✅ Documentación del diagrama de base de datos actualizada
+
+**Beneficios:**
+- 🏫 Soporte completo para múltiples instituciones en la misma base de datos
+- ⚙️ Configuraciones personalizadas por institución
+- 👥 Usuarios segregados por institución
+- 📊 Preparado para comercialización como SaaS
 
 ### Estadísticas del Proyecto
 
@@ -127,10 +143,11 @@ Trazabilidad del sistema.
 
 #### Sistema de Autenticación y Permisos (Spatie)
 - [x] **users** - Tabla base de usuarios
-  - Estado: ✅ **COMPLETA** - Todos los campos implementados
-  - Fecha: 23/12/2024
+  - Estado: ✅ **COMPLETA + ACTUALIZADA** 
+  - Fecha: 23/12/2024 | Actualización: 24/12/2024
   - Campos implementados: 
-    - `id`, `name`, `email`, `email_verified_at`, `password`
+    - `id`, `institucion_id` (FK instituciones.id) ✅ **NUEVO**
+    - `name`, `email`, `email_verified_at`, `password`
     - `cedula` (VARCHAR 10, UNIQUE) ✅
     - `telefono` (VARCHAR 20) ✅
     - `direccion` (TEXT) ✅
@@ -140,8 +157,8 @@ Trazabilidad del sistema.
     - `ultimo_acceso` (TIMESTAMP) ✅
     - `intentos_fallidos` (INT, DEFAULT 0) ✅
     - `remember_token`, `timestamps`
-  - **Modelo actualizado:** Fillable, casts, accessor y relaciones hasOne implementados
-  - **Factory actualizado:** Genera datos de prueba completos
+  - **Modelo actualizado:** Relación belongsTo con Institucion implementada
+  - **Nota:** Usuarios ahora están afiliados a una institución específica
 
 - [x] **roles** - Roles del sistema (Spatie)
   - Estado: ✅ Completa
@@ -162,24 +179,33 @@ Trazabilidad del sistema.
 
 #### Configuración Institucional
 - [x] **instituciones** - Datos de la institución educativa
-  - Estado: ✅ **COMPLETA**
-  - Fecha: 23/12/2024
+  - Estado: ✅ **COMPLETA + ACTUALIZADA**
+  - Fecha: 23/12/2024 | Actualización: 24/12/2024
   - Campos implementados:
     - `id`, `nombre`, `codigo_amie` (UNIQUE), `logo`
-    - `direccion`, `telefono`, `email`, `sitio_web`
+    - `tipo`, `nivel`, `jornada`
+    - `provincia`, `ciudad`, `canton`, `parroquia`, `direccion`
+    - `telefono`, `email`, `sitio_web`
+    - `rector`, `vicerrector`, `inspector`
     - `timestamps`
-  - **Modelo:** Con relación hasMany a configuraciones
-  - **Seeder:** Datos iniciales de la institución
+  - **Modelo:** Con relaciones hasMany(users), hasOne(configuraciones)
+  - **Seeder:** Crea 2 instituciones de ejemplo
+  - **Nota:** Base del sistema multi-institución
 
-- [x] **configuraciones** - Configuraciones del sistema
-  - Estado: ✅ **COMPLETA**
-  - Fecha: 23/12/2024
+- [x] **configuraciones** - Configuraciones del sistema por institución
+  - Estado: ✅ **COMPLETA + ACTUALIZADA**
+  - Fecha: 23/12/2024 | Actualización: 24/12/2024
   - Campos implementados:
-    - `id`, `institucion_id` (FK), `clave` (UNIQUE)
-    - `valor`, `tipo` (ENUM), `categoria`, `descripcion`
+    - `id`, `institucion_id` (FK instituciones.id, UNIQUE) ✅ **ACTUALIZADO**
+    - **Académico:** `periodo_actual_id`, `numero_quimestres`, `numero_parciales`, fechas de clases y quimestres, `porcentaje_minimo_asistencia`
+    - **Calificaciones:** `calificacion_minima/maxima`, `nota_minima_aprobacion`, `decimales`, ponderaciones, permisos de supletorio/remedial/gracia, `redondear_calificaciones`
+    - **Horarios:** `duracion_periodo`, `duracion_recreo`, `periodos_por_dia`, `dias_laborales` (JSON)
+    - **Correo:** `smtp_host/port/encriptacion/usuario/password`, `remitente_nombre/email`
+    - **Notificaciones:** Flags para notificaciones de calificaciones/asistencia/eventos, resúmenes, `plantilla_correo`
     - `timestamps`
-  - **Modelo:** Con relación belongsTo a institución y accessor para valor tipificado
-  - **Seeder:** 9 configuraciones iniciales (calificaciones, asistencia, seguridad, sistema)
+  - **Modelo:** Con belongsTo Institucion y belongsTo PeriodoAcademico
+  - **Seeder:** Crea una configuración por cada institución con valores por defecto
+  - **Nota:** Cada institución tiene configuración única e independiente
 
 #### Estructura Académica Base
 - [x] **periodos_academicos** - Años lectivos

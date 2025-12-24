@@ -107,25 +107,21 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
   - Vistas: ✅ show.blade.php, edit.blade.php (modal)
   - Rutas: ✅ instituciones.show, instituciones.update
 
-- [x] **Configuraciones** ✅ COMPLETA
+- [x] **Configuraciones** ✅ COMPLETA + ACTUALIZADA
   - Tipo: Vista única con pestañas (4 tabs)
   - Mockup: ✅ Completado (docs/FASE_02_MOCKUPS.md)
-  - Campos: Ver mockup para detalles completos
+  - **Actualización 24/12/2025:** Ahora vinculada a instituciones con `institucion_id`
+  - **Estructura:** Cada institución tiene su propia configuración única
+  - Campos académicos: periodo_actual, número de quimestres/parciales, fechas, asistencia mínima
+  - Campos calificaciones: escalas, ponderaciones, permisos de supletorio/remedial/gracia
+  - Campos horarios: duración períodos, recreos, períodos por día, días laborales
+  - Campos correo/notificaciones: SMTP, remitentes, flags de notificación, plantillas
   - Permisos: gestionar configuraciones, ver configuraciones, editar configuraciones
   - Controlador: ✅ ConfiguracionController
   - Vistas: ✅ index.blade.php con 4 tabs (academico, calificaciones, horarios, correo)
   - Rutas: ✅ configuraciones.index, configuraciones.update, configuraciones.test-email
-
----
-
-### Fase 3: Estructura Académica ⏳ PENDIENTE
-  - Mockup: Requerido (no es tabla estándar)
-  - Permisos: gestionar institución, ver institución, editar institución
-
-- [ ] **Configuraciones**
-  - Tipo: Formulario de ajustes
-  - Mockup: Requerido (vista de configuración)
-  - Permisos: gestionar configuraciones, ver configuraciones, editar configuraciones
+  - **Modelo:** ✅ Relaciones con Institucion y PeriodoAcademico
+  - **Seeder:** ✅ Crea configuración por cada institución automáticamente
 
 ---
 
