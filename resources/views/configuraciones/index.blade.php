@@ -1,9 +1,12 @@
 <x-app-layout>
-<div class="container mx-auto px-4 py-6">
-    <!-- Header -->
-    <div class="bg-theme-primary dark:bg-theme-primary-light text-white rounded-lg shadow-md p-6 mb-6">
-        <h1 class="text-2xl font-bold">Configuraciones del Sistema</h1>
-    </div>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Configuración del Sistema') }}
+        </h2>
+    </x-slot>
+
+<div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
     @if ($configuracion)
         <form action="{{ route('configuraciones.update') }}" method="POST" id="configuracionForm">

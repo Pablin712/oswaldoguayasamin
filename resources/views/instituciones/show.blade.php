@@ -1,19 +1,22 @@
 <x-app-layout>
-<div class="container mx-auto px-4 py-6">
-    <!-- Header -->
-    <div class="bg-theme-primary dark:bg-theme-primary-light text-white rounded-lg shadow-md p-6 mb-6">
+    <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h1 class="text-2xl font-bold">Mi Institución</h1>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                {{ __('Mi Institución') }}
+            </h2>
             @canany(['editar institución', 'gestionar institución'])
-                <button x-data="{}" @click="$dispatch('open-modal', 'edit-institucion')" class="bg-white text-theme-primary dark:text-theme-primary-light hover:bg-theme-primary-light dark:hover:bg-theme-primary px-4 py-2 rounded-lg transition duration-200 flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button x-data="{}" @click="$dispatch('open-modal', 'edit-institucion')" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                     Editar
                 </button>
             @endcanany
         </div>
-    </div>
+    </x-slot>
+
+<div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
     @if ($institucion)
         <!-- Logo y Nombre -->

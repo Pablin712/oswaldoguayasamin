@@ -1,12 +1,22 @@
 <aside x-data="{
     sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null,
     dropdowns: {
-        catalogos: {{ request()->routeIs('catalogos.*') ? 'true' : 'false' }},
-        administracion: {{ request()->routeIs(['users.*', 'roles.*', 'permissions.*']) ? 'true' : 'false' }}
+        administracion: {{ request()->routeIs(['users.*', 'roles.*', 'permissions.*']) ? 'true' : 'false' }},
+        estructuraAcademica: {{ request()->routeIs(['periodos.*', 'quimestres.*', 'parciales.*', 'cursos.*', 'materias.*', 'aulas.*']) ? 'true' : 'false' }},
+        usuariosEspecializados: {{ request()->routeIs(['docentes.*', 'estudiantes.*', 'padres.*']) ? 'true' : 'false' }},
+        asignaciones: {{ request()->routeIs(['paralelos.*', 'curso-materia.*', 'docente-materia.*', 'matriculas.*']) ? 'true' : 'false' }},
+        calificaciones: {{ request()->routeIs(['calificaciones.*', 'componentes.*']) ? 'true' : 'false' }},
+        asistencia: {{ request()->routeIs(['asistencias.*', 'justificaciones.*']) ? 'true' : 'false' }},
+        tareas: {{ request()->routeIs(['tareas.*', 'entregas.*']) ? 'true' : 'false' }},
+        comunicacion: {{ request()->routeIs(['mensajes.*', 'notificaciones.*']) ? 'true' : 'false' }},
+        eventos: {{ request()->routeIs(['eventos.*', 'confirmaciones.*']) ? 'true' : 'false' }},
+        horarios: {{ request()->routeIs('horarios.*') ? 'true' : 'false' }},
+        auditoria: {{ request()->routeIs('auditoria.*') ? 'true' : 'false' }}
     },
     toggleSidebar() {
         this.sidebarOpen = !this.sidebarOpen;
         localStorage.setItem('sidebarOpen', this.sidebarOpen);
+        $dispatch('sidebar-toggle', { open: this.sidebarOpen });
     },
     toggleDropdown(name) {
         if (!this.sidebarOpen) {
@@ -56,75 +66,6 @@ class="fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gra
                 <span x-show="sidebarOpen" class="font-medium">Dashboard</span>
             </a>
 
-            <!-- Catálogos Dropdown -->
-            <div class="space-y-1">
-                <button @click="toggleDropdown('catalogos')"
-                        class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg transition-colors text-gray-900 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                        </svg>
-                        <span x-show="sidebarOpen" class="font-medium">Catálogos</span>
-                    </div>
-                    <svg x-show="sidebarOpen"
-                         :class="dropdowns.catalogos ? 'rotate-180' : ''"
-                         class="w-4 h-4 flex-shrink-0 transition-transform duration-200"
-                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </button>
-
-                <!-- Submenu Items -->
-                <div x-show="dropdowns.catalogos && sidebarOpen"
-                     x-collapse
-                     class="ml-3 space-y-1 border-l-2 border-gray-200 dark:border-gray-700">
-                    <!-- Obras -->
-                    <a href="#"
-                       class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300">
-                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        <span class="text-sm">Obras</span>
-                    </a>
-
-                    <!-- Artistas -->
-                    <a href="#"
-                       class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300">
-                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        <span class="text-sm">Artistas</span>
-                    </a>
-
-                    <!-- Exposiciones -->
-                    <a href="#"
-                       class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300">
-                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        <span class="text-sm">Exposiciones</span>
-                    </a>
-
-                    <!-- Categorías -->
-                    <a href="#"
-                       class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300">
-                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-                        </svg>
-                        <span class="text-sm">Categorías</span>
-                    </a>
-
-                    <!-- Técnicas -->
-                    <a href="#"
-                       class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300">
-                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                        </svg>
-                        <span class="text-sm">Técnicas</span>
-                    </a>
-                </div>
-            </div>
-
             <!-- Divider -->
             <div class="pt-4 pb-2" x-show="sidebarOpen">
                 <div class="border-t border-gray-200 dark:border-gray-700"></div>
@@ -155,7 +96,7 @@ class="fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gra
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                     </svg>
-                    <span x-show="sidebarOpen" class="font-medium">Configuraciones</span>
+                    <span x-show="sidebarOpen" class="font-medium">Configuración</span>
                 </a>
                 @endcanany
             </div>

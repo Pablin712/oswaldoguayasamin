@@ -18,8 +18,17 @@
 
         <x-color-sistema />
     </head>
-    <body class="font-sans antialiased" x-data="{ sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null }">
-        <div class="min-h-screen bg-theme-five dark:bg-gray-900">
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-theme-five dark:bg-gray-900"
+             x-data="{
+                 sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null,
+                 init() {
+                     this.$watch('sidebarOpen', value => {
+                         localStorage.setItem('sidebarOpen', value);
+                     });
+                 }
+             }"
+             @sidebar-toggle.window="sidebarOpen = !sidebarOpen">
             <!-- Sidebar -->
             @include('layouts.sidebar')
 
