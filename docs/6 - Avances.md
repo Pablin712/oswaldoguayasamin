@@ -16,9 +16,9 @@
 - **Tablas intermedias (relaciones):** 13 tablas
 
 #### Estado de implementación:
-- ✅ **Completadas:** 30 tablas (65.2%)
+- ✅ **Completadas:** 34 tablas (73.9%)
 - 🔄 **En progreso:** 0 tablas (0%)
-- ⏳ **Pendientes:** 16 tablas (34.8%)
+- ⏳ **Pendientes:** 12 tablas (26.1%)
 
 ---
 
@@ -89,13 +89,13 @@ Sistema de asignación de tareas.
 28. ✅ `archivos_tarea` - Archivos de tareas (COMPLETA)
 29. ✅ `tarea_estudiante` - Seguimiento individual (COMPLETA)
 
-### Fase 10: Comunicación (Prioridad Baja) ⏳
+### Fase 10: Comunicación (Prioridad Baja) ✅ COMPLETADA
 Sistema de mensajería y notificaciones.
 
-30. ⏳ `mensajes` - Mensajes entre usuarios
-31. ⏳ `mensaje_adjuntos` - Archivos adjuntos
-32. ⏳ `mensaje_destinatarios` - Destinatarios múltiples
-33. ⏳ `notificaciones` - Notificaciones del sistema
+30. ✅ `mensajes` - Mensajes entre usuarios (COMPLETA)
+31. ✅ `mensaje_adjuntos` - Archivos adjuntos (COMPLETA)
+32. ✅ `mensaje_destinatarios` - Destinatarios múltiples (COMPLETA)
+33. ✅ `notificaciones` - Notificaciones del sistema (COMPLETA)
 
 ### Fase 11: Eventos y Calendario (Prioridad Baja) ⏳
 Gestión de eventos académicos.
@@ -407,24 +407,68 @@ Trazabilidad del sistema.
 
 #### 💬 Comunicación (4 tablas - Secundarias)
 - [ ] **mensajes** - Mensajes entre usuarios
-  - Prioridad: Baja
-  - Depende de: `users`
-  - Campos: tipo (individual/masivo/anuncio), asunto, cuerpo
+---
 
-- [ ] **mensaje_adjuntos** - Archivos adjuntos a mensajes
-  - Prioridad: Baja
-  - Depende de: `mensajes`
-  - Campos: nombre_archivo, ruta, tipo_mime
+### ✅ Tablas Completadas (34)
 
-- [ ] **mensaje_destinatarios** - Destinatarios de mensajes masivos
-  - Prioridad: Baja
-  - Depende de: `mensajes`, `users`
-  - Tabla intermedia para mensajes masivos
+### ⏳ Tablas Pendientes (12)
 
-- [ ] **notificaciones** - Notificaciones del sistema
-  - Prioridad: Baja
-  - Depende de: `users`
-  - Campos: tipo, titulo, mensaje, url, es_leida
+#### Comunicación
+- [x] **mensajes** - Mensajes entre usuarios
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 24/12/2024
+  - Campos implementados:
+    - `id`, `remitente_id` (FK), `destinatario_id` (FK nullable)
+    - `tipo` (ENUM: individual/masivo/anuncio, DEFAULT 'individual')
+    - `asunto` (VARCHAR 255), `cuerpo` (TEXT)
+    - `es_leido` (BOOLEAN), `fecha_lectura` (TIMESTAMP nullable)
+    - `fecha_envio` (TIMESTAMP nullable), `programado_para` (TIMESTAMP nullable)
+    - `timestamps`
+  - **Modelo:**
+    - belongsTo: Remitente (User), Destinatario (User)
+    - hasMany: Adjuntos, Destinatarios
+    - Scopes: noLeidos, leidos, recibidosPor, enviadosPor, porTipo, programados
+    - Método: marcarComoLeido()
+  - **Índices:** remitente_id, destinatario_id, fecha_envio
+
+- [x] **mensaje_adjuntos** - Archivos adjuntos a mensajes
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 24/12/2024
+  - Campos implementados:
+    - `id`, `mensaje_id` (FK)
+    - `nombre_archivo` (VARCHAR 255), `ruta_archivo` (VARCHAR 255)
+    - `tipo_mime` (VARCHAR 100 nullable), `tamanio` (INT nullable)
+    - `created_at` (TIMESTAMP)
+  - **Modelo:**
+    - belongsTo: Mensaje
+    - Accessor: tamanioFormateado
+
+- [x] **mensaje_destinatarios** - Destinatarios de mensajes masivos
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 24/12/2024
+  - Campos implementados:
+    - `id`, `mensaje_id` (FK), `destinatario_id` (FK)
+    - `es_leido` (BOOLEAN, DEFAULT false), `fecha_lectura` (TIMESTAMP nullable)
+    - `timestamps`
+  - **Modelo:**
+    - belongsTo: Mensaje, Destinatario (User)
+    - Scopes: noLeidos, leidos
+    - Método: marcarComoLeido()
+
+- [x] **notificaciones** - Notificaciones del sistema
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 24/12/2024
+  - Campos implementados:
+    - `id`, `user_id` (FK)
+    - `tipo` (VARCHAR 50), `titulo` (VARCHAR 255), `mensaje` (TEXT)
+    - `url` (VARCHAR 255 nullable), `es_leida` (BOOLEAN, DEFAULT false)
+    - `enviar_email` (BOOLEAN, DEFAULT false), `email_enviado` (BOOLEAN, DEFAULT false)
+    - `fecha_envio` (TIMESTAMP nullable), `timestamps`
+  - **Modelo:**
+    - belongsTo: User
+    - Scopes: noLeidas, leidas, porTipo, deUsuario, recientes
+    - Métodos: marcarComoLeida(), marcarEmailEnviado()
+  - **Índices:** (user_id, es_leida), tipo
 
 #### 📅 Eventos y Calendario (3 tablas - Secundarias)
 - [ ] **eventos** - Eventos académicos y actividades
