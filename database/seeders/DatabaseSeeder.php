@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             RelacionesAcademicasSeeder::class,
             UsuariosEspecializadosSeeder::class,
             AsignacionesAcademicasSeeder::class,
+            AsistenciaSeeder::class, // Fase 8
         ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Docente extends Model
 {
@@ -27,6 +28,14 @@ class Docente extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Relación con Asistencias que registra
+     */
+    public function asistenciasRegistradas(): HasMany
+    {
+        return $this->hasMany(Asistencia::class);
     }
 
     public function scopeActivos($query)

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Estudiante extends Model
 {
@@ -36,6 +37,14 @@ class Estudiante extends Model
         return $this->belongsToMany(Padre::class, 'estudiante_padre')
                     ->withPivot('parentesco', 'es_principal')
                     ->withTimestamps();
+    }
+
+    /**
+     * Relación con Asistencias
+     */
+    public function asistencias(): HasMany
+    {
+        return $this->hasMany(Asistencia::class);
     }
 
     public function scopeActivos($query)

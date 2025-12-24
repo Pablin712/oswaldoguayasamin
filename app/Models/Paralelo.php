@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Paralelo extends Model
 {
@@ -29,6 +30,14 @@ class Paralelo extends Model
     public function aula(): BelongsTo
     {
         return $this->belongsTo(Aula::class);
+    }
+
+    /**
+     * Relación con Asistencias
+     */
+    public function asistencias(): HasMany
+    {
+        return $this->hasMany(Asistencia::class);
     }
 
     /**

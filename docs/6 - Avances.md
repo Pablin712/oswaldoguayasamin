@@ -1,6 +1,6 @@
 # 📊 Avances del Sistema de Gestión Académica
 
-**Última actualización:** 23 de diciembre de 2024
+**Última actualización:** 24 de diciembre de 2024
 
 ---
 
@@ -16,9 +16,9 @@
 - **Tablas intermedias (relaciones):** 13 tablas
 
 #### Estado de implementación:
-- ✅ **Completadas:** 25 tablas (54.3%)
+- ✅ **Completadas:** 27 tablas (58.7%)
 - 🔄 **En progreso:** 0 tablas (0%)
-- ⏳ **Pendientes:** 21 tablas (45.7%)
+- ⏳ **Pendientes:** 19 tablas (41.3%)
 
 ---
 
@@ -76,11 +76,11 @@ Gestión completa de notas.
 23. ✅ `calificaciones` - Registro de notas (COMPLETA)
 24. ✅ `componentes_calificacion` - Desglose de notas (COMPLETA)
 
-### Fase 8: Control de Asistencia (Prioridad Media) ⏳
+### Fase 8: Control de Asistencia (Prioridad Media) ✅ COMPLETADA
 Registro y justificaciones.
 
-25. ⏳ `asistencias` - Registro diario
-26. ⏳ `justificaciones` - Justificaciones de ausencias
+25. ✅ `asistencias` - Registro diario (COMPLETA)
+26. ✅ `justificaciones` - Justificaciones de ausencias (COMPLETA)
 
 ### Fase 9: Tareas y Deberes (Prioridad Media) ⏳
 Sistema de asignación de tareas.
@@ -329,18 +329,37 @@ Trazabilidad del sistema.
 
 ---
 
-### ⏳ Tablas Pendientes (21)
+### ✅ Tablas Completadas (27)
 
-#### ✅ Control de Asistencia (2 tablas - Secundarias)
-- [ ] **asistencias** - Registro diario de asistencia
-  - Prioridad: Media
-  - Depende de: `estudiantes`, `paralelos`, `materias`, `docentes`
-  - Campos: fecha, hora, estado (presente/ausente/atrasado/justificado)
+### ⏳ Tablas Pendientes (19)
 
-- [ ] **justificaciones** - Justificaciones de inasistencias
-  - Prioridad: Media
-  - Depende de: `asistencias`, `padres`, `users`
-  - Campos: motivo, archivo_adjunto, estado, revisado_por
+#### Control de Asistencia
+- [x] **asistencias** - Registro diario de asistencia
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 24/12/2024
+  - Campos implementados:
+    - `id`, `estudiante_id` (FK), `paralelo_id` (FK), `materia_id` (FK nullable), `docente_id` (FK)
+    - `fecha` (DATE), `hora` (TIME nullable)
+    - `estado` (ENUM: presente/ausente/atrasado/justificado, DEFAULT 'presente')
+    - `observaciones` (TEXT nullable), `timestamps`
+  - **Modelo:** 
+    - belongsTo: Estudiante, Paralelo, Materia, Docente
+    - hasMany: Justificaciones
+    - Scopes: porFecha, porEstado, deEstudiante, deParalelo
+  - **Índices:** (estudiante_id, fecha), (paralelo_id, fecha)
+
+- [x] **justificaciones** - Justificaciones de inasistencias
+  - Estado: ✅ **COMPLETA**
+  - Fecha: 24/12/2024
+  - Campos implementados:
+    - `id`, `asistencia_id` (FK), `padre_id` (FK)
+    - `motivo` (TEXT), `archivo_adjunto` (VARCHAR 255 nullable)
+    - `estado` (ENUM: pendiente/aprobada/rechazada, DEFAULT 'pendiente')
+    - `revisado_por` (FK users nullable), `fecha_revision` (TIMESTAMP nullable)
+    - `timestamps`
+  - **Modelo:**
+    - belongsTo: Asistencia, Padre, User (revisor)
+    - Scopes: porEstado, pendientes, aprobadas, rechazadas
 
 #### 📝 Tareas y Deberes (3 tablas - Secundarias)
 - [ ] **tareas** - Tareas asignadas por docentes
