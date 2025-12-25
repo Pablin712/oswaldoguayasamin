@@ -50,7 +50,8 @@ class ConfiguracionRequest extends FormRequest
             'duracion_periodo' => ['nullable', 'integer', 'min:15', 'max:120'],
             'duracion_recreo' => ['nullable', 'integer', 'min:5', 'max:60'],
             'periodos_por_dia' => ['nullable', 'integer', 'min:1', 'max:12'],
-            'dias_laborales' => ['nullable', 'json'],
+            'dias_laborales' => ['nullable', 'array'],
+            'dias_laborales.*' => ['string'],
 
             // Configuración Correo
             'smtp_host' => ['nullable', 'string', 'max:255'],
@@ -93,6 +94,44 @@ class ConfiguracionRequest extends FormRequest
             'smtp_encriptacion.in' => 'La encriptación debe ser TLS o SSL.',
             'remitente_email.email' => 'El correo del remitente debe ser válido.',
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        // Manejar dias_laborales
+        if ($this->has('dias_laborales') && is_array($this->dias_laborales)) {
+            $this->merge([
+                'dias_laborales' => $this->dias_laborales,
+            ]);
+        } else {
+            $this->merge([
+                'dias_laborales' => [],
+            ]);
+        }
+
+        // Manejar checkboxes booleanos (si no están marcados, no se envían)
+        // Los checkboxes no marcados deben establecerse como false
+        $booleanFields = [
+            'permitir_supletorio',
+            'permitir_remedial',
+            'permitir_gracia',
+            'redondear_calificaciones',
+            'notificar_calificaciones',
+            'notificar_asistencia',
+            'notificar_eventos',
+            'resumen_semanal_padres',
+            'resumen_mensual_docentes',
+        ];
+
+        $booleanData = [];
+        foreach ($booleanFields as $field) {
+            $booleanData[$field] = $this->has($field) ? true : false;
+        }
+
+        $this->merge($booleanData);
     }
 
     /**

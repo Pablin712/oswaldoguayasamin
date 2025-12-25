@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Configuracion;
 use App\Models\PeriodoAcademico;
 use App\Http\Requests\ConfiguracionRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
@@ -34,11 +35,18 @@ class ConfiguracionController extends Controller
             return redirect()->back()->with('error', 'No tienes permiso para editar las configuraciones del sistema.');
         }
 
-        $configuracion = Configuracion::first();
+        // Obtener o crear la configuración
+        $configuracion = Configuracion::firstOrNew([]);
 
         $data = $request->validated();
 
-        $configuracion->update($data);
+        // Si es una nueva configuración, agregar institucion_id del usuario
+        if (!$configuracion->exists) {
+            $data['institucion_id'] = Auth::user()->institucion_id ?? 1;
+        }
+
+        $configuracion->fill($data);
+        $configuracion->save();
 
         return redirect()->route('configuraciones.index')
             ->with('success', 'Configuraciones actualizadas exitosamente.');
