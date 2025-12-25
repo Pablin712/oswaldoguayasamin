@@ -73,7 +73,7 @@ class UserController extends Controller
             abort(403);
         });
         $user->load('roles');
-        return view('users.show', compact('user'));
+        return view('admin.users.show', compact('user'));
     }
 
     /**
