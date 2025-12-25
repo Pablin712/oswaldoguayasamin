@@ -14,6 +14,14 @@ class UsuariosEspecializadosSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
+     * IMPORTANTE: Este seeder crea usuarios con su CÉDULA como contraseña inicial.
+     * El sistema forzará el cambio de contraseña en el primer acceso mediante
+     * el middleware EnsurePasswordIsChanged.
+     *
+     * Credenciales de ejemplo:
+     * - Email: docente1@guayasamin.edu.ec
+     * - Password: 1301234567 (su cédula)
      */
     public function run(): void
     {
@@ -33,7 +41,7 @@ class UsuariosEspecializadosSeeder extends Seeder
             $user = User::create([
                 'name' => $docenteData['name'],
                 'email' => 'docente' . ($index + 1) . '@guayasamin.edu.ec',
-                'password' => Hash::make('password'),
+                'password' => Hash::make($docenteData['cedula']), // Usa cédula como contraseña inicial
                 'cedula' => $docenteData['cedula'],
                 'telefono' => '0987654' . str_pad($index + 1, 3, '0', STR_PAD_LEFT),
                 'direccion' => 'Puerto Ayora, Galápagos',
@@ -70,7 +78,7 @@ class UsuariosEspecializadosSeeder extends Seeder
             $user = User::create([
                 'name' => $prefijo . ' ' . $nombre,
                 'email' => 'padre' . $i . '@email.com',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('130' . str_pad($i + 5000, 7, '0', STR_PAD_LEFT)), // Usa cédula como contraseña
                 'cedula' => '130' . str_pad($i + 5000, 7, '0', STR_PAD_LEFT),
                 'telefono' => '0987' . str_pad($i, 6, '0', STR_PAD_LEFT),
                 'direccion' => 'Puerto Ayora, Galápagos',
@@ -104,7 +112,7 @@ class UsuariosEspecializadosSeeder extends Seeder
             $user = User::create([
                 'name' => $nombreCompleto,
                 'email' => 'estudiante' . $i . '@guayasamin.edu.ec',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('130' . str_pad($i + 3000, 7, '0', STR_PAD_LEFT)), // Usa cédula como contraseña
                 'cedula' => '130' . str_pad($i + 3000, 7, '0', STR_PAD_LEFT),
                 'telefono' => '0986' . str_pad($i, 6, '0', STR_PAD_LEFT),
                 'direccion' => 'Puerto Ayora, Galápagos',

@@ -42,14 +42,9 @@
                                     Ir al Dashboard
                                 </a>
                             @else
-                                <a href="{{ route('login') }}" class="px-6 py-2.5 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
+                                <a href="{{ route('login') }}" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md">
                                     Iniciar Sesión
                                 </a>
-                                @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md">
-                                        Registrarse
-                                    </a>
-                                @endif
                             @endauth
                         </div>
                     @endif
