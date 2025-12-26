@@ -18,6 +18,8 @@
 <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
+    <x-session-messages />
+
     @if ($institucion)
         <!-- Logo y Nombre -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-8 mb-6 text-center">
