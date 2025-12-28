@@ -8,6 +8,11 @@ use App\Http\Controllers\InstitucionController;
 use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\PeriodoAcademicoController;
 use App\Http\Controllers\QuimestreController;
+use App\Http\Controllers\ParcialController;
+use App\Http\Controllers\CursoController;
+use App\Http\Controllers\MateriaController;
+use App\Http\Controllers\AulaController;
+use App\Http\Controllers\AreaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -42,6 +47,11 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     // Fase 3: Periodos Académicos
     Route::resource('periodos-academicos', PeriodoAcademicoController::class)->except(['create', 'edit']);
     Route::resource('quimestres', QuimestreController::class)->except(['create', 'edit']);
+    Route::resource('parciales', ParcialController::class)->except(['create', 'edit']);
+    Route::resource('cursos', CursoController::class)->except(['create', 'edit']);
+    Route::resource('materias', MateriaController::class)->except(['create', 'edit']);
+    Route::resource('aulas', AulaController::class)->except(['create', 'edit']);
+    Route::resource('areas', AreaController::class)->except(['create', 'edit']);
 });
 
 require __DIR__.'/auth.php';

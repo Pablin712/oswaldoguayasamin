@@ -1,12 +1,12 @@
 # 🎨 Mockups y Vistas del Sistema
 
-**Última actualización:** 24 de diciembre de 2025
+**Última actualización:** 29 de diciembre de 2025
 
 ---
 
 ## 📊 Estado de Vistas
 
-### ✅ Vistas Completadas (10)
+### ✅ Vistas Completadas (20)
 - Login
 - Recuperar contraseña (Recover password)
 - Editar perfil (Edit profile)
@@ -17,13 +17,18 @@
 - Configuraciones (Vista con pestañas) ✅ **FASE 2**
 - Periodos Académicos (CRUD completo) ✅ **FASE 3**
 - Quimestres (CRUD completo) ✅ **FASE 3**
+- Parciales (CRUD completo) ✅ **FASE 3**
+- Cursos (CRUD completo) ✅ **FASE 3**
+- Materias (CRUD completo con color picker) ✅ **FASE 3**
+- Áreas (CRUD completo con gestión de estado) ✅ **FASE 3**
+- Aulas (CRUD completo) ✅ **FASE 3**
 
 ### 🔄 Vistas por Editar/Cambiar (3)
 - Welcome
 - Register
 - Dashboard
 
-### ⏳ Vistas Pendientes (29 módulos)
+### ⏳ Vistas Pendientes (23 módulos)
 Todos los módulos de las tablas restantes requieren mockups y vistas
 
 ---
@@ -127,8 +132,8 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 
 ---
 
-### Fase 3: Estructura Académica Base 🔄 EN PROGRESO (2/6)
-**Vistas necesarias:** 6 módulos
+### Fase 3: Estructura Académica Base ✅ COMPLETADA (7/7)
+**Vistas necesarias:** 7 módulos
 
 - [x] **Periodos Académicos** ✅ COMPLETA
   - Tipo: Tabla estándar
@@ -152,28 +157,65 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
   - Rutas: ✅ quimestres.* (resource)
   - **Fecha completada:** 28/12/2025
 
-- [ ] **Parciales** ⏳ PENDIENTE
+- [x] **Parciales** ✅ COMPLETA
   - Tipo: Tabla estándar
   - Mockup: No requerido
   - Campos: nombre, quimestre, fecha_inicio, fecha_fin, número, permite_edicion
   - Permisos: gestionar parciales, ver, crear, editar, eliminar, generar reporte
+  - Controlador: ✅ ParcialController
+  - Form Request: ✅ ParcialRequest
+  - Vistas: ✅ index.blade.php con modales
+  - Rutas: ✅ parciales.* (resource)
+  - **Fecha completada:** 28/12/2025
 
-- [ ] **Cursos** ⏳ PENDIENTE
+- [x] **Cursos** ✅ COMPLETA
   - Tipo: Tabla estándar
   - Mockup: No requerido
   - Campos: nombre, nivel, orden
   - Permisos: gestionar cursos, ver, crear, editar, eliminar, generar reporte
+  - Controlador: ✅ CursoController
+  - Form Request: ✅ CursoRequest
+  - Vistas: ✅ index.blade.php con modales
+  - Rutas: ✅ cursos.* (resource)
+  - **Fecha completada:** 28/12/2025
 
-- [ ] **Materias** ⏳ PENDIENTE
+- [x] **Materias** ✅ COMPLETA
   - Tipo: Tabla con colores
-  - Mockup: Requerido (tabla con badge de color por área)
-  - Campos: código, nombre, área, color
+  - Mockup: No requerido (implementado con color picker HTML5)
+  - Campos: código, nombre, área_id (FK), color
   - Permisos: gestionar materias, ver, crear, editar, eliminar, generar reporte
+  - Controlador: ✅ MateriaController
+  - Form Request: ✅ MateriaRequest
+  - Vistas: ✅ index.blade.php con modales y color picker
+  - Rutas: ✅ materias.* (resource)
+  - **Características especiales:** Color picker HTML5, badges dinámicos con color personalizado, select de áreas
+  - **Fecha completada:** 28/12/2025
+  - **Actualización:** 29/12/2025 - Normalización de campo área a tabla relacional
 
-- [ ] **Aulas** ⏳ PENDIENTE
+- [x] **Áreas** ✅ COMPLETA
+  - Tipo: Tabla estándar con gestión de estado
+  - Mockup: No requerido
+  - Campos: nombre, descripción, estado
+  - Permisos: gestionar areas, ver, crear, editar, eliminar, generar reporte
+  - Controlador: ✅ AreaController
+  - Form Request: ✅ AreaRequest
+  - Modelo: ✅ Area.php con relación hasMany materias
+  - Seeder: ✅ AreaSeeder con 10 áreas comunes
+  - Vistas: ✅ index.blade.php, create.blade.php, edit.blade.php, delete.blade.php
+  - Rutas: ✅ areas.* (resource)
+  - **Características especiales:** Badge purple para área, contador de materias asociadas, control de estado activa/inactiva, validación de eliminación si tiene materias
+  - **Fecha completada:** 29/12/2025
+
+- [x] **Aulas** ✅ COMPLETA
   - Tipo: Tabla estándar
   - Mockup: No requerido
   - Campos: nombre, capacidad, edificio, piso
+  - Permisos: gestionar aulas, ver, crear, editar, eliminar, generar reporte
+  - Controlador: ✅ AulaController
+  - Form Request: ✅ AulaRequest
+  - Vistas: ✅ index.blade.php con modales
+  - Rutas: ✅ aulas.* (resource)
+  - **Fecha completada:** 28/12/2025
   - Permisos: gestionar aulas, ver, crear, editar, eliminar, generar reporte
 
 ---

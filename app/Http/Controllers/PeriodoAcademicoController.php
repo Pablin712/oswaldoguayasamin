@@ -19,7 +19,7 @@ class PeriodoAcademicoController extends Controller
 
         $periodos = PeriodoAcademico::orderBy('fecha_inicio', 'desc')->get();
 
-        return view('periodos-academicos.index', compact('periodos'));
+        return view('estructura.periodos-academicos.index', compact('periodos'));
     }
 
     /**

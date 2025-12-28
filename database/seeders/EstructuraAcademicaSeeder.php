@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Area;
 use App\Models\Aula;
 use App\Models\Curso;
 use App\Models\Materia;
@@ -117,19 +118,28 @@ class EstructuraAcademicaSeeder extends Seeder
         }
 
         // 6. Crear Materias
+        $areaMatematicas = Area::where('nombre', 'Matemáticas')->first();
+        $areaLengua = Area::where('nombre', 'Lengua y Literatura')->first();
+        $areaCiencias = Area::where('nombre', 'Ciencias Naturales')->first();
+        $areaSociales = Area::where('nombre', 'Ciencias Sociales')->first();
+        $areaExtranjera = Area::where('nombre', 'Lengua Extranjera')->first();
+        $areaFisica = Area::where('nombre', 'Educación Física')->first();
+        $areaCultural = Area::where('nombre', 'Educación Cultural y Artística')->first();
+        $areaCiudadania = Area::where('nombre', 'Educación para la Ciudadanía')->first();
+
         $materias = [
-            ['nombre' => 'Matemáticas', 'codigo' => 'MAT-001', 'area' => 'Ciencias Exactas', 'color' => '#3B82F6'],
-            ['nombre' => 'Lengua y Literatura', 'codigo' => 'LEN-001', 'area' => 'Lengua', 'color' => '#EF4444'],
-            ['nombre' => 'Ciencias Naturales', 'codigo' => 'CN-001', 'area' => 'Ciencias', 'color' => '#10B981'],
-            ['nombre' => 'Estudios Sociales', 'codigo' => 'SS-001', 'area' => 'Sociales', 'color' => '#F59E0B'],
-            ['nombre' => 'Inglés', 'codigo' => 'ING-001', 'area' => 'Lengua Extranjera', 'color' => '#8B5CF6'],
-            ['nombre' => 'Educación Física', 'codigo' => 'EF-001', 'area' => 'Deportes', 'color' => '#EC4899'],
-            ['nombre' => 'Educación Cultural y Artística', 'codigo' => 'ECA-001', 'area' => 'Arte', 'color' => '#F97316'],
-            ['nombre' => 'Física', 'codigo' => 'FIS-001', 'area' => 'Ciencias Exactas', 'color' => '#06B6D4'],
-            ['nombre' => 'Química', 'codigo' => 'QUI-001', 'area' => 'Ciencias Exactas', 'color' => '#14B8A6'],
-            ['nombre' => 'Biología', 'codigo' => 'BIO-001', 'area' => 'Ciencias', 'color' => '#22C55E'],
-            ['nombre' => 'Filosofía', 'codigo' => 'FIL-001', 'area' => 'Humanidades', 'color' => '#A855F7'],
-            ['nombre' => 'Educación para la Ciudadanía', 'codigo' => 'EC-001', 'area' => 'Sociales', 'color' => '#64748B'],
+            ['nombre' => 'Matemáticas', 'codigo' => 'MAT-001', 'area_id' => $areaMatematicas->id, 'color' => '#3B82F6'],
+            ['nombre' => 'Lengua y Literatura', 'codigo' => 'LEN-001', 'area_id' => $areaLengua->id, 'color' => '#EF4444'],
+            ['nombre' => 'Ciencias Naturales', 'codigo' => 'CN-001', 'area_id' => $areaCiencias->id, 'color' => '#10B981'],
+            ['nombre' => 'Estudios Sociales', 'codigo' => 'SS-001', 'area_id' => $areaSociales->id, 'color' => '#F59E0B'],
+            ['nombre' => 'Inglés', 'codigo' => 'ING-001', 'area_id' => $areaExtranjera->id, 'color' => '#8B5CF6'],
+            ['nombre' => 'Educación Física', 'codigo' => 'EF-001', 'area_id' => $areaFisica->id, 'color' => '#EC4899'],
+            ['nombre' => 'Educación Cultural y Artística', 'codigo' => 'ECA-001', 'area_id' => $areaCultural->id, 'color' => '#F97316'],
+            ['nombre' => 'Física', 'codigo' => 'FIS-001', 'area_id' => $areaMatematicas->id, 'color' => '#06B6D4'],
+            ['nombre' => 'Química', 'codigo' => 'QUI-001', 'area_id' => $areaCiencias->id, 'color' => '#14B8A6'],
+            ['nombre' => 'Biología', 'codigo' => 'BIO-001', 'area_id' => $areaCiencias->id, 'color' => '#22C55E'],
+            ['nombre' => 'Filosofía', 'codigo' => 'FIL-001', 'area_id' => $areaSociales->id, 'color' => '#A855F7'],
+            ['nombre' => 'Educación para la Ciudadanía', 'codigo' => 'EC-001', 'area_id' => $areaCiudadania->id, 'color' => '#64748B'],
         ];
 
         foreach ($materias as $materia) {

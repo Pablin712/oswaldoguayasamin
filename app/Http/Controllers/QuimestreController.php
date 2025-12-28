@@ -21,7 +21,7 @@ class QuimestreController extends Controller
         $quimestres = Quimestre::with('periodoAcademico')->orderBy('fecha_inicio', 'desc')->get();
         $periodos = PeriodoAcademico::orderBy('fecha_inicio', 'desc')->get();
 
-        return view('quimestres.index', compact('quimestres', 'periodos'));
+        return view('estructura.quimestres.index', compact('quimestres', 'periodos'));
     }
 
     /**

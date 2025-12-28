@@ -65,6 +65,46 @@ class RoleSeeder extends Seeder
             'editar quimestres',
             'eliminar quimestres',
             'generar reporte quimestres',
+
+            // Fase 3: Parciales
+            'gestionar parciales',
+            'ver parciales',
+            'crear parciales',
+            'editar parciales',
+            'eliminar parciales',
+            'generar reporte parciales',
+
+            // Fase 3: Cursos
+            'gestionar cursos',
+            'ver cursos',
+            'crear cursos',
+            'editar cursos',
+            'eliminar cursos',
+            'generar reporte cursos',
+
+            // Fase 3: Materias
+            'gestionar materias',
+            'ver materias',
+            'crear materias',
+            'editar materias',
+            'eliminar materias',
+            'generar reporte materias',
+
+            // Fase 3: Áreas
+            'gestionar areas',
+            'ver areas',
+            'crear areas',
+            'editar areas',
+            'eliminar areas',
+            'generar reporte areas',
+
+            // Fase 3: Aulas
+            'gestionar aulas',
+            'ver aulas',
+            'crear aulas',
+            'editar aulas',
+            'eliminar aulas',
+            'generar reporte aulas',
         ];
 
         foreach ($permissions as $permission) {

@@ -41,6 +41,7 @@ erDiagram
     
     cursos ||--o{ paralelos : "tiene"
     cursos ||--o{ curso_materia : "tiene"
+    areas ||--o{ materias : "clasifica"
     materias ||--o{ curso_materia : "asignada a"
     
     paralelos ||--o{ matriculas : "tiene"
@@ -275,6 +276,18 @@ Paralelos de cada curso (A, B, C).
 
 **UNIQUE**: (curso_id, nombre)
 
+#### `areas`
+Catálogo de áreas del conocimiento para materias.
+
+| Campo | Tipo | Descripción | Constraints |
+|-------|------|-------------|-------------|
+| id | BIGINT | ID único | PK, AUTO_INCREMENT |
+| nombre | VARCHAR(100) | Nombre del área | UNIQUE, NOT NULL |
+| descripcion | TEXT | Descripción del área | NULL |
+| estado | ENUM | activa/inactiva | DEFAULT 'activa' |
+| created_at | TIMESTAMP | Fecha de creación | NULL |
+| updated_at | TIMESTAMP | Fecha de actualización | NULL |
+
 #### `materias`
 Catálogo de materias.
 
@@ -283,7 +296,7 @@ Catálogo de materias.
 | id | BIGINT | ID único | PK, AUTO_INCREMENT |
 | nombre | VARCHAR(100) | "Matemáticas" | NOT NULL |
 | codigo | VARCHAR(20) | Código de materia | UNIQUE |
-| area | VARCHAR(50) | Área del conocimiento | NULL |
+| area_id | BIGINT | ID del área | FK areas.id, NOT NULL |
 | descripcion | TEXT | Descripción | NULL |
 | color | VARCHAR(7) | Color hex para UI | NULL |
 | estado | ENUM | activa/inactiva | DEFAULT 'activa' |

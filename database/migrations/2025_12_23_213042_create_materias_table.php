@@ -11,11 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Crear tabla de áreas primero
+        Schema::create('areas', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre', 100)->unique();
+            $table->text('descripcion')->nullable();
+            $table->enum('estado', ['activa', 'inactiva'])->default('activa');
+            $table->timestamps();
+        });
+
+        // Crear tabla de materias con relación a áreas
         Schema::create('materias', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 100);
             $table->string('codigo', 20)->unique();
-            $table->string('area', 50)->nullable();
+            $table->foreignId('area_id')->constrained('areas')->onDelete('restrict');
             $table->text('descripcion')->nullable();
             $table->string('color', 7)->nullable();
             $table->enum('estado', ['activa', 'inactiva'])->default('activa');
@@ -29,5 +39,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('materias');
+        Schema::dropIfExists('areas');
     }
 };
