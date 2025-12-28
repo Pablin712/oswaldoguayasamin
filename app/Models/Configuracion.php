@@ -70,12 +70,6 @@ class Configuracion extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'fecha_inicio_clases' => 'date',
-        'fecha_fin_clases' => 'date',
-        'fecha_inicio_q1' => 'date',
-        'fecha_fin_q1' => 'date',
-        'fecha_inicio_q2' => 'date',
-        'fecha_fin_q2' => 'date',
         'calificacion_minima' => 'decimal:2',
         'calificacion_maxima' => 'decimal:2',
         'nota_minima_aprobacion' => 'decimal:2',
@@ -112,5 +106,65 @@ class Configuracion extends Model
     public function periodoActual(): BelongsTo
     {
         return $this->belongsTo(PeriodoAcademico::class, 'periodo_actual_id');
+    }
+
+    /**
+     * Accessor para fecha_inicio_clases en formato Y-m-d
+     */
+    protected function fechaInicioClases(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            get: fn ($value) => $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : null,
+        );
+    }
+
+    /**
+     * Accessor para fecha_fin_clases en formato Y-m-d
+     */
+    protected function fechaFinClases(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            get: fn ($value) => $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : null,
+        );
+    }
+
+    /**
+     * Accessor para fecha_inicio_q1 en formato Y-m-d
+     */
+    protected function fechaInicioQ1(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            get: fn ($value) => $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : null,
+        );
+    }
+
+    /**
+     * Accessor para fecha_fin_q1 en formato Y-m-d
+     */
+    protected function fechaFinQ1(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            get: fn ($value) => $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : null,
+        );
+    }
+
+    /**
+     * Accessor para fecha_inicio_q2 en formato Y-m-d
+     */
+    protected function fechaInicioQ2(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            get: fn ($value) => $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : null,
+        );
+    }
+
+    /**
+     * Accessor para fecha_fin_q2 en formato Y-m-d
+     */
+    protected function fechaFinQ2(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            get: fn ($value) => $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : null,
+        );
     }
 }
