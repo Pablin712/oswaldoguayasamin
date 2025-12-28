@@ -53,7 +53,10 @@ class MateriaController extends Controller
             abort(403, 'No tienes permiso para ver materias.');
         }
 
-        return response()->json($materia);
+        $materia->load('area');
+        $areas = Area::activas()->orderBy('nombre')->get();
+
+        return view('estructura.materias.show', compact('materia', 'areas'));
     }
 
     /**

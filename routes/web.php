@@ -44,7 +44,7 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::put('configuraciones', [ConfiguracionController::class, 'update'])->name('configuraciones.update');
     Route::post('configuraciones/test-email', [ConfiguracionController::class, 'testEmail'])->name('configuraciones.test-email');
 
-    // Fase 3: Periodos Académicos
+    // Fase 3: Estructura Académica
     Route::resource('periodos-academicos', PeriodoAcademicoController::class)->except(['create', 'edit']);
     Route::resource('quimestres', QuimestreController::class)->except(['create', 'edit']);
     Route::resource('parciales', ParcialController::class)->except(['create', 'edit']);

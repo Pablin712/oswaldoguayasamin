@@ -50,7 +50,7 @@ class AulaController extends Controller
             abort(403, 'No tienes permiso para ver aulas.');
         }
 
-        return response()->json($aula);
+        return view('estructura.aulas.show', compact('aula'));
     }
 
     /**

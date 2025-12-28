@@ -2,7 +2,7 @@
     sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null,
     dropdowns: {
         configuracion: {{ request()->routeIs(['instituciones.*', 'configuraciones.*']) ? 'true' : 'false' }},
-        estructuraAcademica: {{ request()->routeIs(['periodos-academicos.*', 'quimestres.*', 'parciales.*', 'cursos.*', 'materias.*', 'aulas.*']) ? 'true' : 'false' }},
+        estructuraAcademica: {{ request()->routeIs(['periodos-academicos.*', 'quimestres.*', 'parciales.*', 'cursos.*', 'materias.*', 'areas.*', 'aulas.*']) ? 'true' : 'false' }},
         administracion: {{ request()->routeIs(['users.*', 'roles.*', 'permissions.*']) ? 'true' : 'false' }},
         usuariosEspecializados: {{ request()->routeIs(['docentes.*', 'estudiantes.*', 'padres.*']) ? 'true' : 'false' }},
         asignaciones: {{ request()->routeIs(['paralelos.*', 'curso-materia.*', 'docente-materia.*', 'matriculas.*']) ? 'true' : 'false' }},

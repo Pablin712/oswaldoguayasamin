@@ -38,6 +38,20 @@ class AreaController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(Area $area)
+    {
+        if (Gate::denies('ver areas') && Gate::denies('gestionar areas')) {
+            return redirect()->back()->with('error', 'No tienes permiso para ver las áreas.');
+        }
+
+        $area->load('materias');
+
+        return view('estructura.areas.show', compact('area'));
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(AreaRequest $request, Area $area)

@@ -122,24 +122,40 @@ class EstructuraAcademicaSeeder extends Seeder
         $areaLengua = Area::where('nombre', 'Lengua y Literatura')->first();
         $areaCiencias = Area::where('nombre', 'Ciencias Naturales')->first();
         $areaSociales = Area::where('nombre', 'Ciencias Sociales')->first();
-        $areaExtranjera = Area::where('nombre', 'Lengua Extranjera')->first();
         $areaFisica = Area::where('nombre', 'Educación Física')->first();
         $areaCultural = Area::where('nombre', 'Educación Cultural y Artística')->first();
-        $areaCiudadania = Area::where('nombre', 'Educación para la Ciudadanía')->first();
 
         $materias = [
-            ['nombre' => 'Matemáticas', 'codigo' => 'MAT-001', 'area_id' => $areaMatematicas->id, 'color' => '#3B82F6'],
-            ['nombre' => 'Lengua y Literatura', 'codigo' => 'LEN-001', 'area_id' => $areaLengua->id, 'color' => '#EF4444'],
-            ['nombre' => 'Ciencias Naturales', 'codigo' => 'CN-001', 'area_id' => $areaCiencias->id, 'color' => '#10B981'],
-            ['nombre' => 'Estudios Sociales', 'codigo' => 'SS-001', 'area_id' => $areaSociales->id, 'color' => '#F59E0B'],
-            ['nombre' => 'Inglés', 'codigo' => 'ING-001', 'area_id' => $areaExtranjera->id, 'color' => '#8B5CF6'],
-            ['nombre' => 'Educación Física', 'codigo' => 'EF-001', 'area_id' => $areaFisica->id, 'color' => '#EC4899'],
-            ['nombre' => 'Educación Cultural y Artística', 'codigo' => 'ECA-001', 'area_id' => $areaCultural->id, 'color' => '#F97316'],
-            ['nombre' => 'Física', 'codigo' => 'FIS-001', 'area_id' => $areaMatematicas->id, 'color' => '#06B6D4'],
-            ['nombre' => 'Química', 'codigo' => 'QUI-001', 'area_id' => $areaCiencias->id, 'color' => '#14B8A6'],
-            ['nombre' => 'Biología', 'codigo' => 'BIO-001', 'area_id' => $areaCiencias->id, 'color' => '#22C55E'],
-            ['nombre' => 'Filosofía', 'codigo' => 'FIL-001', 'area_id' => $areaSociales->id, 'color' => '#A855F7'],
-            ['nombre' => 'Educación para la Ciudadanía', 'codigo' => 'EC-001', 'area_id' => $areaCiudadania->id, 'color' => '#64748B'],
+            // Matemáticas
+            ['nombre' => 'Matemáticas', 'codigo' => 'MAT-001', 'area_id' => $areaMatematicas->id, 'color' => '#3B82F6', 'estado' => 'activa'],
+            ['nombre' => 'Física', 'codigo' => 'FIS-001', 'area_id' => $areaMatematicas->id, 'color' => '#06B6D4', 'estado' => 'activa'],
+            ['nombre' => 'Estadística', 'codigo' => 'EST-001', 'area_id' => $areaMatematicas->id, 'color' => '#0EA5E9', 'estado' => 'activa'],
+
+            // Lengua y Literatura
+            ['nombre' => 'Lengua y Literatura', 'codigo' => 'LEN-001', 'area_id' => $areaLengua->id, 'color' => '#EF4444', 'estado' => 'activa'],
+            ['nombre' => 'Inglés', 'codigo' => 'ING-001', 'area_id' => $areaLengua->id, 'color' => '#8B5CF6', 'estado' => 'activa'],
+            ['nombre' => 'Francés', 'codigo' => 'FRA-001', 'area_id' => $areaLengua->id, 'color' => '#A855F7', 'estado' => 'activa'],
+
+            // Ciencias Naturales
+            ['nombre' => 'Ciencias Naturales', 'codigo' => 'CN-001', 'area_id' => $areaCiencias->id, 'color' => '#10B981', 'estado' => 'activa'],
+            ['nombre' => 'Biología', 'codigo' => 'BIO-001', 'area_id' => $areaCiencias->id, 'color' => '#22C55E', 'estado' => 'activa'],
+            ['nombre' => 'Química', 'codigo' => 'QUI-001', 'area_id' => $areaCiencias->id, 'color' => '#14B8A6', 'estado' => 'activa'],
+
+            // Ciencias Sociales
+            ['nombre' => 'Estudios Sociales', 'codigo' => 'SS-001', 'area_id' => $areaSociales->id, 'color' => '#F59E0B', 'estado' => 'activa'],
+            ['nombre' => 'Historia', 'codigo' => 'HIS-001', 'area_id' => $areaSociales->id, 'color' => '#F97316', 'estado' => 'activa'],
+            ['nombre' => 'Geografía', 'codigo' => 'GEO-001', 'area_id' => $areaSociales->id, 'color' => '#FB923C', 'estado' => 'activa'],
+            ['nombre' => 'Filosofía', 'codigo' => 'FIL-001', 'area_id' => $areaSociales->id, 'color' => '#A855F7', 'estado' => 'activa'],
+            ['nombre' => 'Educación para la Ciudadanía', 'codigo' => 'EC-001', 'area_id' => $areaSociales->id, 'color' => '#64748B', 'estado' => 'activa'],
+            ['nombre' => 'Emprendimiento y Gestión', 'codigo' => 'EMP-001', 'area_id' => $areaSociales->id, 'color' => '#78716C', 'estado' => 'activa'],
+
+            // Educación Física
+            ['nombre' => 'Educación Física', 'codigo' => 'EF-001', 'area_id' => $areaFisica->id, 'color' => '#EC4899', 'estado' => 'activa'],
+
+            // Educación Cultural y Artística
+            ['nombre' => 'Educación Cultural y Artística', 'codigo' => 'ECA-001', 'area_id' => $areaCultural->id, 'color' => '#F472B6', 'estado' => 'activa'],
+            ['nombre' => 'Música', 'codigo' => 'MUS-001', 'area_id' => $areaCultural->id, 'color' => '#E879F9', 'estado' => 'activa'],
+            ['nombre' => 'Informática', 'codigo' => 'INF-001', 'area_id' => $areaCultural->id, 'color' => '#818CF8', 'estado' => 'activa'],
         ];
 
         foreach ($materias as $materia) {

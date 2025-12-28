@@ -49,7 +49,9 @@ class CursoController extends Controller
             abort(403, 'No tienes permiso para ver cursos.');
         }
 
-        return response()->json($curso);
+        $curso->loadCount('materias');
+
+        return view('estructura.cursos.show', compact('curso'));
     }
 
     /**

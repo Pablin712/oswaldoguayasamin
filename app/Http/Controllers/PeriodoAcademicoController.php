@@ -46,7 +46,7 @@ class PeriodoAcademicoController extends Controller
             return redirect()->back()->with('error', 'No tienes permiso para ver los periodos académicos.');
         }
 
-        return view('periodos-academicos.show', compact('periodoAcademico'));
+        return view('estructura.periodos-academicos.show', compact('periodoAcademico'));
     }
 
     /**
