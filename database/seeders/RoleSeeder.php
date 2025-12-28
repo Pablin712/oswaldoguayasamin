@@ -49,6 +49,22 @@ class RoleSeeder extends Seeder
             'gestionar configuraciones',
             'ver configuraciones',
             'editar configuraciones',
+
+            // Fase 3: Periodos Académicos
+            'gestionar periodos académicos',
+            'ver periodos académicos',
+            'crear periodos académicos',
+            'editar periodos académicos',
+            'eliminar periodos académicos',
+            'generar reporte periodos académicos',
+
+            // Fase 3: Quimestres
+            'gestionar quimestres',
+            'ver quimestres',
+            'crear quimestres',
+            'editar quimestres',
+            'eliminar quimestres',
+            'generar reporte quimestres',
         ];
 
         foreach ($permissions as $permission) {

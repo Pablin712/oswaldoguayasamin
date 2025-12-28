@@ -6,7 +6,7 @@
 
 ## 📊 Estado de Vistas
 
-### ✅ Vistas Completadas (8)
+### ✅ Vistas Completadas (10)
 - Login
 - Recuperar contraseña (Recover password)
 - Editar perfil (Edit profile)
@@ -15,13 +15,15 @@
 - Permisos (CRUD completo)
 - Instituciones (Vista + Modal) ✅ **FASE 2**
 - Configuraciones (Vista con pestañas) ✅ **FASE 2**
+- Periodos Académicos (CRUD completo) ✅ **FASE 3**
+- Quimestres (CRUD completo) ✅ **FASE 3**
 
 ### 🔄 Vistas por Editar/Cambiar (3)
 - Welcome
 - Register
 - Dashboard
 
-### ⏳ Vistas Pendientes (31 módulos)
+### ⏳ Vistas Pendientes (29 módulos)
 Todos los módulos de las tablas restantes requieren mockups y vistas
 
 ---
@@ -125,43 +127,53 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 
 ---
 
-### Fase 3: Estructura Académica Base ⏳ PENDIENTE
-**Vistas necesarias:** 5 módulos
+### Fase 3: Estructura Académica Base 🔄 EN PROGRESO (2/6)
+**Vistas necesarias:** 6 módulos
 
-- [ ] **Periodos Académicos**
+- [x] **Periodos Académicos** ✅ COMPLETA
   - Tipo: Tabla estándar
   - Mockup: No requerido (tabla convencional)
   - Campos: nombre, fecha_inicio, fecha_fin, estado
   - Permisos: gestionar periodos académicos, ver, crear, editar, eliminar, generar reporte
+  - Controlador: ✅ PeriodoAcademicoController
+  - Form Request: ✅ PeriodoAcademicoRequest
+  - Vistas: ✅ index.blade.php con modales
+  - Rutas: ✅ periodos-academicos.* (resource)
+  - **Fecha completada:** 28/12/2025
 
-- [ ] **Quimestres**
+- [x] **Quimestres** ✅ COMPLETA
   - Tipo: Tabla estándar
   - Mockup: No requerido
-  - Campos: nombre, periodo_académico, fecha_inicio, fecha_fin
+  - Campos: nombre, periodo_académico, fecha_inicio, fecha_fin, número
   - Permisos: gestionar quimestres, ver, crear, editar, eliminar, generar reporte
+  - Controlador: ✅ QuimestreController
+  - Form Request: ✅ QuimestreRequest
+  - Vistas: ✅ index.blade.php con modales
+  - Rutas: ✅ quimestres.* (resource)
+  - **Fecha completada:** 28/12/2025
 
-- [ ] **Parciales**
+- [ ] **Parciales** ⏳ PENDIENTE
   - Tipo: Tabla estándar
   - Mockup: No requerido
-  - Campos: nombre, quimestre, fecha_inicio, fecha_fin, orden
+  - Campos: nombre, quimestre, fecha_inicio, fecha_fin, número, permite_edicion
   - Permisos: gestionar parciales, ver, crear, editar, eliminar, generar reporte
 
-- [ ] **Cursos**
+- [ ] **Cursos** ⏳ PENDIENTE
   - Tipo: Tabla estándar
   - Mockup: No requerido
   - Campos: nombre, nivel, orden
   - Permisos: gestionar cursos, ver, crear, editar, eliminar, generar reporte
 
-- [ ] **Materias**
+- [ ] **Materias** ⏳ PENDIENTE
   - Tipo: Tabla con colores
   - Mockup: Requerido (tabla con badge de color por área)
   - Campos: código, nombre, área, color
   - Permisos: gestionar materias, ver, crear, editar, eliminar, generar reporte
 
-- [ ] **Aulas**
+- [ ] **Aulas** ⏳ PENDIENTE
   - Tipo: Tabla estándar
   - Mockup: No requerido
-  - Campos: nombre, capacidad, edificio, piso, estado
+  - Campos: nombre, capacidad, edificio, piso
   - Permisos: gestionar aulas, ver, crear, editar, eliminar, generar reporte
 
 ---

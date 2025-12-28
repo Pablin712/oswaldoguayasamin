@@ -6,6 +6,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\InstitucionController;
 use App\Http\Controllers\ConfiguracionController;
+use App\Http\Controllers\PeriodoAcademicoController;
+use App\Http\Controllers\QuimestreController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,6 +38,10 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::get('configuraciones', [ConfiguracionController::class, 'index'])->name('configuraciones.index');
     Route::put('configuraciones', [ConfiguracionController::class, 'update'])->name('configuraciones.update');
     Route::post('configuraciones/test-email', [ConfiguracionController::class, 'testEmail'])->name('configuraciones.test-email');
+
+    // Fase 3: Periodos Académicos
+    Route::resource('periodos-academicos', PeriodoAcademicoController::class)->except(['create', 'edit']);
+    Route::resource('quimestres', QuimestreController::class)->except(['create', 'edit']);
 });
 
 require __DIR__.'/auth.php';

@@ -1,8 +1,9 @@
 <aside x-data="{
     sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null,
     dropdowns: {
+        configuracion: {{ request()->routeIs(['instituciones.*', 'configuraciones.*']) ? 'true' : 'false' }},
+        estructuraAcademica: {{ request()->routeIs(['periodos-academicos.*', 'quimestres.*', 'parciales.*', 'cursos.*', 'materias.*', 'aulas.*']) ? 'true' : 'false' }},
         administracion: {{ request()->routeIs(['users.*', 'roles.*', 'permissions.*']) ? 'true' : 'false' }},
-        estructuraAcademica: {{ request()->routeIs(['periodos.*', 'quimestres.*', 'parciales.*', 'cursos.*', 'materias.*', 'aulas.*']) ? 'true' : 'false' }},
         usuariosEspecializados: {{ request()->routeIs(['docentes.*', 'estudiantes.*', 'padres.*']) ? 'true' : 'false' }},
         asignaciones: {{ request()->routeIs(['paralelos.*', 'curso-materia.*', 'docente-materia.*', 'matriculas.*']) ? 'true' : 'false' }},
         calificaciones: {{ request()->routeIs(['calificaciones.*', 'componentes.*']) ? 'true' : 'false' }},
@@ -66,46 +67,102 @@ class="fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gra
                 <span x-show="sidebarOpen" class="font-medium">Dashboard</span>
             </a>
 
-            <!-- Divider -->
-            <div class="pt-4 pb-2" x-show="sidebarOpen">
-                <div class="border-t border-gray-200 dark:border-gray-700"></div>
-            </div>
-
-            <!-- Configuración Institucional -->
+            <!-- Configuración Dropdown -->
             @canany(['gestionar institución', 'ver institución', 'gestionar configuraciones', 'ver configuraciones'])
             <div class="space-y-1">
-                <div class="px-3 py-2" x-show="sidebarOpen">
-                    <span class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Configuración</span>
+                <button @click="toggleDropdown('configuracion')"
+                        class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg transition-colors text-gray-900 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                        </svg>
+                        <span x-show="sidebarOpen" class="font-medium">Configuración</span>
+                    </div>
+                    <svg x-show="sidebarOpen"
+                         :class="dropdowns.configuracion ? 'rotate-180' : ''"
+                         class="w-4 h-4 flex-shrink-0 transition-transform duration-200"
+                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <!-- Submenu Items -->
+                <div x-show="dropdowns.configuracion && sidebarOpen"
+                     x-collapse
+                     class="ml-3 space-y-1 border-l-2 border-gray-200 dark:border-gray-700">
+                    @canany(['gestionar institución', 'ver institución'])
+                        <!-- Institución -->
+                        <a href="{{ route('instituciones.show') }}"
+                        class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors {{ request()->routeIs('instituciones.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300' }}">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            <span class="text-sm">Institución</span>
+                        </a>
+                    @endcanany
+
+                    @canany(['gestionar configuraciones', 'ver configuraciones'])
+                        <!-- Configuraciones -->
+                        <a href="{{ route('configuraciones.index') }}"
+                        class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors {{ request()->routeIs('configuraciones.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300' }}">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span class="text-sm">Parámetros</span>
+                        </a>
+                    @endcanany
                 </div>
-
-                @canany(['gestionar institución', 'ver institución'])
-                <!-- Institución -->
-                <a href="{{ route('instituciones.show') }}"
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('instituciones.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-900 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                    <span x-show="sidebarOpen" class="font-medium">Institución</span>
-                </a>
-                @endcanany
-
-                @canany(['gestionar configuraciones', 'ver configuraciones'])
-                <!-- Configuraciones -->
-                <a href="{{ route('configuraciones.index') }}"
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('configuraciones.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-900 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                    </svg>
-                    <span x-show="sidebarOpen" class="font-medium">Configuración</span>
-                </a>
-                @endcanany
             </div>
             @endcanany
 
-            <!-- Divider -->
-            <div class="pt-4 pb-2" x-show="sidebarOpen">
-                <div class="border-t border-gray-200 dark:border-gray-700"></div>
+            <!-- Estructura Académica Dropdown -->
+            @canany(['gestionar periodos académicos', 'ver periodos académicos', 'gestionar quimestres', 'ver quimestres'])
+            <div class="space-y-1">
+                <button @click="toggleDropdown('estructuraAcademica')"
+                        class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg transition-colors text-gray-900 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span x-show="sidebarOpen" class="font-medium">Estructura</span>
+                    </div>
+                    <svg x-show="sidebarOpen"
+                         :class="dropdowns.estructuraAcademica ? 'rotate-180' : ''"
+                         class="w-4 h-4 flex-shrink-0 transition-transform duration-200"
+                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <!-- Submenu Items -->
+                <div x-show="dropdowns.estructuraAcademica && sidebarOpen"
+                     x-collapse
+                     class="ml-3 space-y-1 border-l-2 border-gray-200 dark:border-gray-700">
+                    @canany(['gestionar periodos académicos', 'ver periodos académicos'])
+                        <!-- Periodos Académicos -->
+                        <a href="{{ route('periodos-academicos.index') }}"
+                        class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors {{ request()->routeIs('periodos-academicos.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300' }}">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <span class="text-sm">Periodos Académicos</span>
+                        </a>
+                    @endcanany
+
+                    @canany(['gestionar quimestres', 'ver quimestres'])
+                        <!-- Quimestres -->
+                        <a href="{{ route('quimestres.index') }}"
+                        class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors {{ request()->routeIs('quimestres.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300' }}">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                            <span class="text-sm">Quimestres</span>
+                        </a>
+                    @endcanany
+                </div>
             </div>
+            @endcanany
 
             <!-- Administración Dropdown -->
             <div class="space-y-1">
