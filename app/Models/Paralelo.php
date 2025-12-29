@@ -11,6 +11,7 @@ class Paralelo extends Model
 {
     protected $fillable = [
         'curso_id',
+        'periodo_academico_id',
         'nombre',
         'cupo_maximo',
         'aula_id',
@@ -31,6 +32,27 @@ class Paralelo extends Model
     public function aula(): BelongsTo
     {
         return $this->belongsTo(Aula::class);
+    }
+
+    public function periodoAcademico(): BelongsTo
+    {
+        return $this->belongsTo(PeriodoAcademico::class);
+    }
+
+    /**
+     * Relación con Matrículas
+     */
+    public function matriculas(): HasMany
+    {
+        return $this->hasMany(Matricula::class);
+    }
+
+    /**
+     * Relación con Docentes-Materias (asignaciones)
+     */
+    public function docenteMaterias(): HasMany
+    {
+        return $this->hasMany(DocenteMateria::class);
     }
 
     /**

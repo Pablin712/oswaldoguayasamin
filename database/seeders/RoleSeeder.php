@@ -129,6 +129,14 @@ class RoleSeeder extends Seeder
             'editar padres',
             'eliminar padres',
             'generar reporte padres',
+
+            // Fase 5: Paralelos
+            'gestionar paralelos',
+            'ver paralelos',
+            'crear paralelos',
+            'editar paralelos',
+            'eliminar paralelos',
+            'generar reporte paralelos',
         ];
 
         foreach ($permissions as $permission) {

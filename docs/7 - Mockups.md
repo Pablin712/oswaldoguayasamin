@@ -1,12 +1,20 @@
-# 🎨 Mockups y Vistas del Sistema
+# 🎨 Mockups y Vistas del Sistema (FRONTEND)
 
-**Última actualización:** 29 de diciembre de 2025
+**Última actualización:** 29 de diciembre de 2025  
+**Estado:** 🔄 En Progreso - Fase 4 Completada (20/12/2025 - 29/12/2025)
+
+---
+
+## ⚠️ IMPORTANTE: ESTE DOCUMENTO SE REFIERE AL FRONTEND
+
+**Backend (BD y Modelos):** Consultar [6 - Avances.md](6 - Avances.md) - ✅ 100% Completo  
+**Frontend (Vistas y CRUDs):** Este documento - 🔄 En progreso
 
 ---
 
 ## 📊 Estado de Vistas
 
-### ✅ Vistas Completadas (20)
+### ✅ Vistas Completadas (23)
 - Login
 - Recuperar contraseña (Recover password)
 - Editar perfil (Edit profile)
@@ -220,26 +228,50 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 
 ---
 
-### Fase 4: Usuarios Especializados ⏳ PENDIENTE
-**Vistas necesarias:** 3 módulos
+### Fase 4: Usuarios Especializados ✅ COMPLETADA (20/12/2025 - 29/12/2025)
+**Vistas necesarias:** 3 módulos + Sistema de Relaciones
 
-- [ ] **Docentes**
-  - Tipo: Tabla extendida
-  - Mockup: Requerido (incluye foto, especialidad, estado)
-  - Campos: código, nombre completo, especialidad, título, tipo contrato, estado
-  - Permisos: gestionar docentes, ver, crear, editar, eliminar, generar reporte
+- [x] **Docentes** ✅ COMPLETA
+  - Tipo: Tabla estándar con DataTables
+  - Campos: código, nombre completo, especialidad, título, tipo contrato, email, teléfono, estado
+  - Permisos: gestionar docentes, ver, crear, editar, eliminar, generar reporte docentes, generar reportes
+  - Controlador: ✅ DocenteController (7 métodos)
+  - Form Request: ✅ DocenteRequest con validaciones
+  - Vistas: ✅ index.blade.php, show.blade.php, create.blade.php, edit.blade.php, delete.blade.php
+  - Rutas: ✅ docentes.* (resource)
+  - **Características especiales:** Badges de estado, foto de perfil, historial completo, componente enhanced-table con exportación
+  - **Fecha completada:** 28/12/2025
 
-- [ ] **Estudiantes**
-  - Tipo: Tabla con foto
-  - Mockup: Requerido (foto, estado, información adicional)
-  - Campos: código, foto, nombre completo, fecha ingreso, paralelo actual, estado
-  - Permisos: gestionar estudiantes, ver, crear, editar, eliminar, generar reporte
+- [x] **Estudiantes** ✅ COMPLETA
+  - Tipo: Tabla estándar con gestión de relaciones
+  - Campos: código estudiante, nombre completo, cédula, email, teléfono, fecha ingreso, tipo sangre, estado
+  - Permisos: gestionar estudiantes, ver, crear, editar, eliminar, generar reporte estudiantes, generar reportes
+  - Controlador: ✅ EstudianteController (10 métodos: 7 CRUD + 3 relaciones)
+  - Form Request: ✅ EstudianteRequest con validaciones médicas y académicas
+  - Vistas: ✅ index.blade.php, show.blade.php, create.blade.php, edit.blade.php, delete.blade.php, associate-padre.blade.php, edit-padre-relation.blade.php
+  - Rutas: ✅ estudiantes.* (resource) + 3 rutas de relaciones con padres
+  - **Características especiales:** Gestión de relaciones Many-to-Many con padres, información médica completa, badges de estado
+  - **Fecha completada:** 29/12/2025
 
-- [ ] **Padres**
-  - Tipo: Tabla estándar con relación estudiantes
-  - Mockup: Requerido (mostrar estudiantes asociados)
-  - Campos: nombre, cédula, teléfono, email, estudiantes
-  - Permisos: gestionar padres, ver, crear, editar, eliminar, generar reporte
+- [x] **Padres/Representantes** ✅ COMPLETA
+  - Tipo: Tabla estándar con gestión de relaciones
+  - Campos: nombre, cédula, email, teléfono, ocupación, lugar de trabajo, teléfono trabajo
+  - Permisos: gestionar padres, ver, crear, editar, eliminar, generar reporte padres, generar reportes
+  - Controlador: ✅ PadreController (10 métodos: 7 CRUD + 3 relaciones)
+  - Form Request: ✅ PadreRequest con validaciones
+  - Vistas: ✅ index.blade.php, show.blade.php, create.blade.php, edit.blade.php, delete.blade.php, associate-estudiante.blade.php, edit-estudiante-relation.blade.php
+  - Rutas: ✅ padres.* (resource) + 3 rutas de relaciones con estudiantes
+  - **Características especiales:** Gestión de relaciones Many-to-Many con estudiantes, información laboral, parentesco
+  - **Fecha completada:** 29/12/2025
+
+- [x] **Sistema de Relaciones Estudiante-Padre** ✅ COMPLETA
+  - Tipo: Many-to-Many con datos pivot (parentesco, es_principal)
+  - Tabla pivot: estudiante_padre
+  - Funcionalidad: Asociar, editar, desvincular padres/estudiantes desde ambos lados
+  - Validaciones: Prevención de duplicados, selección de parentesco, designación de representante principal
+  - UI: Modals separados para cada operación, cards con información completa
+  - Documentación: ✅ FASE_04_COMPLETADA.md, FASE_04_RELACIONES_COMPLETADAS.md, FASE_04_RESUMEN_FINAL.md, FASE_04_GUIA_USO.md
+  - **Fecha completada:** 29/12/2025
 
 ---
 
@@ -382,9 +414,13 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 ## 📊 Resumen de Vistas
 
 **Total de módulos:** 38 módulos
-- ✅ **Completados:** 4 módulos (10.5%)
-- 🔄 **Por editar:** 3 módulos (7.9%)
-- ⏳ **Pendientes:** 31 módulos (81.6%)
+- ✅ **Completados:** 23 módulos (60.5%)
+  - Fase 1: 4 módulos ✅
+  - Fase 2: 2 módulos ✅
+  - Fase 3: 7 módulos ✅
+  - Fase 4: 3 módulos + relaciones ✅
+- 🔄 **En progreso:** Fase 5 iniciando
+- ⏳ **Pendientes:** 15 módulos (39.5%)
 
 **Tipos de vistas:**
 - Tablas estándar: 15 módulos

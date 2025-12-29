@@ -1,11 +1,22 @@
 # 📊 Avances del Sistema de Gestión Académica
 
-**Última actualización:** 24 de diciembre de 2025  
-**Estado:** ✅ SISTEMA COMPLETADO AL 100% + ACTUALIZACIÓN MULTI-INSTITUCIÓN
+**Última actualización:** 29 de diciembre de 2025  
+**Estado:** ✅ BACKEND COMPLETADO AL 100% (BD, Modelos, Relaciones, Seeders)
+**Frontend:** 🔄 En Progreso - Fase 4 Completada, Iniciando Fase 5
 
 ---
 
-## 🎉 PROYECTO COMPLETADO + MEJORAS
+## ⚠️ IMPORTANTE: ESTE DOCUMENTO SE REFIERE AL BACKEND
+
+**Este documento registra el progreso del BACKEND:**
+- ✅ Migraciones de base de datos
+- ✅ Modelos Eloquent con relaciones
+- ✅ Scopes y métodos de modelos
+- ✅ Seeders con datos de prueba
+
+**Para el progreso del FRONTEND (Vistas/CRUDs), consultar:** [7 - Mockups.md](7 - Mockups.md)
+
+## 🎉 BACKEND COMPLETADO + MEJORAS
 
 ### ✨ Actualización Reciente (24/12/2025)
 

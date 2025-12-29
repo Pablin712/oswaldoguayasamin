@@ -16,6 +16,7 @@ use App\Http\Controllers\AreaController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\PadreController;
+use App\Http\Controllers\ParaleloController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -69,6 +70,9 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::post('padres/{padre}/estudiantes', [PadreController::class, 'attachEstudiante'])->name('padres.attach-estudiante');
     Route::delete('padres/{padre}/estudiantes/{estudiante}', [PadreController::class, 'detachEstudiante'])->name('padres.detach-estudiante');
     Route::put('padres/{padre}/estudiantes/{estudiante}', [PadreController::class, 'updateEstudianteRelation'])->name('padres.update-estudiante');
+
+    // Fase 5: Asignaciones Académicas
+    Route::resource('paralelos', ParaleloController::class)->except(['create', 'edit']);
 });
 
 require __DIR__.'/auth.php';
