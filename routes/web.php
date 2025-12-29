@@ -14,6 +14,8 @@ use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\AulaController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\DocenteController;
+use App\Http\Controllers\EstudianteController;
+use App\Http\Controllers\PadreController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -56,6 +58,17 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
 
     // Fase 4: Usuarios Especializados
     Route::resource('docentes', DocenteController::class)->except(['create', 'edit']);
+    Route::resource('estudiantes', EstudianteController::class)->except(['create', 'edit']);
+    Route::resource('padres', PadreController::class)->except(['create', 'edit']);
+
+    // Relaciones Estudiante-Padre
+    Route::post('estudiantes/{estudiante}/padres', [EstudianteController::class, 'attachPadre'])->name('estudiantes.attach-padre');
+    Route::delete('estudiantes/{estudiante}/padres/{padre}', [EstudianteController::class, 'detachPadre'])->name('estudiantes.detach-padre');
+    Route::put('estudiantes/{estudiante}/padres/{padre}', [EstudianteController::class, 'updatePadreRelation'])->name('estudiantes.update-padre');
+
+    Route::post('padres/{padre}/estudiantes', [PadreController::class, 'attachEstudiante'])->name('padres.attach-estudiante');
+    Route::delete('padres/{padre}/estudiantes/{estudiante}', [PadreController::class, 'detachEstudiante'])->name('padres.detach-estudiante');
+    Route::put('padres/{padre}/estudiantes/{estudiante}', [PadreController::class, 'updateEstudianteRelation'])->name('padres.update-estudiante');
 });
 
 require __DIR__.'/auth.php';

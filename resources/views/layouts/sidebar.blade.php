@@ -220,7 +220,7 @@ class="fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gra
             @endcanany
 
             <!-- Usuarios Especializados Dropdown -->
-            @canany(['gestionar docentes', 'ver docentes'])
+            @canany(['gestionar docentes', 'ver docentes', 'gestionar estudiantes', 'ver estudiantes', 'gestionar padres', 'ver padres'])
             <div class="space-y-1">
                 <button @click="toggleDropdown('usuariosEspecializados')"
                         class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg transition-colors text-gray-900 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -250,6 +250,28 @@ class="fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gra
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                             </svg>
                             <span class="text-sm">Docentes</span>
+                        </a>
+                    @endcanany
+
+                    @canany(['gestionar estudiantes', 'ver estudiantes'])
+                        <!-- Estudiantes -->
+                        <a href="{{ route('estudiantes.index') }}"
+                        class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors {{ request()->routeIs('estudiantes.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300' }}">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                            <span class="text-sm">Estudiantes</span>
+                        </a>
+                    @endcanany
+
+                    @canany(['gestionar padres', 'ver padres'])
+                        <!-- Padres/Representantes -->
+                        <a href="{{ route('padres.index') }}"
+                        class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors {{ request()->routeIs('padres.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300' }}">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span class="text-sm">Padres/Representantes</span>
                         </a>
                     @endcanany
                 </div>

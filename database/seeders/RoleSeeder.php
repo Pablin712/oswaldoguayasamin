@@ -113,6 +113,22 @@ class RoleSeeder extends Seeder
             'editar docentes',
             'eliminar docentes',
             'generar reporte docentes',
+
+            // Fase 4: Estudiantes
+            'gestionar estudiantes',
+            'ver estudiantes',
+            'crear estudiantes',
+            'editar estudiantes',
+            'eliminar estudiantes',
+            'generar reporte estudiantes',
+
+            // Fase 4: Padres/Representantes
+            'gestionar padres',
+            'ver padres',
+            'crear padres',
+            'editar padres',
+            'eliminar padres',
+            'generar reporte padres',
         ];
 
         foreach ($permissions as $permission) {
