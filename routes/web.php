@@ -13,6 +13,7 @@ use App\Http\Controllers\CursoController;
 use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\AulaController;
 use App\Http\Controllers\AreaController;
+use App\Http\Controllers\DocenteController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -52,6 +53,9 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::resource('materias', MateriaController::class)->except(['create', 'edit']);
     Route::resource('aulas', AulaController::class)->except(['create', 'edit']);
     Route::resource('areas', AreaController::class)->except(['create', 'edit']);
+
+    // Fase 4: Usuarios Especializados
+    Route::resource('docentes', DocenteController::class)->except(['create', 'edit']);
 });
 
 require __DIR__.'/auth.php';

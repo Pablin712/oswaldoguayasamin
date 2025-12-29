@@ -105,6 +105,14 @@ class RoleSeeder extends Seeder
             'editar aulas',
             'eliminar aulas',
             'generar reporte aulas',
+
+            // Fase 4: Docentes
+            'gestionar docentes',
+            'ver docentes',
+            'crear docentes',
+            'editar docentes',
+            'eliminar docentes',
+            'generar reporte docentes',
         ];
 
         foreach ($permissions as $permission) {
