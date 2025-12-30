@@ -18,29 +18,32 @@
                         <label for="curso_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Curso
                         </label>
-                        <select name="curso_id" id="curso_id"
-                            class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                            <option value="">Todos los cursos</option>
-                            @foreach($todosLosCursos as $c)
-                                <option value="{{ $c->id }}" {{ $cursoId == $c->id ? 'selected' : '' }}>
-                                    {{ $c->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <x-searchable-select
+                            id="curso_id"
+                            name="curso_id"
+                            :options="$todosLosCursos"
+                            :selected="$cursoId"
+                            placeholder="Todos los cursos"
+                            label-field="nombre"
+                            value-field="id"
+                            :allow-clear="true"
+                        />
                     </div>
 
                     <div class="flex-1 min-w-[200px]">
                         <label for="periodo_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Período Académico
                         </label>
-                        <select name="periodo_id" id="periodo_id"
-                            class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                            @foreach($periodos as $periodo)
-                                <option value="{{ $periodo->id }}" {{ $periodoId == $periodo->id ? 'selected' : '' }}>
-                                    {{ $periodo->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <x-searchable-select
+                            id="periodo_id"
+                            name="periodo_id"
+                            :options="$periodos"
+                            :selected="$periodoId"
+                            placeholder="Seleccione período"
+                            label-field="nombre"
+                            value-field="id"
+                            :allow-clear="false"
+                        />
                     </div>
 
                     <div>

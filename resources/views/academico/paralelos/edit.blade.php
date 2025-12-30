@@ -28,28 +28,36 @@
                 <!-- Curso -->
                 <div>
                     <x-input-label for="edit_curso_id" :value="__('Curso *')" />
-                    <select id="edit_curso_id" name="curso_id" x-model="curso_id"
-                        class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                        required>
-                        <option value="">Seleccione un curso</option>
-                        @foreach(\App\Models\Curso::orderBy('orden')->get() as $curso)
-                            <option value="{{ $curso->id }}">{{ $curso->nombre }}</option>
-                        @endforeach
-                    </select>
+                    <x-searchable-select
+                        id="edit_curso_id"
+                        name="curso_id"
+                        :options="\App\Models\Curso::orderBy('orden')->get()"
+                        placeholder="Seleccione un curso"
+                        label-field="nombre"
+                        value-field="id"
+                        required
+                        class="mt-1"
+                        x-model="curso_id"
+                        dropdown-parent="#edit-paralelo-modal"
+                    />
                     <x-input-error :messages="$errors->get('curso_id')" class="mt-2" />
                 </div>
 
                 <!-- Período Académico -->
                 <div>
                     <x-input-label for="edit_periodo_academico_id" :value="__('Período Académico *')" />
-                    <select id="edit_periodo_academico_id" name="periodo_academico_id" x-model="periodo_academico_id"
-                        class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                        required>
-                        <option value="">Seleccione un período</option>
-                        @foreach(\App\Models\PeriodoAcademico::orderBy('fecha_inicio', 'desc')->get() as $periodo)
-                            <option value="{{ $periodo->id }}">{{ $periodo->nombre }}</option>
-                        @endforeach
-                    </select>
+                    <x-searchable-select
+                        id="edit_periodo_academico_id"
+                        name="periodo_academico_id"
+                        :options="\App\Models\PeriodoAcademico::orderBy('fecha_inicio', 'desc')->get()"
+                        placeholder="Seleccione un período"
+                        label-field="nombre"
+                        value-field="id"
+                        required
+                        class="mt-1"
+                        x-model="periodo_academico_id"
+                        dropdown-parent="#edit-paralelo-modal"
+                    />
                     <x-input-error :messages="$errors->get('periodo_academico_id')" class="mt-2" />
                 </div>
 
@@ -71,13 +79,17 @@
                 <!-- Aula -->
                 <div>
                     <x-input-label for="edit_aula_id" :value="__('Aula')" />
-                    <select id="edit_aula_id" name="aula_id" x-model="aula_id"
-                        class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        <option value="">Sin asignar</option>
-                        @foreach(\App\Models\Aula::orderBy('nombre')->get() as $aula)
-                            <option value="{{ $aula->id }}">{{ $aula->nombre }}</option>
-                        @endforeach
-                    </select>
+                    <x-searchable-select
+                        id="edit_aula_id"
+                        name="aula_id"
+                        :options="\App\Models\Aula::orderBy('nombre')->get()"
+                        placeholder="Sin asignar"
+                        label-field="nombre"
+                        value-field="id"
+                        class="mt-1"
+                        x-model="aula_id"
+                        dropdown-parent="#edit-paralelo-modal"
+                    />
                     <x-input-error :messages="$errors->get('aula_id')" class="mt-2" />
                 </div>
 
