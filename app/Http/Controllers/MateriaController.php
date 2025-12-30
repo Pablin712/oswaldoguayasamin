@@ -15,7 +15,7 @@ class MateriaController extends Controller
      */
     public function index()
     {
-        if (Gate::denies('ver materias') && Gate::denies('gestionar materias')) {
+        if (Gate::denies('ver materias') || Gate::denies('gestionar materias')) {
             abort(403, 'No tienes permiso para ver materias.');
         }
 
@@ -34,7 +34,7 @@ class MateriaController extends Controller
      */
     public function store(MateriaRequest $request)
     {
-        if (Gate::denies('crear materias') && Gate::denies('gestionar materias')) {
+        if (Gate::denies('crear materias') || Gate::denies('gestionar materias')) {
             abort(403, 'No tienes permiso para crear materias.');
         }
 
@@ -49,7 +49,7 @@ class MateriaController extends Controller
      */
     public function show(Materia $materia)
     {
-        if (Gate::denies('ver materias') && Gate::denies('gestionar materias')) {
+        if (Gate::denies('ver materias') || Gate::denies('gestionar materias')) {
             abort(403, 'No tienes permiso para ver materias.');
         }
 
@@ -64,7 +64,7 @@ class MateriaController extends Controller
      */
     public function update(MateriaRequest $request, Materia $materia)
     {
-        if (Gate::denies('editar materias') && Gate::denies('gestionar materias')) {
+        if (Gate::denies('editar materias') || Gate::denies('gestionar materias')) {
             abort(403, 'No tienes permiso para editar materias.');
         }
 
@@ -79,7 +79,7 @@ class MateriaController extends Controller
      */
     public function destroy(Materia $materia)
     {
-        if (Gate::denies('eliminar materias') && Gate::denies('gestionar materias')) {
+        if (Gate::denies('eliminar materias') || Gate::denies('gestionar materias')) {
             abort(403, 'No tienes permiso para eliminar materias.');
         }
 

@@ -14,7 +14,7 @@ class CursoController extends Controller
      */
     public function index()
     {
-        if (Gate::denies('ver cursos') && Gate::denies('gestionar cursos')) {
+        if (Gate::denies('ver cursos') || Gate::denies('gestionar cursos')) {
             abort(403, 'No tienes permiso para ver cursos.');
         }
 
@@ -30,7 +30,7 @@ class CursoController extends Controller
      */
     public function store(CursoRequest $request)
     {
-        if (Gate::denies('crear cursos') && Gate::denies('gestionar cursos')) {
+        if (Gate::denies('crear cursos') || Gate::denies('gestionar cursos')) {
             abort(403, 'No tienes permiso para crear cursos.');
         }
 
@@ -45,7 +45,7 @@ class CursoController extends Controller
      */
     public function show(Curso $curso)
     {
-        if (Gate::denies('ver cursos') && Gate::denies('gestionar cursos')) {
+        if (Gate::denies('ver cursos') || Gate::denies('gestionar cursos')) {
             abort(403, 'No tienes permiso para ver cursos.');
         }
 
@@ -59,7 +59,7 @@ class CursoController extends Controller
      */
     public function update(CursoRequest $request, Curso $curso)
     {
-        if (Gate::denies('editar cursos') && Gate::denies('gestionar cursos')) {
+        if (Gate::denies('editar cursos') || Gate::denies('gestionar cursos')) {
             abort(403, 'No tienes permiso para editar cursos.');
         }
 
@@ -74,7 +74,7 @@ class CursoController extends Controller
      */
     public function destroy(Curso $curso)
     {
-        if (Gate::denies('eliminar cursos') && Gate::denies('gestionar cursos')) {
+        if (Gate::denies('eliminar cursos') || Gate::denies('gestionar cursos')) {
             abort(403, 'No tienes permiso para eliminar cursos.');
         }
 

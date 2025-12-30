@@ -16,7 +16,7 @@ class ParaleloController extends Controller
      */
     public function index()
     {
-        if (Gate::denies('ver paralelos') && Gate::denies('gestionar paralelos')) {
+        if (Gate::denies('ver paralelos') || Gate::denies('gestionar paralelos')) {
             abort(403, 'No tienes permiso para ver paralelos.');
         }
 
@@ -52,7 +52,7 @@ class ParaleloController extends Controller
      */
     public function store(ParaleloRequest $request)
     {
-        if (Gate::denies('crear paralelos') && Gate::denies('gestionar paralelos')) {
+        if (Gate::denies('crear paralelos') || Gate::denies('gestionar paralelos')) {
             abort(403, 'No tienes permiso para crear paralelos.');
         }
 
@@ -67,7 +67,7 @@ class ParaleloController extends Controller
      */
     public function show(Paralelo $paralelo)
     {
-        if (Gate::denies('ver paralelos') && Gate::denies('gestionar paralelos')) {
+        if (Gate::denies('ver paralelos') || Gate::denies('gestionar paralelos')) {
             abort(403, 'No tienes permiso para ver paralelos.');
         }
 
@@ -96,7 +96,7 @@ class ParaleloController extends Controller
      */
     public function update(ParaleloRequest $request, Paralelo $paralelo)
     {
-        if (Gate::denies('editar paralelos') && Gate::denies('gestionar paralelos')) {
+        if (Gate::denies('editar paralelos') || Gate::denies('gestionar paralelos')) {
             abort(403, 'No tienes permiso para editar paralelos.');
         }
 
@@ -111,7 +111,7 @@ class ParaleloController extends Controller
      */
     public function destroy(Paralelo $paralelo)
     {
-        if (Gate::denies('eliminar paralelos') && Gate::denies('gestionar paralelos')) {
+        if (Gate::denies('eliminar paralelos') || Gate::denies('gestionar paralelos')) {
             abort(403, 'No tienes permiso para eliminar paralelos.');
         }
 

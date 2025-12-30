@@ -15,7 +15,7 @@ class ParcialController extends Controller
      */
     public function index()
     {
-        if (Gate::denies('ver parciales') && Gate::denies('gestionar parciales')) {
+        if (Gate::denies('ver parciales') || Gate::denies('gestionar parciales')) {
             abort(403, 'No tienes permiso para ver parciales.');
         }
 
@@ -35,7 +35,7 @@ class ParcialController extends Controller
      */
     public function store(ParcialRequest $request)
     {
-        if (Gate::denies('crear parciales') && Gate::denies('gestionar parciales')) {
+        if (Gate::denies('crear parciales') || Gate::denies('gestionar parciales')) {
             abort(403, 'No tienes permiso para crear parciales.');
         }
 
@@ -50,7 +50,7 @@ class ParcialController extends Controller
      */
     public function show(Parcial $parcial)
     {
-        if (Gate::denies('ver parciales') && Gate::denies('gestionar parciales')) {
+        if (Gate::denies('ver parciales') || Gate::denies('gestionar parciales')) {
             abort(403, 'No tienes permiso para ver parciales.');
         }
 
@@ -64,7 +64,7 @@ class ParcialController extends Controller
      */
     public function update(ParcialRequest $request, Parcial $parcial)
     {
-        if (Gate::denies('editar parciales') && Gate::denies('gestionar parciales')) {
+        if (Gate::denies('editar parciales') || Gate::denies('gestionar parciales')) {
             abort(403, 'No tienes permiso para editar parciales.');
         }
 
@@ -79,7 +79,7 @@ class ParcialController extends Controller
      */
     public function destroy(Parcial $parcial)
     {
-        if (Gate::denies('eliminar parciales') && Gate::denies('gestionar parciales')) {
+        if (Gate::denies('eliminar parciales') || Gate::denies('gestionar parciales')) {
             abort(403, 'No tienes permiso para eliminar parciales.');
         }
 

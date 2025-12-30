@@ -17,7 +17,7 @@ class EstudianteController extends Controller
      */
     public function index()
     {
-        if (Gate::denies('ver estudiantes') && Gate::denies('gestionar estudiantes')) {
+        if (Gate::denies('ver estudiantes') || Gate::denies('gestionar estudiantes')) {
             abort(403, 'No tienes permiso para ver estudiantes.');
         }
 

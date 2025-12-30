@@ -13,7 +13,7 @@ class PeriodoAcademicoController extends Controller
      */
     public function index()
     {
-        if (Gate::denies('ver periodos académicos') && Gate::denies('gestionar periodos académicos')) {
+        if (Gate::denies('ver periodos académicos') || Gate::denies('gestionar periodos académicos')) {
             return redirect()->back()->with('error', 'No tienes permiso para ver los periodos académicos.');
         }
 
@@ -27,7 +27,7 @@ class PeriodoAcademicoController extends Controller
      */
     public function store(PeriodoAcademicoRequest $request)
     {
-        if (Gate::denies('crear periodos académicos') && Gate::denies('gestionar periodos académicos')) {
+        if (Gate::denies('crear periodos académicos') || Gate::denies('gestionar periodos académicos')) {
             return redirect()->back()->with('error', 'No tienes permiso para crear periodos académicos.');
         }
 
@@ -42,7 +42,7 @@ class PeriodoAcademicoController extends Controller
      */
     public function show(PeriodoAcademico $periodoAcademico)
     {
-        if (Gate::denies('ver periodos académicos') && Gate::denies('gestionar periodos académicos')) {
+        if (Gate::denies('ver periodos académicos') || Gate::denies('gestionar periodos académicos')) {
             return redirect()->back()->with('error', 'No tienes permiso para ver los periodos académicos.');
         }
 
@@ -54,7 +54,7 @@ class PeriodoAcademicoController extends Controller
      */
     public function update(PeriodoAcademicoRequest $request, PeriodoAcademico $periodoAcademico)
     {
-        if (Gate::denies('editar periodos académicos') && Gate::denies('gestionar periodos académicos')) {
+        if (Gate::denies('editar periodos académicos') || Gate::denies('gestionar periodos académicos')) {
             return redirect()->back()->with('error', 'No tienes permiso para editar periodos académicos.');
         }
 
@@ -69,7 +69,7 @@ class PeriodoAcademicoController extends Controller
      */
     public function destroy(PeriodoAcademico $periodoAcademico)
     {
-        if (Gate::denies('eliminar periodos académicos') && Gate::denies('gestionar periodos académicos')) {
+        if (Gate::denies('eliminar periodos académicos') || Gate::denies('gestionar periodos académicos')) {
             return redirect()->back()->with('error', 'No tienes permiso para eliminar periodos académicos.');
         }
 

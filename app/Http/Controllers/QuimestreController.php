@@ -14,7 +14,7 @@ class QuimestreController extends Controller
      */
     public function index()
     {
-        if (Gate::denies('ver quimestres') && Gate::denies('gestionar quimestres')) {
+        if (Gate::denies('ver quimestres') || Gate::denies('gestionar quimestres')) {
             return redirect()->back()->with('error', 'No tienes permiso para ver los quimestres.');
         }
 
@@ -29,7 +29,7 @@ class QuimestreController extends Controller
      */
     public function store(QuimestreRequest $request)
     {
-        if (Gate::denies('crear quimestres') && Gate::denies('gestionar quimestres')) {
+        if (Gate::denies('crear quimestres') || Gate::denies('gestionar quimestres')) {
             return redirect()->back()->with('error', 'No tienes permiso para crear quimestres.');
         }
 
@@ -44,7 +44,7 @@ class QuimestreController extends Controller
      */
     public function show(Quimestre $quimestre)
     {
-        if (Gate::denies('ver quimestres') && Gate::denies('gestionar quimestres')) {
+        if (Gate::denies('ver quimestres') || Gate::denies('gestionar quimestres')) {
             return redirect()->back()->with('error', 'No tienes permiso para ver los quimestres.');
         }
 
@@ -58,7 +58,7 @@ class QuimestreController extends Controller
      */
     public function update(QuimestreRequest $request, Quimestre $quimestre)
     {
-        if (Gate::denies('editar quimestres') && Gate::denies('gestionar quimestres')) {
+        if (Gate::denies('editar quimestres') || Gate::denies('gestionar quimestres')) {
             return redirect()->back()->with('error', 'No tienes permiso para editar quimestres.');
         }
 
@@ -73,7 +73,7 @@ class QuimestreController extends Controller
      */
     public function destroy(Quimestre $quimestre)
     {
-        if (Gate::denies('eliminar quimestres') && Gate::denies('gestionar quimestres')) {
+        if (Gate::denies('eliminar quimestres') || Gate::denies('gestionar quimestres')) {
             return redirect()->back()->with('error', 'No tienes permiso para eliminar quimestres.');
         }
 

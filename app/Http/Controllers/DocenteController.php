@@ -18,7 +18,7 @@ class DocenteController extends Controller
      */
     public function index()
     {
-        if (Gate::denies('ver docentes') && Gate::denies('gestionar docentes')) {
+        if (Gate::denies('ver docentes') || Gate::denies('gestionar docentes')) {
             abort(403, 'No tienes permiso para ver docentes.');
         }
 
@@ -34,7 +34,7 @@ class DocenteController extends Controller
      */
     public function store(DocenteRequest $request)
     {
-        if (Gate::denies('crear docentes') && Gate::denies('gestionar docentes')) {
+        if (Gate::denies('crear docentes') || Gate::denies('gestionar docentes')) {
             abort(403, 'No tienes permiso para crear docentes.');
         }
 
@@ -89,7 +89,7 @@ class DocenteController extends Controller
      */
     public function show(Docente $docente)
     {
-        if (Gate::denies('ver docentes') && Gate::denies('gestionar docentes')) {
+        if (Gate::denies('ver docentes') || Gate::denies('gestionar docentes')) {
             abort(403, 'No tienes permiso para ver docentes.');
         }
 
@@ -103,7 +103,7 @@ class DocenteController extends Controller
      */
     public function update(DocenteRequest $request, Docente $docente)
     {
-        if (Gate::denies('editar docentes') && Gate::denies('gestionar docentes')) {
+        if (Gate::denies('editar docentes') || Gate::denies('gestionar docentes')) {
             abort(403, 'No tienes permiso para editar docentes.');
         }
 
@@ -146,7 +146,7 @@ class DocenteController extends Controller
      */
     public function destroy(Docente $docente)
     {
-        if (Gate::denies('eliminar docentes') && Gate::denies('gestionar docentes')) {
+        if (Gate::denies('eliminar docentes') || Gate::denies('gestionar docentes')) {
             abort(403, 'No tienes permiso para eliminar docentes.');
         }
 

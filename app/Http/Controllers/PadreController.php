@@ -17,7 +17,8 @@ class PadreController extends Controller
      */
     public function index()
     {
-        if (Gate::denies('ver padres') && Gate::denies('gestionar padres')) {
+        // Permitir solo a usuarios con cualquiera de estos permisos adecuados
+        if (Gate::denies('ver padres') || Gate::denies('gestionar padres')) {
             abort(403, 'No tienes permiso para ver padres/representantes.');
         }
 
@@ -33,7 +34,7 @@ class PadreController extends Controller
      */
     public function store(PadreRequest $request)
     {
-        if (Gate::denies('crear padres') && Gate::denies('gestionar padres')) {
+        if (Gate::denies('crear padres') || Gate::denies('gestionar padres')) {
             abort(403, 'No tienes permiso para crear padres/representantes.');
         }
 
