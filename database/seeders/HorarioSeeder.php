@@ -26,7 +26,7 @@ class HorarioSeeder extends Seeder
         $this->command->info('Creando horarios de clases...');
 
         // Obtener todas las asignaciones de docentes a materias con paralelos
-        $asignaciones = DocenteMateria::with(['docente', 'cursoMateria.materia', 'paralelo', 'paralelo.aula'])
+        $asignaciones = DocenteMateria::with(['docente', 'materia', 'paralelo'])
             ->where('periodo_academico_id', $periodoActivo->id)
             ->get();
 
@@ -45,7 +45,7 @@ class HorarioSeeder extends Seeder
             ['inicio' => '12:10', 'fin' => '12:50'],
         ];
 
-        $diasSemana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'];
+        $diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
         // Agrupar asignaciones por paralelo
         $asignacionesPorParalelo = $asignaciones->groupBy('paralelo_id');
@@ -55,13 +55,18 @@ class HorarioSeeder extends Seeder
             $diaActual = 0;
 
             foreach ($asignacionesParalelo as $asignacion) {
-                // Verificar que tenga la relación cursoMateria
-                if (!$asignacion->cursoMateria) {
+                // Verificar que tenga la materia relacionada
+                if (!$asignacion->materia) {
                     continue;
                 }
 
-                // Determinar cuántos bloques necesita esta materia (basado en horas semanales)
-                $horasSemanales = $asignacion->cursoMateria->horas_semanales ?? 2;
+                // Obtener las horas semanales desde curso_materia
+                $cursoMateria = \App\Models\CursoMateria::where('curso_id', $asignacion->paralelo->curso_id)
+                    ->where('materia_id', $asignacion->materia_id)
+                    ->where('periodo_academico_id', $periodoActivo->id)
+                    ->first();
+
+                $horasSemanales = $cursoMateria?->horas_semanales ?? 2;
                 $bloquesNecesarios = min($horasSemanales, 5); // Máximo 5 bloques por materia
 
                 for ($i = 0; $i < $bloquesNecesarios; $i++) {
@@ -70,7 +75,7 @@ class HorarioSeeder extends Seeder
                         $bloqueActual = 0;
                         $diaActual++;
 
-                        // Si nos quedamos sin días, empezar de nuevo (no debería pasar con distribución normal)
+                        // Si nos quedamos sin días, empezar de nuevo
                         if ($diaActual >= count($diasSemana)) {
                             break;
                         }
@@ -80,11 +85,7 @@ class HorarioSeeder extends Seeder
 
                     try {
                         Horario::create([
-                            'paralelo_id' => $asignacion->paralelo_id,
-                            'materia_id' => $asignacion->cursoMateria->materia_id,
-                            'docente_id' => $asignacion->docente_id,
-                            'aula_id' => $asignacion->paralelo->aula_id,
-                            'periodo_academico_id' => $periodoActivo->id,
+                            'docente_materia_id' => $asignacion->id,
                             'dia_semana' => $diasSemana[$diaActual],
                             'hora_inicio' => $horario['inicio'],
                             'hora_fin' => $horario['fin'],

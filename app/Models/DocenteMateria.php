@@ -11,9 +11,10 @@ class DocenteMateria extends Model
 
     protected $fillable = [
         'docente_id',
-        'curso_materia_id',
+        'materia_id',
         'paralelo_id',
         'periodo_academico_id',
+        'rol',
     ];
 
     public function docente(): BelongsTo
@@ -21,9 +22,9 @@ class DocenteMateria extends Model
         return $this->belongsTo(Docente::class);
     }
 
-    public function cursoMateria(): BelongsTo
+    public function materia(): BelongsTo
     {
-        return $this->belongsTo(CursoMateria::class);
+        return $this->belongsTo(Materia::class);
     }
 
     public function paralelo(): BelongsTo
@@ -34,5 +35,20 @@ class DocenteMateria extends Model
     public function periodoAcademico(): BelongsTo
     {
         return $this->belongsTo(PeriodoAcademico::class);
+    }
+
+    public function horarios()
+    {
+        return $this->hasMany(Horario::class);
+    }
+
+    // Helper: Calcular total de horas asignadas
+    public function totalHorasAsignadas()
+    {
+        return $this->horarios->sum(function($horario) {
+            $inicio = \Carbon\Carbon::parse($horario->hora_inicio);
+            $fin = \Carbon\Carbon::parse($horario->hora_fin);
+            return $inicio->diffInHours($fin);
+        });
     }
 }

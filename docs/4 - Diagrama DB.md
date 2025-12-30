@@ -353,18 +353,22 @@ Información específica de docentes.
 | updated_at | TIMESTAMP | Fecha de actualización | NULL |
 
 #### `docente_materia`
-Asignación de docentes a materias por paralelo.
+Asignación de docentes a materias por paralelo (permite múltiples docentes por materia).
 
 | Campo | Tipo | Descripción | Constraints |
 |-------|------|-------------|-------------|
 | id | BIGINT | ID único | PK, AUTO_INCREMENT |
 | docente_id | BIGINT | ID del docente | FK docentes.id |
-| curso_materia_id | BIGINT | ID curso-materia | FK curso_materia.id |
+| materia_id | BIGINT | ID de la materia | FK materias.id |
 | paralelo_id | BIGINT | ID del paralelo | FK paralelos.id |
 | periodo_academico_id | BIGINT | ID del período | FK periodos_academicos.id |
-| es_titular | BOOLEAN | Es profesor titular | DEFAULT false |
+| rol | VARCHAR(50) | Rol del docente | DEFAULT 'Principal' |
 | created_at | TIMESTAMP | Fecha de creación | NULL |
 | updated_at | TIMESTAMP | Fecha de actualización | NULL |
+
+**UNIQUE CONSTRAINT**: (docente_id, materia_id, paralelo_id, periodo_academico_id)  
+**Roles permitidos**: Principal, Auxiliar, Practicante, Suplente, Co-teaching  
+**Nota**: El mismo docente NO puede estar asignado DOS VECES a la misma materia/paralelo, pero DIFERENTES docentes SÍ pueden (co-teaching, auxiliar, etc.)
 
 ---
 
@@ -689,23 +693,20 @@ Confirmaciones de asistencia a eventos.
 ### ⏰ **Horarios**
 
 #### `horarios`
-Horarios de clases.
+Bloques de tiempo específicos para cada asignación docente-materia.
 
 | Campo | Tipo | Descripción | Constraints |
 |-------|------|-------------|-------------|
 | id | BIGINT | ID único | PK, AUTO_INCREMENT |
-| paralelo_id | BIGINT | ID del paralelo | FK paralelos.id |
-| materia_id | BIGINT | ID de la materia | FK materias.id |
-| docente_id | BIGINT | ID del docente | FK docentes.id |
-| aula_id | BIGINT | ID del aula | FK aulas.id, NULL |
-| periodo_academico_id | BIGINT | Período académico | FK periodos_academicos.id |
-| dia_semana | ENUM | lunes/martes/miércoles/jueves/viernes | NOT NULL |
+| docente_materia_id | BIGINT | ID asignación | FK docente_materia.id, CASCADE |
+| dia_semana | ENUM | Lunes/Martes/Miércoles/Jueves/Viernes/Sábado | NOT NULL |
 | hora_inicio | TIME | Hora de inicio | NOT NULL |
 | hora_fin | TIME | Hora de fin | NOT NULL |
 | created_at | TIMESTAMP | Fecha de creación | NULL |
 | updated_at | TIMESTAMP | Fecha de actualización | NULL |
 
-**INDEX**: (paralelo_id, dia_semana), (docente_id, dia_semana)
+**INDEX**: (dia_semana, hora_inicio, hora_fin) para consultas de conflictos  
+**Nota**: Cada horario pertenece a una asignación docente-materia. Al eliminar la asignación, se eliminan todos sus horarios (CASCADE).
 
 ---
 

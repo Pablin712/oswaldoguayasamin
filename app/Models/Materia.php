@@ -49,6 +49,14 @@ class Materia extends Model
         return $this->hasMany(Horario::class);
     }
 
+    /**
+     * Relación con asignaciones de docentes
+     */
+    public function docenteMaterias(): HasMany
+    {
+        return $this->hasMany(DocenteMateria::class);
+    }
+
     public function scopeActivas($query)
     {
         return $query->where('estado', 'activa');

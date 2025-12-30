@@ -17,6 +17,8 @@ class Paralelo extends Model
         'aula_id',
     ];
 
+    protected $appends = ['nombre_completo'];
+
     protected function casts(): array
     {
         return [

@@ -20,7 +20,7 @@ class TareaSeeder extends Seeder
     public function run(): void
     {
         // Obtener asignaciones de docentes
-        $asignaciones = DocenteMateria::with(['docente', 'cursoMateria.materia', 'paralelo'])
+        $asignaciones = DocenteMateria::with(['docente', 'materia', 'paralelo'])
             ->get();
 
         if ($asignaciones->isEmpty()) {
@@ -44,9 +44,9 @@ class TareaSeeder extends Seeder
 
                 $tarea = Tarea::create([
                     'docente_id' => $asignacion->docente_id,
-                    'materia_id' => $asignacion->cursoMateria->materia_id,
+                    'materia_id' => $asignacion->materia_id,
                     'paralelo_id' => $asignacion->paralelo_id,
-                    'titulo' => $this->getTituloAleatorio($asignacion->cursoMateria->materia->nombre),
+                    'titulo' => $this->getTituloAleatorio($asignacion->materia->nombre),
                     'descripcion' => $this->getDescripcionAleatoria(),
                     'fecha_asignacion' => $fechaAsignacion,
                     'fecha_entrega' => $fechaAsignacion->copy()->addDays($diasParaEntrega),

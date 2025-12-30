@@ -323,16 +323,38 @@ Trazabilidad del sistema.
   - **Seeder:** 80 relaciones creadas (cada estudiante vinculado a 2 padres)
 
 #### Asignaciones Académicas
-- [x] **docente_materia** - Asignación docente-materia-paralelo
-  - Estado: ✅ **COMPLETA**
-  - Fecha: 23/12/2024
+- [x] **docente_materia** - Asignación docente-materia-paralelo (Multi-docente)
+  - Estado: ✅ **COMPLETA Y ACTUALIZADA**
+  - Fecha: 30/12/2024
+  - Arquitectura: Sistema de 2 tablas (asignaciones + bloques de tiempo)
   - Campos implementados:
-    - `id`, `docente_id` (FK), `curso_materia_id` (FK)
+    - `id`, `docente_id` (FK), `materia_id` (FK) - **Relación directa a materias**
     - `paralelo_id` (FK), `periodo_academico_id` (FK)
+    - `rol` (VARCHAR 50, DEFAULT 'Principal')
     - `timestamps`
-    - UNIQUE constraint (docente_id, curso_materia_id, paralelo_id, periodo_academico_id)
-  - **Modelo:** belongsTo Docente, CursoMateria, Paralelo, PeriodoAcademico
-  - **Seeder:** 270 asignaciones creadas
+    - UNIQUE constraint (docente_id, materia_id, paralelo_id, periodo_academico_id)
+  - **Modelo:** belongsTo Docente, Materia, Paralelo, PeriodoAcademico; hasMany Horarios
+  - **Funcionalidades:** 
+    - Permite múltiples docentes por materia (co-teaching, auxiliar, practicante)
+    - Helper totalHorasAsignadas() para calcular carga horaria
+    - Previene asignación duplicada del mismo docente
+  - **Seeder:** 270 asignaciones creadas con rol 'Principal' con rol 'Principal'
+
+- [x] **horarios** - Bloques de tiempo para asignaciones docente-materia
+  - Estado: ✅ **COMPLETA Y ACTUALIZADA**
+  - Fecha: 30/12/2024
+  - Arquitectura: Depende de docente_materia_id (relación padre-hijo)
+  - Campos implementados:
+    - `id`, `docente_materia_id` (FK con CASCADE)
+    - `dia_semana` (ENUM: Lunes/Martes/Miércoles/Jueves/Viernes/Sábado)
+    - `hora_inicio` (TIME), `hora_fin` (TIME)
+    - `timestamps`
+  - **Modelo:** belongsTo DocenteMateria; Accessors para Docente, Materia, Paralelo
+  - **Funcionalidades:**
+    - Detección de conflictos (docente, aula, paralelo)
+    - Validación de solapamiento de horarios
+    - Cascade delete al eliminar asignación
+  - **Seeder:** 900 horarios creados (distribución: Lunes-Jueves 216 c/u, Viernes 36)
 
 - [x] **matriculas** - Matrícula de estudiantes por período
   - Estado: ✅ **COMPLETA**

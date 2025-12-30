@@ -45,9 +45,10 @@ class AsignacionesAcademicasSeeder extends Seeder
 
                 DocenteMateria::create([
                     'docente_id' => $docente->id,
-                    'curso_materia_id' => $cursoMateria->id,
+                    'materia_id' => $cursoMateria->materia_id,
                     'paralelo_id' => $paralelo->id,
                     'periodo_academico_id' => $periodoActual->id,
+                    'rol' => 'Principal',
                 ]);
 
                 $asignacionesCount++;
@@ -85,7 +86,7 @@ class AsignacionesAcademicasSeeder extends Seeder
 
             foreach ($cursoMaterias as $cursoMateria) {
                 // Obtener el docente asignado
-                $docenteMateria = DocenteMateria::where('curso_materia_id', $cursoMateria->id)
+                $docenteMateria = DocenteMateria::where('materia_id', $cursoMateria->materia_id)
                     ->where('paralelo_id', $paralelo->id)
                     ->first();
 

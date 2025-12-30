@@ -322,6 +322,17 @@ class="fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gra
                             <span class="text-sm">Curso-Materia</span>
                         </a>
                     @endcanany
+
+                    @canany(['gestionar asignaciones docentes', 'ver asignaciones docentes'])
+                        <!-- Docente-Materia -->
+                        <a href="{{ route('docente-materia.index') }}"
+                        class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors {{ request()->routeIs('docente-materia.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300' }}">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span class="text-sm">Docente-Materia</span>
+                        </a>
+                    @endcanany
                 </div>
             </div>
             @endcanany

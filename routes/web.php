@@ -18,6 +18,7 @@ use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\PadreController;
 use App\Http\Controllers\ParaleloController;
 use App\Http\Controllers\CursoMateriaController;
+use App\Http\Controllers\DocenteMateriaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -82,6 +83,11 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
             'update' => 'curso-materia.update',
             'destroy' => 'curso-materia.destroy',
         ]);
+
+    // Docente-Materia con Horarios
+    Route::resource('docente-materia', DocenteMateriaController::class)->except(['create', 'edit', 'show', 'update']);
+    Route::get('docente-materia/disponibilidad', [DocenteMateriaController::class, 'disponibilidad'])->name('docente-materia.disponibilidad');
+    Route::get('docente-materia/horarios-ocupados', [DocenteMateriaController::class, 'horariosOcupados'])->name('docente-materia.horarios-ocupados');
 });
 
 require __DIR__.'/auth.php';

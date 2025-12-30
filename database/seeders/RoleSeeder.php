@@ -145,6 +145,14 @@ class RoleSeeder extends Seeder
             'editar asignaciones',
             'eliminar asignaciones',
             'generar reporte asignaciones',
+
+            // Fase 5: Asignaciones Docente-Materia con Horarios
+            'gestionar asignaciones docentes',
+            'ver asignaciones docentes',
+            'crear asignaciones docentes',
+            'editar asignaciones docentes',
+            'eliminar asignaciones docentes',
+            'generar reporte asignaciones docentes',
         ];
 
         foreach ($permissions as $permission) {

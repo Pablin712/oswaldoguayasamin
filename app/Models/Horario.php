@@ -10,40 +10,37 @@ class Horario extends Model
     use HasFactory;
 
     protected $fillable = [
-        'paralelo_id',
-        'materia_id',
-        'docente_id',
-        'aula_id',
-        'periodo_academico_id',
+        'docente_materia_id',
         'dia_semana',
         'hora_inicio',
         'hora_fin',
     ];
 
+    protected $casts = [
+        'hora_inicio' => 'datetime:H:i',
+        'hora_fin' => 'datetime:H:i',
+    ];
+
     // Relaciones
-    public function paralelo()
+    public function docenteMateria()
     {
-        return $this->belongsTo(Paralelo::class);
+        return $this->belongsTo(DocenteMateria::class);
     }
 
-    public function materia()
+    // Acceso a relaciones a través de docenteMateria
+    public function getDocenteAttribute()
     {
-        return $this->belongsTo(Materia::class);
+        return $this->docenteMateria->docente ?? null;
     }
 
-    public function docente()
+    public function getMateriaAttribute()
     {
-        return $this->belongsTo(Docente::class);
+        return $this->docenteMateria->materia ?? null;
     }
 
-    public function aula()
+    public function getParaleloAttribute()
     {
-        return $this->belongsTo(Aula::class);
-    }
-
-    public function periodoAcademico()
-    {
-        return $this->belongsTo(PeriodoAcademico::class);
+        return $this->docenteMateria->paralelo ?? null;
     }
 
     // Scopes
