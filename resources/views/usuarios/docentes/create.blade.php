@@ -91,24 +91,36 @@
             <!-- Tipo Contrato -->
             <div class="mb-4">
                 <x-input-label for="tipo_contrato" :value="__('Tipo de Contrato')" />
-                <select id="tipo_contrato" name="tipo_contrato"
-                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-theme-primary dark:focus:border-theme-primary focus:ring-theme-primary dark:focus:ring-theme-primary rounded-md shadow-sm">
-                    <option value="">Seleccione un tipo</option>
-                    <option value="nombramiento" {{ old('tipo_contrato') == 'nombramiento' ? 'selected' : '' }}>Nombramiento</option>
-                    <option value="contrato" {{ old('tipo_contrato') == 'contrato' ? 'selected' : '' }}>Contrato</option>
-                </select>
+                <x-searchable-select
+                    id="tipo_contrato"
+                    name="tipo_contrato"
+                    :options="[
+                        ['id' => 'nombramiento', 'name' => 'Nombramiento'],
+                        ['id' => 'contrato', 'name' => 'Contrato']
+                    ]"
+                    :selected="old('tipo_contrato')"
+                    placeholder="Seleccione un tipo de contrato..."
+                    :allow-clear="true"
+                />
                 <x-input-error :messages="$errors->get('tipo_contrato')" class="mt-2" />
             </div>
 
             <!-- Estado -->
             <div class="mb-4">
                 <x-input-label for="estado" :value="__('Estado')" />
-                <select id="estado" name="estado" required
-                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-theme-primary dark:focus:border-theme-primary focus:ring-theme-primary dark:focus:ring-theme-primary rounded-md shadow-sm">
-                    <option value="activo" {{ old('estado', 'activo') == 'activo' ? 'selected' : '' }}>Activo</option>
-                    <option value="inactivo" {{ old('estado') == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
-                    <option value="licencia" {{ old('estado') == 'licencia' ? 'selected' : '' }}>Licencia</option>
-                </select>
+                <x-searchable-select
+                    id="estado"
+                    name="estado"
+                    :options="[
+                        ['id' => 'activo', 'name' => 'Activo'],
+                        ['id' => 'inactivo', 'name' => 'Inactivo'],
+                        ['id' => 'licencia', 'name' => 'Licencia']
+                    ]"
+                    :selected="old('estado', 'activo')"
+                    placeholder="Seleccione un estado..."
+                    :allow-clear="false"
+                    :required="true"
+                />
                 <x-input-error :messages="$errors->get('estado')" class="mt-2" />
             </div>
         </div>

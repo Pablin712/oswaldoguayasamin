@@ -104,24 +104,38 @@
                 <!-- Tipo Contrato -->
                 <div class="mb-4">
                     <x-input-label for="edit_tipo_contrato" :value="__('Tipo de Contrato')" />
-                    <select id="edit_tipo_contrato" name="tipo_contrato" x-model="editData.tipo_contrato"
-                            class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-theme-primary dark:focus:border-theme-primary focus:ring-theme-primary dark:focus:ring-theme-primary rounded-md shadow-sm">
-                        <option value="">Seleccione un tipo</option>
-                        <option value="nombramiento">Nombramiento</option>
-                        <option value="contrato">Contrato</option>
-                    </select>
+                    <x-searchable-select
+                        id="edit_tipo_contrato"
+                        name="tipo_contrato"
+                        :options="[
+                            ['id' => 'nombramiento', 'name' => 'Nombramiento'],
+                            ['id' => 'contrato', 'name' => 'Contrato']
+                        ]"
+                        placeholder="Seleccione un tipo de contrato..."
+                        :allow-clear="true"
+                        x-model="editData.tipo_contrato"
+                        dropdown-parent="#edit-docente"
+                    />
                     <x-input-error :messages="$errors->get('tipo_contrato')" class="mt-2" />
                 </div>
 
                 <!-- Estado -->
                 <div class="mb-4">
                     <x-input-label for="edit_estado" :value="__('Estado')" />
-                    <select id="edit_estado" name="estado" x-model="editData.estado" required
-                            class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-theme-primary dark:focus:border-theme-primary focus:ring-theme-primary dark:focus:ring-theme-primary rounded-md shadow-sm">
-                        <option value="activo">Activo</option>
-                        <option value="inactivo">Inactivo</option>
-                        <option value="licencia">Licencia</option>
-                    </select>
+                    <x-searchable-select
+                        id="edit_estado"
+                        name="estado"
+                        :options="[
+                            ['id' => 'activo', 'name' => 'Activo'],
+                            ['id' => 'inactivo', 'name' => 'Inactivo'],
+                            ['id' => 'licencia', 'name' => 'Licencia']
+                        ]"
+                        placeholder="Seleccione un estado..."
+                        :allow-clear="false"
+                        :required="true"
+                        x-model="editData.estado"
+                        dropdown-parent="#edit-docente"
+                    />
                     <x-input-error :messages="$errors->get('estado')" class="mt-2" />
                 </div>
             </div>

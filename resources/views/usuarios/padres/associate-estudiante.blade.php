@@ -10,25 +10,44 @@
             <div class="space-y-4">
                 <div>
                     <x-input-label for="estudiante_id" value="Seleccionar Estudiante" />
-                    <select id="estudiante_id" name="estudiante_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
-                        <option value="">Seleccione...</option>
-                        @foreach(\App\Models\Estudiante::with('user')->get() as $e)
-                            @if(!$padre->estudiantes->contains($e->id))
-                                <option value="{{ $e->id }}">{{ $e->codigo_estudiante }} - {{ $e->user->name }}</option>
-                            @endif
-                        @endforeach
-                    </select>
+                    @php
+                        $estudiantesDisponibles = \App\Models\Estudiante::with('user')
+                            ->get()
+                            ->filter(fn($e) => !$padre->estudiantes->contains($e->id))
+                            ->map(fn($e) => [
+                                'id' => $e->id,
+                                'name' => $e->codigo_estudiante . ' - ' . $e->user->name
+                            ])
+                            ->values()
+                            ->toArray();
+                    @endphp
+                    <x-searchable-select
+                        id="estudiante_id"
+                        name="estudiante_id"
+                        :options="$estudiantesDisponibles"
+                        placeholder="Buscar estudiante..."
+                        :allow-clear="false"
+                        :required="true"
+                        dropdown-parent="#add-estudiante-modal"
+                    />
                 </div>
 
                 <div>
                     <x-input-label for="parentesco" value="Parentesco" />
-                    <select id="parentesco" name="parentesco" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
-                        <option value="">Seleccione...</option>
-                        <option value="padre">Padre</option>
-                        <option value="madre">Madre</option>
-                        <option value="tutor">Tutor</option>
-                        <option value="otro">Otro</option>
-                    </select>
+                    <x-searchable-select
+                        id="parentesco"
+                        name="parentesco"
+                        :options="[
+                            ['id' => 'padre', 'name' => 'Padre'],
+                            ['id' => 'madre', 'name' => 'Madre'],
+                            ['id' => 'tutor', 'name' => 'Tutor'],
+                            ['id' => 'otro', 'name' => 'Otro']
+                        ]"
+                        placeholder="Seleccione parentesco..."
+                        :allow-clear="false"
+                        :required="true"
+                        dropdown-parent="#add-estudiante-modal"
+                    />
                 </div>
 
                 <div class="flex items-center">

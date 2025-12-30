@@ -97,17 +97,24 @@
 
                     <div>
                         <x-input-label for="edit_tipo_sangre" :value="__('Tipo de Sangre')" />
-                        <select id="edit_tipo_sangre" name="tipo_sangre" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" x-model="editData.tipo_sangre">
-                            <option value="">Seleccione...</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                        </select>
+                        <x-searchable-select
+                            id="edit_tipo_sangre"
+                            name="tipo_sangre"
+                            :options="[
+                                ['id' => 'O+', 'name' => 'O+'],
+                                ['id' => 'O-', 'name' => 'O-'],
+                                ['id' => 'A+', 'name' => 'A+'],
+                                ['id' => 'A-', 'name' => 'A-'],
+                                ['id' => 'B+', 'name' => 'B+'],
+                                ['id' => 'B-', 'name' => 'B-'],
+                                ['id' => 'AB+', 'name' => 'AB+'],
+                                ['id' => 'AB-', 'name' => 'AB-']
+                            ]"
+                            placeholder="Seleccione un tipo de sangre..."
+                            :allow-clear="true"
+                            x-model="editData.tipo_sangre"
+                            dropdown-parent="#edit-estudiante-modal"
+                        />
                         <x-input-error :messages="$errors->get('tipo_sangre')" class="mt-2" />
                     </div>
 
@@ -131,11 +138,20 @@
 
                     <div>
                         <x-input-label for="edit_estado" :value="__('Estado *')" />
-                        <select id="edit_estado" name="estado" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" x-model="editData.estado" required>
-                            <option value="activo">Activo</option>
-                            <option value="inactivo">Inactivo</option>
-                            <option value="retirado">Retirado</option>
-                        </select>
+                        <x-searchable-select
+                            id="edit_estado"
+                            name="estado"
+                            :options="[
+                                ['id' => 'activo', 'name' => 'Activo'],
+                                ['id' => 'inactivo', 'name' => 'Inactivo'],
+                                ['id' => 'retirado', 'name' => 'Retirado']
+                            ]"
+                            placeholder="Seleccione un estado..."
+                            :allow-clear="false"
+                            :required="true"
+                            x-model="editData.estado"
+                            dropdown-parent="#edit-estudiante-modal"
+                        />
                         <x-input-error :messages="$errors->get('estado')" class="mt-2" />
                     </div>
                 </div>

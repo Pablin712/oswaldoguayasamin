@@ -31,6 +31,7 @@
                 width: '100%',
                 placeholder: select.dataset.placeholder || select.getAttribute('placeholder') || 'Seleccione...',
                 allowClear: select.dataset.allowClear !== 'false',
+                minimumResultsForSearch: 0, // Siempre mostrar el campo de búsqueda
                 language: {
                     noResults: function() {
                         return "No se encontraron resultados";

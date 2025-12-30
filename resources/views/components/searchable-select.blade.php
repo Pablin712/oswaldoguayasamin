@@ -15,7 +15,7 @@
 <select
     id="{{ $id }}"
     name="{{ $name }}"
-    class="form-select searchable-select {{ $class }}"
+    class="searchable-select block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 {{ $class }}"
     {{ $required ? 'required' : '' }}
     data-placeholder="{{ $placeholder }}"
     data-allow-clear="{{ $allowClear ? 'true' : 'false' }}"

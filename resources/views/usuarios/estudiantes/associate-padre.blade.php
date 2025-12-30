@@ -10,25 +10,44 @@
             <div class="space-y-4">
                 <div>
                     <x-input-label for="padre_id" value="Seleccionar Padre/Representante" />
-                    <select id="padre_id" name="padre_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
-                        <option value="">Seleccione...</option>
-                        @foreach(\App\Models\Padre::with('user')->get() as $p)
-                            @if(!$estudiante->padres->contains($p->id))
-                                <option value="{{ $p->id }}">{{ $p->user->name }} - {{ $p->user->cedula }}</option>
-                            @endif
-                        @endforeach
-                    </select>
+                    @php
+                        $padresDisponibles = \App\Models\Padre::with('user')
+                            ->get()
+                            ->filter(fn($p) => !$estudiante->padres->contains($p->id))
+                            ->map(fn($p) => [
+                                'id' => $p->id,
+                                'name' => $p->user->name . ' - ' . $p->user->cedula
+                            ])
+                            ->values()
+                            ->toArray();
+                    @endphp
+                    <x-searchable-select
+                        id="padre_id"
+                        name="padre_id"
+                        :options="$padresDisponibles"
+                        placeholder="Buscar padre o representante..."
+                        :allow-clear="false"
+                        :required="true"
+                        dropdown-parent="#add-padre-modal"
+                    />
                 </div>
 
                 <div>
                     <x-input-label for="parentesco" value="Parentesco" />
-                    <select id="parentesco" name="parentesco" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
-                        <option value="">Seleccione...</option>
-                        <option value="padre">Padre</option>
-                        <option value="madre">Madre</option>
-                        <option value="tutor">Tutor</option>
-                        <option value="otro">Otro</option>
-                    </select>
+                    <x-searchable-select
+                        id="parentesco"
+                        name="parentesco"
+                        :options="[
+                            ['id' => 'padre', 'name' => 'Padre'],
+                            ['id' => 'madre', 'name' => 'Madre'],
+                            ['id' => 'tutor', 'name' => 'Tutor'],
+                            ['id' => 'otro', 'name' => 'Otro']
+                        ]"
+                        placeholder="Seleccione parentesco..."
+                        :allow-clear="false"
+                        :required="true"
+                        dropdown-parent="#add-padre-modal"
+                    />
                 </div>
 
                 <div class="flex items-center">
