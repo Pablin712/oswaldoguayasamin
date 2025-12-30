@@ -275,20 +275,32 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 
 ---
 
-### Fase 5: Asignaciones Académicas ⏳ PENDIENTE
+### Fase 5: Asignaciones Académicas 🔄 EN PROGRESO (2/4)
 **Vistas necesarias:** 4 módulos
 
-- [ ] **Paralelos**
+- [x] **Paralelos** ✅ COMPLETA
   - Tipo: Cards agrupados por curso
-  - Mockup: Requerido (vista de cards/grid, no tabla)
-  - Campos: curso, nombre (A, B, C), aula, cupo máximo, estudiantes matriculados
-  - Permisos: gestionar paralelos, ver, crear, editar, eliminar
+  - Mockup: ✅ Completado (docs/FASE_05_MOCKUP_PARALELOS.md)
+  - Campos: curso, nombre (A, B, C), aula, cupo máximo, período académico
+  - Permisos: gestionar paralelos, ver, crear, editar, eliminar, generar reporte paralelos
+  - Controlador: ✅ ParaleloController
+  - Form Request: ✅ ParaleloRequest
+  - Vistas: ✅ index.blade.php, show.blade.php, create.blade.php, edit.blade.php, delete.blade.php
+  - Rutas: ✅ paralelos.* (resource)
+  - **Características especiales:** Cards agrupados por curso, estadísticas, searchable-select, filtros por período
+  - **Fecha completada:** 29/12/2025
 
-- [ ] **Curso-Materia** (Asignación de materias a cursos)
-  - Tipo: Vista de asignación visual/matriz
-  - Mockup: Requerido (interfaz de asignación)
-  - Campos: curso, materias asignadas, horas semanales
-  - Permisos: gestionar asignaciones, ver, crear, editar, eliminar
+- [x] **Curso-Materia** (Asignación de materias a cursos) ✅ COMPLETA
+  - Tipo: Vista de asignación con cards de materias
+  - Mockup: ✅ Completado (docs/FASE_05_MOCKUP_CURSO_MATERIA.md)
+  - Campos: curso, materia, período académico, horas semanales
+  - Permisos: gestionar asignaciones, ver, crear, editar, eliminar, generar reporte asignaciones
+  - Controlador: ✅ CursoMateriaController
+  - Form Request: ✅ CursoMateriaRequest
+  - Vistas: ✅ index.blade.php, create.blade.php, edit.blade.php, delete.blade.php
+  - Rutas: ✅ asignaciones/curso-materia.* (resource sin show)
+  - **Características especiales:** Cards con colores de materia, cálculo total horas, validación duplicados, filtro de materias disponibles, searchable-select
+  - **Fecha completada:** 29/12/2025
 
 - [ ] **Docente-Materia** (Asignación de docentes)
   - Tipo: Vista de asignación con horario

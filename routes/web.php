@@ -17,6 +17,7 @@ use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\PadreController;
 use App\Http\Controllers\ParaleloController;
+use App\Http\Controllers\CursoMateriaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -73,6 +74,14 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
 
     // Fase 5: Asignaciones Académicas
     Route::resource('paralelos', ParaleloController::class)->except(['create', 'edit']);
+    Route::resource('asignaciones/curso-materia', CursoMateriaController::class)
+        ->except(['create', 'edit', 'show'])
+        ->names([
+            'index' => 'curso-materia.index',
+            'store' => 'curso-materia.store',
+            'update' => 'curso-materia.update',
+            'destroy' => 'curso-materia.destroy',
+        ]);
 });
 
 require __DIR__.'/auth.php';

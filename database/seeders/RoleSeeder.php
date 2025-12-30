@@ -137,6 +137,14 @@ class RoleSeeder extends Seeder
             'editar paralelos',
             'eliminar paralelos',
             'generar reporte paralelos',
+
+            // Fase 5: Asignaciones (Curso-Materia)
+            'gestionar asignaciones',
+            'ver asignaciones',
+            'crear asignaciones',
+            'editar asignaciones',
+            'eliminar asignaciones',
+            'generar reporte asignaciones',
         ];
 
         foreach ($permissions as $permission) {
