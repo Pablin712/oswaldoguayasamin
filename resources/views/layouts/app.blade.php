@@ -13,10 +13,20 @@
 
         {{-- Favicon usando el componente logo --}}
         <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+
+        <!-- Select2 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+        <!-- Select2 Dark Mode -->
+        <link href="{{ asset('css/select2-dark-mode.css') }}" rel="stylesheet" />
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <x-color-sistema />
+
+        <!-- Estilos adicionales por página -->
+        @stack('styles')
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-theme-five dark:bg-gray-900"
@@ -43,5 +53,17 @@
                 </main>
             </div>
         </div>
+
+        <!-- jQuery (debe cargarse antes que Select2) -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- Select2 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+        <!-- Inicializador de searchable-selects -->
+        <script src="{{ asset('js/searchable-select.js') }}"></script>
+
+        <!-- Scripts adicionales por página -->
+        @stack('scripts')
     </body>
 </html>
