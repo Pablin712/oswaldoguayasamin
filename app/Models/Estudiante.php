@@ -18,12 +18,14 @@ class Estudiante extends Model
         'contacto_emergencia',
         'telefono_emergencia',
         'estado',
+        'conteo_matriculas',
     ];
 
     protected function casts(): array
     {
         return [
             'fecha_ingreso' => 'date',
+            'conteo_matriculas' => 'array',
         ];
     }
 
@@ -63,6 +65,22 @@ class Estudiante extends Model
         return $this->hasMany(EventoConfirmacion::class);
     }
 
+    /**
+     * Relación con Solicitudes de Matrícula
+     */
+    public function solicitudesMatricula(): HasMany
+    {
+        return $this->hasMany(SolicitudMatricula::class);
+    }
+
+    /**
+     * Relación con Matrículas
+     */
+    public function matriculas(): HasMany
+    {
+        return $this->hasMany(Matricula::class);
+    }
+
     public function scopeActivos($query)
     {
         return $query->where('estado', 'activo');
@@ -74,5 +92,32 @@ class Estudiante extends Model
     public function getNombreCompletoAttribute(): string
     {
         return $this->user->name;
+    }
+
+    /**
+     * Incrementar conteo de matrículas para un curso
+     */
+    public function incrementarMatricula(int $cursoId): void
+    {
+        $conteo = $this->conteo_matriculas ?? [];
+        $conteo[$cursoId] = ($conteo[$cursoId] ?? 0) + 1;
+        $this->update(['conteo_matriculas' => $conteo]);
+    }
+
+    /**
+     * Obtener cantidad de matrículas en un curso específico
+     */
+    public function getConteoMatriculasEnCurso(int $cursoId): int
+    {
+        $conteo = $this->conteo_matriculas ?? [];
+        return $conteo[$cursoId] ?? 0;
+    }
+
+    /**
+     * Verificar si puede matricularse en un curso (máximo 2 matrículas)
+     */
+    public function puedeMatricularseEn(int $cursoId): bool
+    {
+        return $this->getConteoMatriculasEnCurso($cursoId) < 2;
     }
 }

@@ -1,8 +1,8 @@
 # 📊 Avances del Sistema de Gestión Académica
 
-**Última actualización:** 29 de diciembre de 2025  
+**Última actualización:** 03 de enero de 2026  
 **Estado:** ✅ BACKEND COMPLETADO AL 100% (BD, Modelos, Relaciones, Seeders)
-**Frontend:** 🔄 En Progreso - Fase 4 Completada, Iniciando Fase 5
+**Frontend:** 🔄 En Progreso - Fase 5 Iniciada (Matrículas con Órdenes de Pago)
 
 ---
 
@@ -18,7 +18,28 @@
 
 ## 🎉 BACKEND COMPLETADO + MEJORAS
 
-### ✨ Actualización Reciente (24/12/2025)
+### ✨ Actualización Reciente (03/01/2026)
+
+**Sistema Completo de Gestión de Matrículas Implementado:**
+- ✅ Tabla `configuracion_matriculas` - Costos por institución (fiscal/fiscomisional/particular)
+- ✅ Tabla `solicitudes_matricula` - Solicitudes de estudiantes nuevos/externos
+- ✅ Tabla `ordenes_pago` - Órdenes de pago con comprobantes
+- ✅ Tabla `matriculas` actualizada con tipo_matricula, orden_pago_id, aprobación
+- ✅ Tabla `estudiantes` actualizada con estado transferido y conteo de matrículas
+- ✅ Modelos con relaciones completas y métodos de negocio
+- ✅ Seeders con datos de prueba
+- ✅ Documentación completa en "8 - Gestión de matrículas.md"
+- ✅ Diagrama de BD actualizado
+
+**Características del Sistema de Matrículas:**
+- 🎓 Gestión de primera y segunda matrícula (máximo 2 por curso)
+- 💰 Órdenes de pago configurables por institución
+- 📄 Solicitudes para estudiantes externos con adjuntos
+- ✅ Aprobación de pagos con comprobantes
+- 📋 Validación de aprobación del año anterior
+- 🚫 Bloqueo automático tras segunda matrícula reprobada
+
+### ✨ Actualización (24/12/2025)
 
 **Sistema Multi-Institución Implementado:**
 - ✅ Tabla `configuraciones` ahora tiene `institucion_id` (FK a instituciones, UNIQUE)
@@ -36,15 +57,15 @@
 
 ### Estadísticas del Proyecto
 
-**Total de tablas identificadas en el diagrama:** 46 tablas
+**Total de tablas identificadas en el diagrama:** 50 tablas
 
 #### Por categoría:
-- **Tablas principales (núcleo):** 9 tablas
-- **Tablas secundarias (dependientes):** 24 tablas
+- **Tablas principales (núcleo):** 10 tablas
+- **Tablas secundarias (dependientes):** 27 tablas
 - **Tablas intermedias (relaciones):** 13 tablas
 
 #### Estado de implementación:
-- ✅ **Completadas:** 46 tablas (100%) 🎉
+- ✅ **Completadas:** 50 tablas (100%) 🎉
 - 🔄 **En progreso:** 0 tablas (0%)
 - ⏳ **Pendientes:** 0 tablas (0%)
 

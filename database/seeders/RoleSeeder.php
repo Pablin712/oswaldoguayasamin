@@ -153,6 +153,35 @@ class RoleSeeder extends Seeder
             'editar asignaciones docentes',
             'eliminar asignaciones docentes',
             'generar reporte asignaciones docentes',
+
+            // Fase 5: Solicitudes de Matrícula
+            'ver solicitudes matricula',
+            'aprobar solicitudes matricula',
+            'rechazar solicitudes matricula',
+            'gestionar solicitudes matricula',
+
+            // Fase 5: Órdenes de Pago
+            'ver ordenes pago',
+            'aprobar ordenes pago',
+            'rechazar ordenes pago',
+            'gestionar ordenes pago',
+
+            // Fase 5: Configuración de Matrículas
+            'gestionar configuracion matriculas',
+            'ver configuracion matriculas',
+            'editar configuracion matriculas',
+
+            // Fase 5: Matrículas
+            'ver matriculas',
+            'crear matriculas',
+            'editar matriculas',
+            'eliminar matriculas',
+            'gestionar matriculas',
+            'generar reporte matriculas',
+
+            // Fase 5: Carpeta Académica
+            'generar carpeta academica',
+            'ver carpeta academica',
         ];
 
         foreach ($permissions as $permission) {

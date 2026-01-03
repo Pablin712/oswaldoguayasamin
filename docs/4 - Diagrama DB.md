@@ -50,12 +50,25 @@ erDiagram
     
     estudiantes ||--o{ matriculas : "se matricula"
     estudiantes ||--o{ estudiante_padre : "tiene tutor"
+    estudiantes ||--o{ solicitudes_matricula : "solicita"
     padres ||--o{ estudiante_padre : "es tutor de"
     estudiantes ||--o{ calificaciones : "recibe"
     estudiantes ||--o{ asistencias : "tiene"
     estudiantes ||--o{ tarea_estudiante : "realiza"
     
     matriculas }o--|| periodos_academicos : "en periodo"
+    matriculas ||--o| ordenes_pago : "tiene orden"
+    matriculas }o--o| solicitudes_matricula : "generada por"
+    
+    ordenes_pago }o--|| matriculas : "para matricula"
+    ordenes_pago }o--o| users : "revisado por"
+    
+    solicitudes_matricula }o--|| cursos : "para curso"
+    solicitudes_matricula }o--|| periodos_academicos : "para periodo"
+    solicitudes_matricula }o--o| users : "revisado por"
+    solicitudes_matricula }o--o| estudiantes : "genera estudiante"
+    
+    instituciones ||--o| configuracion_matriculas : "configura costos"
     
     docentes ||--o{ docente_materia : "enseña"
     curso_materia ||--o{ docente_materia : "asignado a"
@@ -387,7 +400,8 @@ Información específica de estudiantes.
 | alergias | TEXT | Alergias conocidas | NULL |
 | contacto_emergencia | VARCHAR(255) | Contacto emergencia | NULL |
 | telefono_emergencia | VARCHAR(20) | Teléfono emergencia | NULL |
-| estado | ENUM | activo/inactivo/retirado | DEFAULT 'activo' |
+| estado | ENUM | activo/inactivo/retirado/transferido | DEFAULT 'activo' |
+| conteo_matriculas | JSON | Conteo matrículas por curso | NULL |
 | created_at | TIMESTAMP | Fecha de creación | NULL |
 | updated_at | TIMESTAMP | Fecha de actualización | NULL |
 
@@ -428,14 +442,81 @@ Matrículas de estudiantes por período.
 | estudiante_id | BIGINT | ID del estudiante | FK estudiantes.id |
 | paralelo_id | BIGINT | ID del paralelo | FK paralelos.id |
 | periodo_academico_id | BIGINT | ID del período | FK periodos_academicos.id |
-| numero_matricula | VARCHAR(20) | Número de matrícula | UNIQUE |
+| numero_matricula | VARCHAR(50) | Número de matrícula | UNIQUE |
 | fecha_matricula | DATE | Fecha de matrícula | NOT NULL |
-| estado | ENUM | activa/retirada/transferida | DEFAULT 'activa' |
+| tipo_matricula | ENUM | primera/segunda | DEFAULT 'primera' |
+| orden_pago_id | BIGINT | ID orden de pago | FK ordenes_pago.id, NULL |
+| solicitud_matricula_id | BIGINT | ID solicitud | FK solicitudes_matricula.id, NULL |
+| estado | ENUM | pendiente/aprobada/rechazada/activa/retirada/trasladada/finalizada | DEFAULT 'pendiente' |
+| fecha_aprobacion | TIMESTAMP | Fecha de aprobación | NULL |
+| aprobado_por | BIGINT | Usuario que aprobó | FK users.id, NULL |
 | observaciones | TEXT | Observaciones | NULL |
 | created_at | TIMESTAMP | Fecha de creación | NULL |
 | updated_at | TIMESTAMP | Fecha de actualización | NULL |
 
-**UNIQUE**: (estudiante_id, periodo_academico_id)
+**UNIQUE**: (estudiante_id, paralelo_id, periodo_academico_id)
+
+#### `ordenes_pago`
+Órdenes de pago para matrículas.
+
+| Campo | Tipo | Descripción | Constraints |
+|-------|------|-------------|-------------|
+| id | BIGINT | ID único | PK, AUTO_INCREMENT |
+| matricula_id | BIGINT | ID de matrícula | FK matriculas.id |
+| codigo_orden | VARCHAR(50) | Código único | UNIQUE |
+| monto | DECIMAL(10,2) | Monto a pagar | NOT NULL |
+| tipo_pago | ENUM | primera_matricula/segunda_matricula | DEFAULT 'primera_matricula' |
+| estado | ENUM | pendiente/aprobada/rechazada | DEFAULT 'pendiente' |
+| comprobante_path | VARCHAR(255) | Ruta del comprobante | NULL |
+| fecha_pago | TIMESTAMP | Fecha de pago | NULL |
+| observaciones | TEXT | Observaciones | NULL |
+| revisado_por | BIGINT | Usuario revisor | FK users.id, NULL |
+| fecha_revision | TIMESTAMP | Fecha de revisión | NULL |
+| created_at | TIMESTAMP | Fecha de creación | NULL |
+| updated_at | TIMESTAMP | Fecha de actualización | NULL |
+
+**INDEX**: (estado, created_at), codigo_orden
+
+#### `solicitudes_matricula`
+Solicitudes de matrícula de estudiantes nuevos/externos.
+
+| Campo | Tipo | Descripción | Constraints |
+|-------|------|-------------|-------------|
+| id | BIGINT | ID único | PK, AUTO_INCREMENT |
+| estudiante_id | BIGINT | ID estudiante generado | FK estudiantes.id, NULL |
+| nombres | VARCHAR(100) | Nombres | NOT NULL |
+| apellidos | VARCHAR(100) | Apellidos | NOT NULL |
+| cedula | VARCHAR(13) | Cédula | UNIQUE |
+| email | VARCHAR(100) | Email | NOT NULL |
+| telefono | VARCHAR(20) | Teléfono | NULL |
+| institucion_origen | VARCHAR(255) | Institución de origen | NULL |
+| curso_solicitado_id | BIGINT | Curso solicitado | FK cursos.id |
+| periodo_academico_id | BIGINT | Período académico | FK periodos_academicos.id |
+| adjunto_cedula_path | VARCHAR(255) | Ruta cédula | NULL |
+| adjunto_certificado_path | VARCHAR(255) | Ruta certificado | NULL |
+| estado | ENUM | pendiente/aprobada/rechazada | DEFAULT 'pendiente' |
+| observaciones | TEXT | Observaciones | NULL |
+| revisado_por | BIGINT | Usuario revisor | FK users.id, NULL |
+| fecha_revision | TIMESTAMP | Fecha de revisión | NULL |
+| created_at | TIMESTAMP | Fecha de creación | NULL |
+| updated_at | TIMESTAMP | Fecha de actualización | NULL |
+
+**INDEX**: (estado, periodo_academico_id)
+
+#### `configuracion_matriculas`
+Configuración de costos de matrícula por institución.
+
+| Campo | Tipo | Descripción | Constraints |
+|-------|------|-------------|-------------|
+| id | BIGINT | ID único | PK, AUTO_INCREMENT |
+| institucion_id | BIGINT | ID institución | FK instituciones.id, UNIQUE |
+| tipo_institucion | ENUM | fiscal/fiscomisional/particular | DEFAULT 'fiscal' |
+| monto_primera_matricula | DECIMAL(10,2) | Costo primera matrícula | DEFAULT 0 |
+| monto_segunda_matricula | DECIMAL(10,2) | Costo segunda matrícula | DEFAULT 0 |
+| created_at | TIMESTAMP | Fecha de creación | NULL |
+| updated_at | TIMESTAMP | Fecha de actualización | NULL |
+
+**UNIQUE**: institucion_id
 
 ---
 
