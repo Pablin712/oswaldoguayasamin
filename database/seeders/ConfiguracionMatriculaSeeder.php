@@ -14,29 +14,35 @@ class ConfiguracionMatriculaSeeder extends Seeder
      */
     public function run(): void
     {
-        // Obtener instituciones
-        $instituciones = Institucion::all();
+        // Institución 1: Unidad Educativa Oswaldo Guayasamín (Fiscal)
+        ConfiguracionMatricula::updateOrCreate(
+            ['institucion_id' => 1],
+            [
+                'tipo_institucion' => 'fiscal',
+                'monto_primera_matricula' => 0.00,  // Gratuita
+                'monto_segunda_matricula' => 0.00,  // Gratuita
+            ]
+        );
 
-        foreach ($instituciones as $institucion) {
-            ConfiguracionMatricula::firstOrCreate(
-                ['institucion_id' => $institucion->id],
-                [
-                    'tipo_institucion' => 'fiscal', // Cambiar según corresponda
-                    'monto_primera_matricula' => 0,  // Gratuita para fiscal
-                    'monto_segunda_matricula' => 25.00, // Ejemplo: $25 por segunda matrícula
-                ]
-            );
-        }
+        // Institución 2: Unidad Educativa Fiscal Galápagos (Fiscomisional - cobra algo)
+        ConfiguracionMatricula::updateOrCreate(
+            ['institucion_id' => 2],
+            [
+                'tipo_institucion' => 'fiscomisional',
+                'monto_primera_matricula' => 35.00,
+                'monto_segunda_matricula' => 50.00,
+            ]
+        );
 
-        // Ejemplo: Configurar segunda institución como fiscomisional
-        $institucion2 = Institucion::find(2);
-        if ($institucion2) {
+        // Si hay más instituciones, configurarlas también
+        $institucion3 = Institucion::find(3);
+        if ($institucion3) {
             ConfiguracionMatricula::updateOrCreate(
-                ['institucion_id' => $institucion2->id],
+                ['institucion_id' => 3],
                 [
-                    'tipo_institucion' => 'fiscomisional',
-                    'monto_primera_matricula' => 50.00,
-                    'monto_segunda_matricula' => 75.00,
+                    'tipo_institucion' => 'particular',
+                    'monto_primera_matricula' => 150.00,
+                    'monto_segunda_matricula' => 200.00,
                 ]
             );
         }

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Area;
 use App\Models\Aula;
 use App\Models\Curso;
+use App\Models\Institucion;
 use App\Models\Materia;
 use App\Models\Parcial;
 use App\Models\PeriodoAcademico;
@@ -15,86 +16,91 @@ class EstructuraAcademicaSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Crear Período Académico 2024-2025
-        $periodo = PeriodoAcademico::create([
-            'nombre' => '2024-2025',
-            'fecha_inicio' => '2024-09-01',
-            'fecha_fin' => '2025-06-30',
-            'estado' => 'activo',
-        ]);
+        $instituciones = Institucion::all();
 
-        // 2. Crear Quimestres
-        $quimestre1 = Quimestre::create([
-            'periodo_academico_id' => $periodo->id,
-            'nombre' => 'Primer Quimestre',
-            'numero' => 1,
-            'fecha_inicio' => '2024-09-01',
-            'fecha_fin' => '2025-01-31',
-        ]);
+        foreach ($instituciones as $institucion) {
+            // 1. Crear Período Académico 2024-2025 para cada institución
+            $periodo = PeriodoAcademico::create([
+                'institucion_id' => $institucion->id,
+                'nombre' => '2024-2025',
+                'fecha_inicio' => '2024-09-01',
+                'fecha_fin' => '2025-06-30',
+                'estado' => 'activo',
+            ]);
 
-        $quimestre2 = Quimestre::create([
-            'periodo_academico_id' => $periodo->id,
-            'nombre' => 'Segundo Quimestre',
-            'numero' => 2,
-            'fecha_inicio' => '2025-02-01',
-            'fecha_fin' => '2025-06-30',
-        ]);
+            // 2. Crear Quimestres
+            $quimestre1 = Quimestre::create([
+                'periodo_academico_id' => $periodo->id,
+                'nombre' => 'Primer Quimestre',
+                'numero' => 1,
+                'fecha_inicio' => '2024-09-01',
+                'fecha_fin' => '2025-01-31',
+            ]);
 
-        // 3. Crear Parciales para Quimestre 1
-        Parcial::create([
-            'quimestre_id' => $quimestre1->id,
-            'nombre' => 'Primer Parcial',
-            'numero' => 1,
-            'fecha_inicio' => '2024-09-01',
-            'fecha_fin' => '2024-10-15',
-            'permite_edicion' => true,
-        ]);
+            $quimestre2 = Quimestre::create([
+                'periodo_academico_id' => $periodo->id,
+                'nombre' => 'Segundo Quimestre',
+                'numero' => 2,
+                'fecha_inicio' => '2025-02-01',
+                'fecha_fin' => '2025-06-30',
+            ]);
 
-        Parcial::create([
-            'quimestre_id' => $quimestre1->id,
-            'nombre' => 'Segundo Parcial',
-            'numero' => 2,
-            'fecha_inicio' => '2024-10-16',
-            'fecha_fin' => '2024-11-30',
-            'permite_edicion' => true,
-        ]);
+            // 3. Crear Parciales para Quimestre 1
+            Parcial::create([
+                'quimestre_id' => $quimestre1->id,
+                'nombre' => 'Primer Parcial',
+                'numero' => 1,
+                'fecha_inicio' => '2024-09-01',
+                'fecha_fin' => '2024-10-15',
+                'permite_edicion' => true,
+            ]);
 
-        Parcial::create([
-            'quimestre_id' => $quimestre1->id,
-            'nombre' => 'Tercer Parcial',
-            'numero' => 3,
-            'fecha_inicio' => '2024-12-01',
-            'fecha_fin' => '2025-01-31',
-            'permite_edicion' => true,
-        ]);
+            Parcial::create([
+                'quimestre_id' => $quimestre1->id,
+                'nombre' => 'Segundo Parcial',
+                'numero' => 2,
+                'fecha_inicio' => '2024-10-16',
+                'fecha_fin' => '2024-11-30',
+                'permite_edicion' => true,
+            ]);
 
-        // 4. Crear Parciales para Quimestre 2
-        Parcial::create([
-            'quimestre_id' => $quimestre2->id,
-            'nombre' => 'Primer Parcial',
-            'numero' => 1,
-            'fecha_inicio' => '2025-02-01',
-            'fecha_fin' => '2025-03-15',
-            'permite_edicion' => true,
-        ]);
+            Parcial::create([
+                'quimestre_id' => $quimestre1->id,
+                'nombre' => 'Tercer Parcial',
+                'numero' => 3,
+                'fecha_inicio' => '2024-12-01',
+                'fecha_fin' => '2025-01-31',
+                'permite_edicion' => true,
+            ]);
 
-        Parcial::create([
-            'quimestre_id' => $quimestre2->id,
-            'nombre' => 'Segundo Parcial',
-            'numero' => 2,
-            'fecha_inicio' => '2025-03-16',
-            'fecha_fin' => '2025-04-30',
-            'permite_edicion' => true,
-        ]);
+            // 4. Crear Parciales para Quimestre 2
+            Parcial::create([
+                'quimestre_id' => $quimestre2->id,
+                'nombre' => 'Primer Parcial',
+                'numero' => 1,
+                'fecha_inicio' => '2025-02-01',
+                'fecha_fin' => '2025-03-15',
+                'permite_edicion' => true,
+            ]);
 
-        Parcial::create([
-            'quimestre_id' => $quimestre2->id,
-            'nombre' => 'Tercer Parcial',
-            'numero' => 3,
-            'fecha_inicio' => '2025-05-01',
-            'fecha_fin' => '2025-06-30',
-            'permite_edicion' => true,
-        ]);
+            Parcial::create([
+                'quimestre_id' => $quimestre2->id,
+                'nombre' => 'Segundo Parcial',
+                'numero' => 2,
+                'fecha_inicio' => '2025-03-16',
+                'fecha_fin' => '2025-04-30',
+                'permite_edicion' => true,
+            ]);
+
+            Parcial::create([
+                'quimestre_id' => $quimestre2->id,
+                'nombre' => 'Tercer Parcial',
+                'numero' => 3,
+                'fecha_inicio' => '2025-05-01',
+                'fecha_fin' => '2025-06-30',
+                'permite_edicion' => true,
+            ]);
+        }
 
         // 5. Crear Cursos (Educación Básica y Bachillerato)
         $cursos = [

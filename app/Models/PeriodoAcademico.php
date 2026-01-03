@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PeriodoAcademico extends Model
 {
     protected $fillable = [
+        'institucion_id',
         'nombre',
         'fecha_inicio',
         'fecha_fin',
@@ -27,6 +29,14 @@ class PeriodoAcademico extends Model
     public function quimestres(): HasMany
     {
         return $this->hasMany(Quimestre::class);
+    }
+
+    /**
+     * Relación con Institución
+     */
+    public function institucion(): BelongsTo
+    {
+        return $this->belongsTo(Institucion::class);
     }
 
     /**

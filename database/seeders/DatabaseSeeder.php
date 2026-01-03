@@ -31,6 +31,9 @@ class DatabaseSeeder extends Seeder
             EventoSeeder::class, // Fase 11
             HorarioSeeder::class, // Fase 12
             AuditoriaSeeder::class, // Fase 13
+            ConfiguracionMatriculaSeeder::class, // Fase 5
+            SolicitudMatriculaSeeder::class, // Fase 5
+            OrdenPagoSeeder::class, // Fase 5
         ]);
     }
 }

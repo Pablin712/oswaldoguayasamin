@@ -55,7 +55,7 @@ class SolicitudMatricula extends Model
      */
     public function periodoAcademico(): BelongsTo
     {
-        return $this->belongsTo(PeriodoAcademico::class);
+        return $this->belongsTo(PeriodoAcademico::class, 'periodo_academico_id');
     }
 
     /**

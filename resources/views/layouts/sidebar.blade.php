@@ -1,11 +1,12 @@
 <aside x-data="{
     sidebarOpen: localStorage.getItem('sidebarOpen') === 'true' || localStorage.getItem('sidebarOpen') === null,
     dropdowns: {
-        configuracion: {{ request()->routeIs(['instituciones.*', 'configuraciones.*']) ? 'true' : 'false' }},
+        configuracion: {{ request()->routeIs(['instituciones.*', 'configuraciones.*', 'configuracion.matricula.*']) ? 'true' : 'false' }},
         estructuraAcademica: {{ request()->routeIs(['periodos-academicos.*', 'quimestres.*', 'parciales.*', 'cursos.*', 'materias.*', 'areas.*', 'aulas.*']) ? 'true' : 'false' }},
         administracion: {{ request()->routeIs(['users.*', 'roles.*', 'permissions.*']) ? 'true' : 'false' }},
         usuariosEspecializados: {{ request()->routeIs(['docentes.*', 'estudiantes.*', 'padres.*']) ? 'true' : 'false' }},
-        asignaciones: {{ request()->routeIs(['paralelos.*', 'curso-materia.*', 'docente-materia.*', 'matriculas.*']) ? 'true' : 'false' }},
+        asignaciones: {{ request()->routeIs(['paralelos.*', 'curso-materia.*', 'docente-materia.*']) ? 'true' : 'false' }},
+        matriculas: {{ request()->routeIs(['solicitudes-matricula.*', 'ordenes-pago.*']) ? 'true' : 'false' }},
         calificaciones: {{ request()->routeIs(['calificaciones.*', 'componentes.*']) ? 'true' : 'false' }},
         asistencia: {{ request()->routeIs(['asistencias.*', 'justificaciones.*']) ? 'true' : 'false' }},
         tareas: {{ request()->routeIs(['tareas.*', 'entregas.*']) ? 'true' : 'false' }},
@@ -110,6 +111,17 @@ class="fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gra
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
                             <span class="text-sm">Parámetros</span>
+                        </a>
+                    @endcanany
+
+                    @canany(['gestionar configuracion matriculas', 'ver configuracion matriculas'])
+                        <!-- Costos de Matrícula -->
+                        <a href="{{ route('configuracion.matricula.show') }}"
+                        class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors {{ request()->routeIs('configuracion.matricula.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300' }}">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-sm">Costos de Matrícula</span>
                         </a>
                     @endcanany
                 </div>
@@ -331,6 +343,54 @@ class="fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gra
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             <span class="text-sm">Docente-Materia</span>
+                        </a>
+                    @endcanany
+                </div>
+            </div>
+            @endcanany
+
+            <!-- Matrículas Dropdown -->
+            @canany(['gestionar configuracion matriculas', 'ver configuracion matriculas', 'gestionar solicitudes matricula', 'ver solicitudes matricula', 'gestionar ordenes pago', 'ver ordenes pago'])
+            <div class="space-y-1">
+                <button @click="toggleDropdown('matriculas')"
+                        class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg transition-colors text-gray-900 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span x-show="sidebarOpen" class="font-medium">Matrículas</span>
+                    </div>
+                    <svg x-show="sidebarOpen"
+                         :class="dropdowns.matriculas ? 'rotate-180' : ''"
+                         class="w-4 h-4 flex-shrink-0 transition-transform duration-200"
+                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <!-- Submenu Items -->
+                <div x-show="dropdowns.matriculas && sidebarOpen"
+                     x-collapse
+                     class="ml-3 space-y-1 border-l-2 border-gray-200 dark:border-gray-700">
+                    @canany(['gestionar solicitudes matricula', 'ver solicitudes matricula'])
+                        <!-- Solicitudes -->
+                        <a href="{{ route('solicitudes-matricula.index') }}"
+                        class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors {{ request()->routeIs('solicitudes-matricula.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300' }}">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span class="text-sm">Solicitudes</span>
+                        </a>
+                    @endcanany
+
+                    @canany(['gestionar ordenes pago', 'ver ordenes pago'])
+                        <!-- Órdenes de Pago -->
+                        <a href="{{ route('ordenes-pago.index') }}"
+                        class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors {{ request()->routeIs('ordenes-pago.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300' }}">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span class="text-sm">Órdenes de Pago</span>
                         </a>
                     @endcanany
                 </div>
