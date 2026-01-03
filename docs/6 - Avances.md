@@ -1,8 +1,8 @@
 # 📊 Avances del Sistema de Gestión Académica
 
-**Última actualización:** 03 de enero de 2026  
+**Última actualización:** 04 de enero de 2026  
 **Estado:** ✅ BACKEND COMPLETADO AL 100% (BD, Modelos, Relaciones, Seeders)
-**Frontend:** ✅ Fase 5 COMPLETADA (Sistema de Matrículas con Órdenes de Pago + Controllers + Views)
+**Frontend:** ✅ Fase 5 COMPLETADA (Sistema de Matrículas con Órdenes de Pago + Controllers + Views + Flujo Multi-Institución)
 
 ---
 
@@ -18,7 +18,50 @@
 
 ## 🎉 BACKEND COMPLETADO + MEJORAS
 
-### ✨ Actualización Reciente (03/01/2026) - FASE 5 COMPLETADA
+### ✨ Actualización Reciente (04/01/2026) - FASE 5: FLUJO DE MATRICULACIÓN COMPLETADO
+
+**Sistema de Acceso a Matriculación (Multi-Institución) Implementado:**
+
+**Accesos de Usuario:**
+- ✅ **Estudiantes internos (sidebar):**
+  - Link "Solicitar Matrícula" visible solo para rol `estudiante`
+  - Acceso directo desde el dashboard al formulario de matriculación
+  - Ruta: `/solicitudes-matricula/create`
+  
+- ✅ **Solicitantes externos (welcome page):**
+  - Botón "Matricularse" en navegación superior (junto a "Iniciar Sesión")
+  - Botón principal "Solicitar Matrícula" en sección hero
+  - Acceso público sin autenticación requerida
+  - Ruta: `/solicitar-matricula`
+
+**Validaciones Multi-Institución:**
+- ✅ Verificación de períodos académicos activos antes de mostrar formulario
+- ✅ Redirección automática a welcome page si no hay períodos disponibles
+- ✅ Mensaje informativo cuando no hay períodos activos
+- ✅ Formulario muestra solo períodos activos por institución
+- ✅ Selector de institución dinámico en el formulario
+
+**Flujo Completo:**
+1. Usuario accede desde sidebar (estudiante) o welcome (externo)
+2. Sistema verifica períodos académicos activos por institución
+3. Si no hay períodos: redirecciona con mensaje informativo
+4. Si hay períodos: muestra formulario con instituciones/períodos disponibles
+5. Usuario selecciona institución y período académico correspondiente
+6. Sistema procesa solicitud y genera orden de pago asociada
+
+**Características del Sistema de Matrículas:**
+- 🎓 Gestión de primera y segunda matrícula (máximo 2 por curso)
+- 💰 Órdenes de pago configurables por institución
+- 📄 Solicitudes para estudiantes externos con adjuntos (cédula, certificado)
+- ✅ Aprobación de pagos con comprobantes (upload y download)
+- 📋 Validación de aprobación del año anterior
+- 🚫 Bloqueo automático tras segunda matrícula reprobada
+- 🔐 Permisos granulares (13 permisos específicos)
+- 💾 Almacenamiento privado de documentos sensibles
+- 🎨 Interfaz completa con formularios, filtros y tablas responsive
+- 🏫 Soporte completo multi-institución con períodos independientes
+
+### ✨ Actualización Anterior (03/01/2026) - FASE 5 COMPLETADA
 
 **Sistema Completo de Gestión de Matrículas Implementado:**
 
@@ -45,20 +88,11 @@
 - ✅ **ordenes-pago/show.blade.php** - Vista detalle con upload/download comprobantes
 - ✅ Rutas públicas (`/solicitar-matricula`) y protegidas configuradas
 - ✅ Sidebar con dropdown "Matrículas" (3 submenu items con iconos)
+- ✅ Sidebar con link directo para estudiantes "Solicitar Matrícula"
+- ✅ Welcome page con botones de matriculación pública
 - ✅ Storage privado configurado + Directorios creados
 - ✅ 11 permisos nuevos agregados al RoleSeeder y ejecutados en BD
 - ✅ Todas las vistas siguen el patrón del proyecto (enhanced-table, modales, canany, SVG icons)
-
-**Características del Sistema de Matrículas:**
-- 🎓 Gestión de primera y segunda matrícula (máximo 2 por curso)
-- 💰 Órdenes de pago configurables por institución
-- 📄 Solicitudes para estudiantes externos con adjuntos (cédula, certificado)
-- ✅ Aprobación de pagos con comprobantes (upload y download)
-- 📋 Validación de aprobación del año anterior
-- 🚫 Bloqueo automático tras segunda matrícula reprobada
-- 🔐 Permisos granulares (13 permisos específicos)
-- 💾 Almacenamiento privado de documentos sensibles
-- 🎨 Interfaz completa con formularios, filtros y tablas responsive
 
 ### ✨ Actualización (24/12/2025)
 

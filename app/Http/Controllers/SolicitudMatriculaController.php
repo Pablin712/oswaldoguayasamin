@@ -74,13 +74,42 @@ class SolicitudMatriculaController extends Controller
      */
     public function create()
     {
-        $cursos = Curso::where('estado', 'activo')->orderBy('orden')->get();
-        $instituciones = \App\Models\Institucion::all();
-        $periodos = PeriodoAcademico::where('estado', 'activo')
+        // Verificar si hay períodos académicos activos
+        $periodosActivos = PeriodoAcademico::where('estado', 'activo')
             ->with('institucion')
             ->get();
 
+        if ($periodosActivos->isEmpty()) {
+            return redirect()->route('welcome')
+                ->with('info', 'No hay períodos de matrícula disponibles en este momento. Por favor, inténtelo más tarde.');
+        }
+
+        $cursos = Curso::where('estado', 'activo')->orderBy('orden')->get();
+        $instituciones = \App\Models\Institucion::all();
+        $periodos = $periodosActivos;
+
         return view('academico.matriculas.solicitudes.create', compact('cursos', 'instituciones', 'periodos'));
+    }
+
+    /**
+     * Show the form for creating a new resource (Formulario para estudiantes autenticados).
+     */
+    public function createAuthenticated()
+    {
+        // Verificar si hay períodos académicos activos
+        $periodosActivos = PeriodoAcademico::where('estado', 'activo')
+            ->with('institucion')
+            ->get();
+
+        if ($periodosActivos->isEmpty()) {
+            return redirect()->route('dashboard')
+                ->with('info', 'No hay períodos de matrícula disponibles en este momento. Por favor, consulte con la administración.');
+        }
+
+        $cursos = Curso::where('estado', 'activo')->orderBy('orden')->get();
+        $periodos = $periodosActivos;
+
+        return view('academico.matriculas.solicitudes.create-authenticated', compact('cursos', 'periodos'));
     }
 
     /**

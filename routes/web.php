@@ -25,7 +25,7 @@ use App\Http\Controllers\OrdenPagoController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 // Ruta pública para solicitud de matrícula (estudiantes externos)
 Route::get('/solicitar-matricula', [SolicitudMatriculaController::class, 'create'])->name('solicitudes-matricula.create');
@@ -39,6 +39,9 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Ruta para solicitud de matrícula (estudiantes autenticados)
+    Route::get('/mis-solicitudes/crear', [SolicitudMatriculaController::class, 'createAuthenticated'])->name('solicitudes-matricula.create-authenticated');
 
     Route::resource('users', UserController::class)->except(['create', 'edit']);
     Route::resource('roles', RoleController::class)->except(['create', 'edit']);

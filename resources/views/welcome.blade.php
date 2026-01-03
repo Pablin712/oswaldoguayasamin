@@ -42,6 +42,11 @@
                                     Ir al Dashboard
                                 </a>
                             @else
+                                <!-- Botón de Matriculación -->
+                                <a href="{{ route('solicitudes-matricula.create') }}" class="px-6 py-2.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-gray-800 rounded-lg font-medium transition-all duration-200">
+                                    Matricularse
+                                </a>
+
                                 <a href="{{ route('login') }}" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md">
                                     Iniciar Sesión
                                 </a>
@@ -72,11 +77,14 @@
                                 Acceder al Sistema
                             </a>
                         @else
-                            <a href="{{ route('login') }}" class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl">
+                            <a href="{{ route('solicitudes-matricula.create') }}" class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl">
+                                Solicitar Matrícula
+                            </a>
+                            <a href="{{ route('login') }}" class="px-8 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-blue-600 dark:text-blue-400 border-2 border-blue-600 dark:border-blue-400 rounded-lg font-semibold text-lg transition-all duration-200 shadow-md hover:shadow-lg">
                                 Iniciar Sesión
                             </a>
                             @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="px-8 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-white border-2 border-gray-300 dark:border-gray-600 rounded-lg font-semibold text-lg transition-all duration-200 shadow-md hover:shadow-lg">
+                                <a href="{{ route('register') }}" class="px-8 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-white border-2 border-gray-300 dark:border-gray-600 rounded-lg font-semibold text-lg transition-all duration-200 shadow-md hover:shadow-lg hidden sm:inline-flex">
                                     Solicitar Acceso
                                 </a>
                             @endif
