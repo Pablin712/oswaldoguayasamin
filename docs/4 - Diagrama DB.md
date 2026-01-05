@@ -71,13 +71,15 @@ erDiagram
     instituciones ||--o| configuracion_matriculas : "configura costos"
     
     docentes ||--o{ docente_materia : "enseña"
-    curso_materia ||--o{ docente_materia : "asignado a"
+    materias ||--o{ docente_materia : "asignado a"
+    paralelos ||--o{ docente_materia : "asignado a"
+    periodos_academicos ||--o{ docente_materia : "en periodo"
+    docente_materia ||--o{ horarios : "tiene bloques"
     docentes ||--o{ tareas : "crea"
     docentes ||--o{ asistencias : "registra"
-    docentes ||--o{ horarios : "imparte"
     
     calificaciones }o--|| matriculas : "pertenece a"
-    calificaciones }o--|| materias : "de materia"
+    calificaciones }o--|| curso_materia : "de materia-curso"
     calificaciones }o--|| parciales : "en parcial"
     calificaciones }o--|| docentes : "registrada por"
     calificaciones ||--o{ componentes_calificacion : "tiene"
@@ -92,9 +94,6 @@ erDiagram
     eventos ||--o{ evento_confirmacion : "confirmaciones"
     paralelos ||--o{ evento_curso : "participa en"
     users ||--o{ evento_confirmacion : "confirma"
-    
-    aulas ||--o{ horarios : "utilizada en"
-    materias ||--o{ horarios : "impartida en"
     
     mensajes }o--|| users : "de remitente"
     mensajes }o--|| users : "para destinatario"
@@ -290,12 +289,12 @@ Paralelos de cada curso (A, B, C).
 **UNIQUE**: (curso_id, nombre)
 
 #### `areas`
-Catálogo de áreas del conocimiento para materias.
+Áreas académicas para clasificación de materias.
 
 | Campo | Tipo | Descripción | Constraints |
 |-------|------|-------------|-------------|
 | id | BIGINT | ID único | PK, AUTO_INCREMENT |
-| nombre | VARCHAR(100) | Nombre del área | UNIQUE, NOT NULL |
+| nombre | VARCHAR(100) | "Ciencias Exactas" | NOT NULL |
 | descripcion | TEXT | Descripción del área | NULL |
 | estado | ENUM | activa/inactiva | DEFAULT 'activa' |
 | created_at | TIMESTAMP | Fecha de creación | NULL |
@@ -529,16 +528,17 @@ Registro de calificaciones.
 |-------|------|-------------|-------------|
 | id | BIGINT | ID único | PK, AUTO_INCREMENT |
 | matricula_id | BIGINT | ID de la matrícula | FK matriculas.id |
-| materia_id | BIGINT | ID de la materia | FK materias.id |
+| curso_materia_id | BIGINT | ID de curso-materia | FK curso_materia.id |
 | parcial_id | BIGINT | ID del parcial | FK parciales.id |
 | docente_id | BIGINT | Docente que registra | FK docentes.id |
-| nota_final | DECIMAL(4,2) | Nota final (0-10) | NULL |
+| nota_final | DECIMAL(5,2) | Nota final (0-10) | NOT NULL |
 | observaciones | TEXT | Observaciones | NULL |
-| fecha_registro | TIMESTAMP | Fecha de registro | NULL |
+| fecha_registro | DATE | Fecha de registro | NOT NULL |
+| estado | ENUM | registrada/modificada/aprobada/publicada | DEFAULT 'registrada' |
 | created_at | TIMESTAMP | Fecha de creación | NULL |
 | updated_at | TIMESTAMP | Fecha de actualización | NULL |
 
-**UNIQUE**: (matricula_id, materia_id, parcial_id)
+**UNIQUE**: (matricula_id, curso_materia_id, parcial_id)
 
 #### `componentes_calificacion`
 Desglose de calificaciones por componente.
@@ -549,9 +549,9 @@ Desglose de calificaciones por componente.
 | calificacion_id | BIGINT | ID de la calificación | FK calificaciones.id |
 | nombre | VARCHAR(100) | "Tareas", "Lecciones" | NOT NULL |
 | tipo | ENUM | tarea/leccion/examen/proyecto | NOT NULL |
-| nota | DECIMAL(4,2) | Nota del componente | NOT NULL |
-| porcentaje | DECIMAL(5,2) | % que representa | NULL |
-| fecha_evaluacion | DATE | Fecha de evaluación | NULL |
+| nota | DECIMAL(5,2) | Nota del componente | NOT NULL |
+| porcentaje | DECIMAL(5,2) | % que representa | NOT NULL |
+| descripcion | TEXT | Descripción del componente | NULL |
 | created_at | TIMESTAMP | Fecha de creación | NULL |
 | updated_at | TIMESTAMP | Fecha de actualización | NULL |
 

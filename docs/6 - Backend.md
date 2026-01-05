@@ -112,15 +112,15 @@
 
 ### Estadísticas del Proyecto
 
-**Total de tablas identificadas en el diagrama:** 50 tablas
+**Total de tablas identificadas en el diagrama:** 53 tablas
 
 #### Por categoría:
 - **Tablas principales (núcleo):** 10 tablas
-- **Tablas secundarias (dependientes):** 27 tablas
+- **Tablas secundarias (dependientes):** 30 tablas (+3 sistema de matrículas)
 - **Tablas intermedias (relaciones):** 13 tablas
 
 #### Estado de implementación:
-- ✅ **Completadas:** 50 tablas (100%) 🎉
+- ✅ **Completadas:** 53 tablas (100%) 🎉
 - 🔄 **En progreso:** 0 tablas (0%)
 - ⏳ **Pendientes:** 0 tablas (0%)
 
@@ -172,51 +172,54 @@ Extender users con información específica.
 Asignar docentes y matricular estudiantes.
 
 21. ✅ `docente_materia` - Asignación docente-materia-paralelo (COMPLETA)
-22. ✅ `matriculas` - Matrícula de estudiantes (COMPLETA)
+22. ✅ `matriculas` - Matrícula de estudiantes (COMPLETA + ACTUALIZADA)
+23. ✅ `configuracion_matriculas` - Configuración de costos por institución (COMPLETA)
+24. ✅ `solicitudes_matricula` - Solicitudes de estudiantes externos (COMPLETA)
+25. ✅ `ordenes_pago` - Órdenes de pago para matrículas (COMPLETA)
 
 ### Fase 7: Sistema de Calificaciones (Prioridad Media) ✅ COMPLETADA
 Gestión completa de notas.
 
-23. ✅ `calificaciones` - Registro de notas (COMPLETA)
-24. ✅ `componentes_calificacion` - Desglose de notas (COMPLETA)
+26. ✅ `calificaciones` - Registro de notas (COMPLETA)
+27. ✅ `componentes_calificacion` - Desglose de notas (COMPLETA)
 
 ### Fase 8: Control de Asistencia (Prioridad Media) ✅ COMPLETADA
 Registro y justificaciones.
 
-25. ✅ `asistencias` - Registro diario (COMPLETA)
-26. ✅ `justificaciones` - Justificaciones de ausencias (COMPLETA)
+28. ✅ `asistencias` - Registro diario (COMPLETA)
+29. ✅ `justificaciones` - Justificaciones de ausencias (COMPLETA)
 
 ### Fase 9: Tareas y Deberes (Prioridad Media) ✅ COMPLETADA
 Sistema de asignación de tareas.
 
-27. ✅ `tareas` - Tareas asignadas (COMPLETA)
-28. ✅ `archivos_tarea` - Archivos de tareas (COMPLETA)
-29. ✅ `tarea_estudiante` - Seguimiento individual (COMPLETA)
+30. ✅ `tareas` - Tareas asignadas (COMPLETA)
+31. ✅ `archivos_tarea` - Archivos de tareas (COMPLETA)
+32. ✅ `tarea_estudiante` - Seguimiento individual (COMPLETA)
 
 ### Fase 10: Comunicación (Prioridad Baja) ✅ COMPLETADA
 Sistema de mensajería y notificaciones.
 
-30. ✅ `mensajes` - Mensajes entre usuarios (COMPLETA)
-31. ✅ `mensaje_adjuntos` - Archivos adjuntos (COMPLETA)
-32. ✅ `mensaje_destinatarios` - Destinatarios múltiples (COMPLETA)
-33. ✅ `notificaciones` - Notificaciones del sistema (COMPLETA)
+33. ✅ `mensajes` - Mensajes entre usuarios (COMPLETA)
+34. ✅ `mensaje_adjuntos` - Archivos adjuntos (COMPLETA)
+35. ✅ `mensaje_destinatarios` - Destinatarios múltiples (COMPLETA)
+36. ✅ `notificaciones` - Notificaciones del sistema (COMPLETA)
 
 ### Fase 11: Eventos y Calendario (Prioridad Baja) ✅ COMPLETADA
 Gestión de eventos académicos.
 
-34. ✅ `eventos` - Eventos institucionales (COMPLETA)
-35. ✅ `evento_curso` - Eventos por curso (COMPLETA)
-36. ✅ `evento_confirmacion` - Confirmaciones de asistencia (COMPLETA)
+37. ✅ `eventos` - Eventos institucionales (COMPLETA)
+38. ✅ `evento_curso` - Eventos por curso (COMPLETA)
+39. ✅ `evento_confirmacion` - Confirmaciones de asistencia (COMPLETA)
 
 ### Fase 12: Horarios (Prioridad Baja) ✅ COMPLETADA
 Programación de clases.
 
-37. ✅ `horarios` - Horarios de clase (COMPLETA)
+40. ✅ `horarios` - Horarios de clase (COMPLETA)
 
 ### Fase 13: Auditoría (Prioridad Baja) ✅ COMPLETADA
 Trazabilidad del sistema.
 
-38. ✅ `auditoria_accesos` - Registro de auditoría (COMPLETA)
+41. ✅ `auditoria_accesos` - Registro de auditoría (COMPLETA)
 
 ---
 
@@ -549,7 +552,7 @@ Trazabilidad del sistema.
 - [ ] **mensajes** - Mensajes entre usuarios
 ---
 
-### ✅ Tablas Completadas (46) - TODAS ✅
+### ✅ Tablas Completadas (49) - TODAS ✅
 
 ### ⏳ Tablas Pendientes (0) - NINGUNA 🎉
 
@@ -717,7 +720,7 @@ Trazabilidad del sistema.
 8. `permissions` - Permisos del sistema (Spatie)
 9. `configuraciones` - Config sistema (depende de instituciones)
 
-### 🟢 Tablas Secundarias (24) - Datos Dependientes
+### 🟢 Tablas Secundarias (27) - Datos Dependientes
 **Definición:** Tablas que extienden o dependen de las principales, pero no son solo relaciones.
 
 #### Estructura Académica
@@ -732,57 +735,60 @@ Trazabilidad del sistema.
 
 #### Gestión Académica
 16. `matriculas` - Depende de estudiantes, paralelos, periodos
-17. `calificaciones` - Depende de matriculas, materias, parciales
-18. `componentes_calificacion` - Depende de calificaciones
-19. `asistencias` - Depende de estudiantes, paralelos, docentes
-20. `justificaciones` - Depende de asistencias, padres
+17. `configuracion_matriculas` - Depende de instituciones (costos)
+18. `solicitudes_matricula` - Depende de cursos, periodos (estudiantes externos)
+19. `ordenes_pago` - Depende de matriculas (pagos)
+20. `calificaciones` - Depende de matriculas, materias, parciales
+21. `componentes_calificacion` - Depende de calificaciones
+22. `asistencias` - Depende de estudiantes, paralelos, docentes
+23. `justificaciones` - Depende de asistencias, padres
 
 #### Tareas
-21. `tareas` - Depende de docentes, materias, paralelos
-22. `archivos_tarea` - Depende de tareas
+24. `tareas` - Depende de docentes, materias, paralelos
+25. `archivos_tarea` - Depende de tareas
 
 #### Comunicación
-23. `mensajes` - Depende de users
-24. `mensaje_adjuntos` - Depende de mensajes
-25. `notificaciones` - Depende de users
+26. `mensajes` - Depende de users
+27. `mensaje_adjuntos` - Depende de mensajes
+28. `notificaciones` - Depende de users
 
 #### Eventos
-26. `eventos` - Depende de periodos_academicos, users
+29. `eventos` - Depende de periodos_academicos, users
 
 #### Horarios
-27. `horarios` - Depende de múltiples tablas
+30. `horarios` - Depende de múltiples tablas
 
 #### Auditoría
-28. `auditoria_accesos` - Depende de users
+31. `auditoria_accesos` - Depende de users
 
 #### Tablas adicionales (5 más)
-29. `password_reset_tokens` - Relacionada con users
-30. `sessions` - Sesiones de Laravel
-31. `personal_access_tokens` - Tokens API (si se usa)
-32. `failed_jobs` - Jobs fallidos de Laravel
-33. `jobs` - Jobs pendientes de Laravel
+32. `password_reset_tokens` - Relacionada con users
+33. `sessions` - Sesiones de Laravel
+34. `personal_access_tokens` - Tokens API (si se usa)
+35. `failed_jobs` - Jobs fallidos de Laravel
+36. `jobs` - Jobs pendientes de Laravel
 
 ### 🟡 Tablas Intermedias (13) - Relaciones Muchos a Muchos
 **Definición:** Tablas pivote que conectan dos o más tablas principales/secundarias.
 
 #### Spatie Laravel Permission (3)
-34. `model_has_roles` - Polimórfica: users ↔ roles
-35. `model_has_permissions` - Polimórfica: users ↔ permissions
-36. `role_has_permissions` - roles ↔ permissions
+37. `model_has_roles` - Polimórfica: users ↔ roles
+38. `model_has_permissions` - Polimórfica: users ↔ permissions
+39. `role_has_permissions` - roles ↔ permissions
 
 #### Relaciones Académicas (6)
-37. `curso_materia` - cursos ↔ materias
-38. `docente_materia` - docentes ↔ curso_materia ↔ paralelos
-39. `estudiante_padre` - estudiantes ↔ padres
-40. `tarea_estudiante` - tareas ↔ estudiantes (con seguimiento)
-41. `evento_curso` - eventos ↔ paralelos
-42. `evento_confirmacion` - eventos ↔ users (con confirmación)
+40. `curso_materia` - cursos ↔ materias
+41. `docente_materia` - docentes ↔ curso_materia ↔ paralelos
+42. `estudiante_padre` - estudiantes ↔ padres
+43. `tarea_estudiante` - tareas ↔ estudiantes (con seguimiento)
+44. `evento_curso` - eventos ↔ paralelos
+45. `evento_confirmacion` - eventos ↔ users (con confirmación)
 
 #### Comunicación (2)
-43. `mensaje_destinatarios` - mensajes ↔ users (masivos)
-44. `cache` - Cache de Laravel
-45. `cache_locks` - Locks del cache
-46. `job_batches` - Batches de jobs
+46. `mensaje_destinatarios` - mensajes ↔ users (masivos)
+47. `cache` - Cache de Laravel
+48. `cache_locks` - Locks del cache
+49. `job_batches` - Batches de jobs
 
 ---Refrescar base de datos ✅ LISTO
 **Acción:** Ejecutar migraciones frescas

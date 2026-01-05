@@ -275,7 +275,7 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 
 ---
 
-### Fase 5: Asignaciones Académicas 🔄 EN PROGRESO (2/4)
+### Fase 5: Asignaciones Académicas ✅ COMPLETADA (4/4)
 **Vistas necesarias:** 4 módulos
 
 - [x] **Paralelos** ✅ COMPLETA
@@ -302,17 +302,41 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
   - **Características especiales:** Cards con colores de materia, cálculo total horas, validación duplicados, filtro de materias disponibles, searchable-select
   - **Fecha completada:** 29/12/2025
 
-- [ ] **Docente-Materia** (Asignación de docentes)
+- [x] **Docente-Materia** (Asignación de docentes) ✅ COMPLETA
   - Tipo: Vista de asignación con horario
-  - Mockup: Requerido (interfaz de asignación docente-paralelo-materia)
+  - Mockup: No requerido (tabla estándar con selects múltiples)
   - Campos: docente, materia, paralelo, periodo
   - Permisos: gestionar asignaciones docentes, ver, crear, editar, eliminar
+  - Controlador: ✅ DocenteMateriaController
+  - Vistas: ✅ index.blade.php con modales y filtros
+  - Rutas: ✅ asignaciones/docente-materia.* (resource)
+  - **Características especiales:** Sistema multi-docente, validación de conflictos de horario
+  - **Fecha completada:** 30/12/2025
 
-- [ ] **Matrículas**
-  - Tipo: Tabla con estados y búsqueda avanzada
-  - Mockup: Requerido (incluye badges de estado, filtros)
-  - Campos: estudiante, paralelo, número matrícula, fecha, estado
-  - Permisos: gestionar matrículas, ver, crear, editar, eliminar, generar reporte
+- [x] **Matrículas** (Sistema completo con órdenes de pago) ✅ COMPLETA
+  - Tipo: Sistema multi-módulo con 3 subsistemas
+  - **Subsistemas implementados:**
+    - **Configuración de Costos** (configuracion_matriculas)
+    - **Solicitudes de Matrícula** (solicitudes_matricula) - Estudiantes externos
+    - **Órdenes de Pago** (ordenes_pago)
+    - **Matrículas Actualizadas** (matriculas) - Con tipo, pagos y aprobación
+  - Campos actualizados: tipo_matricula, orden_pago_id, solicitud_matricula_id, aprobado_por, fecha_aprobacion
+  - Permisos: gestionar matrículas, ver, crear, editar, eliminar, gestionar configuración costos, aprobar solicitudes, aprobar pagos, ver reportes, gestionar órdenes pago
+  - Controladores: ✅ ConfiguracionMatriculaController, SolicitudMatriculaController, OrdenPagoController
+  - Form Requests: ✅ Validaciones implementadas en controllers
+  - Vistas: ✅ configuracion/index, solicitudes/create/index/show, ordenes-pago/index/show
+  - Rutas: ✅ configuracion-costos.*, solicitudes-matricula.*, ordenes-pago.*
+  - **Características especiales:** 
+    - Formulario público para estudiantes externos
+    - Sistema de aprobación de solicitudes con adjuntos (cédula, certificado)
+    - Gestión de órdenes de pago con upload/download de comprobantes
+    - Configuración de costos por institución (fiscal/fiscomisional/particular)
+    - Flujo completo: Solicitud → Aprobación → Orden de Pago → Matrícula
+    - Validación de segunda matrícula (máximo 2 por curso)
+    - Storage privado para documentos sensibles
+    - Sidebar con dropdown y accesos desde welcome page
+    - Soporte multi-institución con validación de períodos activos
+  - **Fecha completada:** 04/01/2026
 
 ---
 
@@ -426,13 +450,14 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 ## 📊 Resumen de Vistas
 
 **Total de módulos:** 38 módulos
-- ✅ **Completados:** 23 módulos (60.5%)
+- ✅ **Completados:** 27 módulos (71.1%)
   - Fase 1: 4 módulos ✅
   - Fase 2: 2 módulos ✅
   - Fase 3: 7 módulos ✅
   - Fase 4: 3 módulos + relaciones ✅
-- 🔄 **En progreso:** Fase 5 iniciando
-- ⏳ **Pendientes:** 15 módulos (39.5%)
+  - Fase 5: 4 módulos (incluye sistema completo de matrículas) ✅
+- 🔄 **En progreso:** Fase 6 iniciando
+- ⏳ **Pendientes:** 11 módulos (28.9%)
 
 **Tipos de vistas:**
 - Tablas estándar: 15 módulos
