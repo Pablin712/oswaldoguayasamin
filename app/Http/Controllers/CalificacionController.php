@@ -212,46 +212,69 @@ class CalificacionController extends Controller
      */
     public function cargarEstudiantes(Request $request)
     {
-        $paraleloId = $request->paralelo_id;
-        $cursoMateriaId = $request->curso_materia_id;
-        $parcialId = $request->parcial_id;
+        try {
+            $paraleloId = $request->paralelo_id;
+            $cursoMateriaId = $request->curso_materia_id;
+            $parcialId = $request->parcial_id;
 
-        // Obtener docente del usuario autenticado
-        $user = Auth::user();
-        $docenteId = $user->docente->id ?? null;
+            // Validar parámetros requeridos
+            if (!$paraleloId || !$cursoMateriaId || !$parcialId) {
+                return response()->json(['error' => 'Parámetros incompletos'], 400);
+            }
 
-        // Obtener matrículas activas del paralelo
-        $matriculas = Matricula::where('paralelo_id', $paraleloId)
-            ->where('estado', 'activo')
-            ->with(['estudiante.user'])
-            ->orderBy('id')
-            ->get();
+            // Obtener docente del usuario autenticado (si existe)
+            $user = Auth::user();
+            $docenteId = optional($user->docente)->id;
 
-        // Obtener calificaciones existentes para estos estudiantes
-        $calificaciones = Calificacion::where('curso_materia_id', $cursoMateriaId)
-            ->where('parcial_id', $parcialId)
-            ->whereIn('matricula_id', $matriculas->pluck('id'))
-            ->with('componentesCalificacion')
-            ->get()
-            ->keyBy('matricula_id');
+            // Obtener matrículas activas del paralelo
+            $matriculas = Matricula::where('paralelo_id', $paraleloId)
+                ->where('estado', 'activa')
+                ->with(['estudiante.user'])
+                ->orderBy('id')
+                ->get();
 
-        // Preparar datos de estudiantes con calificaciones
-        $estudiantes = $matriculas->map(function ($matricula) use ($calificaciones, $cursoMateriaId, $parcialId, $docenteId) {
-            $calificacion = $calificaciones->get($matricula->id);
+            if ($matriculas->isEmpty()) {
+                return response()->json([]);
+            }
 
-            return [
-                'matricula_id' => $matricula->id,
-                'estudiante_nombre' => $matricula->estudiante->user->name,
-                'calificacion_id' => $calificacion ? $calificacion->id : null,
-                'nota_final' => $calificacion ? $calificacion->nota_final : null,
-                'estado' => $calificacion ? $calificacion->estado : 'pendiente',
-                'observaciones' => $calificacion ? $calificacion->observaciones : null,
-                'puede_editar' => $calificacion ? ($calificacion->estado != 'publicada') : true,
-                'componentes' => $calificacion ? $calificacion->componentesCalificacion : [],
-            ];
-        });
+            // Obtener calificaciones existentes para estos estudiantes
+            $calificaciones = Calificacion::where('curso_materia_id', $cursoMateriaId)
+                ->where('parcial_id', $parcialId)
+                ->whereIn('matricula_id', $matriculas->pluck('id'))
+                ->with('componentes')
+                ->get()
+                ->keyBy('matricula_id');
 
-        return response()->json($estudiantes);
+            // Preparar datos de estudiantes con calificaciones
+            $estudiantes = $matriculas->map(function ($matricula) use ($calificaciones) {
+                $calificacion = $calificaciones->get($matricula->id);
+
+                return [
+                    'matricula_id' => $matricula->id,
+                    'estudiante_nombre' => $matricula->estudiante->user->name,
+                    'calificacion_id' => $calificacion ? $calificacion->id : null,
+                    'nota_final' => $calificacion ? $calificacion->nota_final : null,
+                    'estado' => $calificacion ? $calificacion->estado : 'pendiente',
+                    'observaciones' => $calificacion ? $calificacion->observaciones : null,
+                    'puede_editar' => $calificacion ? ($calificacion->estado != 'publicada') : true,
+                    'componentes' => $calificacion ? $calificacion->componentes : [],
+                ];
+            });
+
+            return response()->json($estudiantes);
+        } catch (\Exception $e) {
+            \Log::error('Error al cargar estudiantes: ' . $e->getMessage(), [
+                'paralelo_id' => $request->paralelo_id,
+                'curso_materia_id' => $request->curso_materia_id,
+                'parcial_id' => $request->parcial_id,
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'error' => 'Error al cargar estudiantes',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -336,7 +359,7 @@ class CalificacionController extends Controller
             DB::beginTransaction();
 
             // Eliminar componentes asociados
-            $calificacion->componentesCalificacion()->delete();
+            $calificacion->componentes()->delete();
 
             // Eliminar calificación
             $calificacion->delete();
@@ -401,10 +424,21 @@ class CalificacionController extends Controller
 
         // Calcular estadísticas
         $total = $calificaciones->count();
-        $promedio = $total > 0 ? $calificaciones->avg('nota_final') : 0;
+        $promedio = $total > 0 ? round($calificaciones->avg('nota_final'), 2) : 0;
         $aprobados = $calificaciones->where('nota_final', '>=', 7)->count();
         $enRiesgo = $calificaciones->whereBetween('nota_final', [5, 6.99])->count();
         $reprobados = $calificaciones->where('nota_final', '<', 5)->count();
+
+        return response()->json([
+            'total' => $total,
+            'promedio' => $promedio,
+            'aprobados' => $aprobados,
+            'enRiesgo' => $enRiesgo,
+            'reprobados' => $reprobados,
+            'porcentajeAprobados' => $total > 0 ? round(($aprobados / $total) * 100, 1) : 0,
+            'porcentajeRiesgo' => $total > 0 ? round(($enRiesgo / $total) * 100, 1) : 0,
+            'porcentajeReprobados' => $total > 0 ? round(($reprobados / $total) * 100, 1) : 0,
+        ]);
 
         // Estudiantes en riesgo (detalle)
         $estudiantesRiesgo = $calificaciones->filter(function ($cal) {
