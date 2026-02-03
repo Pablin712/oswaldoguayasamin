@@ -1,20 +1,20 @@
 # 🎨 Mockups y Vistas del Sistema (FRONTEND)
 
-**Última actualización:** 29 de diciembre de 2025  
-**Estado:** 🔄 En Progreso - Fase 4 Completada (20/12/2025 - 29/12/2025)
+**Última actualización:** 02 de febrero de 2026  
+**Estado:** 🔄 En Progreso - Fase 6 Completada (02/02/2026)
 
 ---
 
 ## ⚠️ IMPORTANTE: ESTE DOCUMENTO SE REFIERE AL FRONTEND
 
 **Backend (BD y Modelos):** Consultar [6 - Avances.md](6 - Avances.md) - ✅ 100% Completo  
-**Frontend (Vistas y CRUDs):** Este documento - 🔄 En progreso
+**Frontend (Vistas y CRUDs):** Este documento - 🔄 En progreso (29/38 módulos = 76.3%)
 
 ---
 
 ## 📊 Estado de Vistas
 
-### ✅ Vistas Completadas (23)
+### ✅ Vistas Completadas (29 de 38 módulos)
 - Login
 - Recuperar contraseña (Recover password)
 - Editar perfil (Edit profile)
@@ -28,6 +28,33 @@
 - Parciales (CRUD completo) ✅ **FASE 3**
 - Cursos (CRUD completo) ✅ **FASE 3**
 - Materias (CRUD completo con color picker) ✅ **FASE 3**
+- Áreas (CRUD completo) ✅ **FASE 3**
+- Aulas (CRUD completo) ✅ **FASE 3**
+- Docentes (CRUD completo) ✅ **FASE 4**
+- Estudiantes (CRUD completo + Relaciones) ✅ **FASE 4**
+- Padres (CRUD completo + Relaciones) ✅ **FASE 4**
+- Paralelos (Cards agrupados) ✅ **FASE 5**
+- Curso-Materia (Cards asignación) ✅ **FASE 5**
+- Docente-Materia (Tabla con horarios) ✅ **FASE 5**
+- Configuración de Matrículas ✅ **FASE 5**
+- Solicitudes de Matrícula ✅ **FASE 5**
+- Órdenes de Pago ✅ **FASE 5**
+- Calificaciones (Contexto + Registro) ✅ **FASE 6** (02/02/2026)
+- Componentes de Calificación (API CRUD) ✅ **FASE 6** (02/02/2026)
+
+### ⏳ Vistas Pendientes (9 módulos)
+- Asistencias (Calendario/tabla) **FASE 7**
+- Justificaciones (Workflow) **FASE 7**
+- Tareas (Cards con estado) **FASE 8**
+- Entregas de Tareas (Calificaciones) **FASE 8**
+- Mensajes (Bandeja email) **FASE 9**
+- Notificaciones (Dropdown) **FASE 9**
+- Eventos (Calendario) **FASE 10**
+- Confirmaciones de Eventos **FASE 10**
+- Horarios (Grid semanal) **FASE 11**
+- Auditoría (Tabla de logs) **FASE 12**
+
+---
 - Áreas (CRUD completo con gestión de estado) ✅ **FASE 3**
 - Aulas (CRUD completo) ✅ **FASE 3**
 
@@ -340,20 +367,49 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 
 ---
 
-### Fase 6: Sistema de Calificaciones ⏳ PENDIENTE
+### Fase 6: Sistema de Calificaciones ✅ COMPLETADA (2/2)
 **Vistas necesarias:** 2 módulos
 
-- [ ] **Calificaciones**
-  - Tipo: Tabla con entrada de notas
-  - Mockup: Requerido (interfaz de calificación, colores según nota)
-  - Campos: estudiante, materia, parcial, nota final, componentes, estado
-  - Permisos: gestionar calificaciones, ver, crear, editar, eliminar, generar reporte
+- [x] **Calificaciones** ✅ COMPLETA
+  - Tipo: Vista de selección de contexto + tabla de registro de notas
+  - Mockup: ✅ Completado (docs/FASE_06_MOCKUP_CALIFICACIONES.md)
+  - Campos: matricula_id, curso_materia_id, parcial_id, docente_id, nota_final (DECIMAL 5,2), observaciones, fecha_registro, estado (registrada/modificada/aprobada/publicada)
+  - Permisos: gestionar calificaciones, ver, registrar, editar, eliminar, publicar, generar reporte
+  - Controlador: ✅ CalificacionController
+  - Form Request: ✅ CalificacionRequest
+  - Vistas: ✅ index.blade.php con contexto + tabla dinámica + modal estadísticas
+  - Rutas: ✅ calificaciones.index, contexto, estudiantes, estadisticas, store, update, destroy, publicar
+  - Permisos: ✅ Protegida con @canany y Gate::any
+  - Sidebar: ✅ Agrupada en dropdown "Académico"
+  - **Características especiales:**
+    - Selección cascada: Período → Quimestre → Parcial → Curso → Materia (con searchable-select)
+    - Filtros por rol: Docentes solo ven sus materias/paralelos asignados
+    - Sistema de colores: 🟢 Verde (7.0-10.0 APROBADO), 🟡 Amarillo (5.0-6.9 EN RIESGO), 🔴 Rojo (0-4.9 REPROBADO)
+    - Cálculo automático de nota final: (tareas*0.2 + lecciones*0.2 + trabajo*0.2 + examen*0.4)
+    - Validación de rango 0-10 con 2 decimales
+    - Auto-save en cambios
+    - Restricción de edición en calificaciones publicadas (solo admin puede modificar)
+    - Modal de estadísticas: Total estudiantes, promedio, aprobados, en riesgo, reprobados
+    - Botón con gradiente azul e indicador de progreso
+    - Scroll automático a tabla de resultados
+  - **Fecha completada:** 02/02/2026
 
-- [ ] **Componentes de Calificación**
-  - Tipo: Vista detalle/desglose (dentro de calificaciones)
-  - Mockup: Requerido (desglose de nota: tareas, lecciones, examen)
-  - Campos: componente, tipo, nota, porcentaje
+- [x] **Componentes de Calificación** ✅ COMPLETA
+  - Tipo: Vista detalle/desglose (API dentro de calificaciones)
+  - Mockup: ✅ Incluido en mockup principal (docs/FASE_06_MOCKUP_CALIFICACIONES.md)
+  - Campos: calificacion_id, nombre, tipo (tarea/leccion/examen/proyecto/trabajo), nota (DECIMAL 5,2), porcentaje (DECIMAL 5,2), descripcion
   - Permisos: gestionar componentes, ver, crear, editar, eliminar
+  - Controlador: ✅ ComponenteCalificacionController
+  - Form Request: ✅ ComponenteCalificacionRequest
+  - Rutas: ✅ componentes.index, store, update, destroy (APIs)
+  - **Características especiales:**
+    - CRUD completo de componentes individuales (tareas específicas, lecciones, exámenes)
+    - Recálculo automático de nota final al crear/editar/eliminar componentes
+    - Validación de tipo ENUM (tarea, leccion, examen, proyecto, trabajo)
+    - Porcentajes configurables por tipo
+    - Agrupación por tipo para promedio ponderado
+    - Restricción de edición en calificaciones publicadas
+  - **Fecha completada:** 02/02/2026
 
 ---
 
@@ -450,27 +506,28 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 ## 📊 Resumen de Vistas
 
 **Total de módulos:** 38 módulos
-- ✅ **Completados:** 27 módulos (71.1%)
+- ✅ **Completados:** 29 módulos (76.3%)
   - Fase 1: 4 módulos ✅
   - Fase 2: 2 módulos ✅
   - Fase 3: 7 módulos ✅
   - Fase 4: 3 módulos + relaciones ✅
   - Fase 5: 4 módulos (incluye sistema completo de matrículas) ✅
-- 🔄 **En progreso:** Fase 6 iniciando
-- ⏳ **Pendientes:** 11 módulos (28.9%)
+  - Fase 6: 2 módulos (calificaciones + componentes) ✅
+- ⏳ **Pendientes:** 9 módulos (23.7%)
 
 **Tipos de vistas:**
 - Tablas estándar: 15 módulos
-- Vistas con mockup requerido: 16 módulos
+- Vistas con mockup requerido: 14 módulos
 - Vistas editables: 3 módulos
 
 **Próximos pasos:**
-1. Confirmar fase inicial para mockups
-2. Crear mockups para vistas no estándar
-3. Implementar vistas fase por fase
-4. Agregar permisos al RoleSeeder por cada fase
+1. ✅ Fase 6 completada con todas las validaciones
+2. Iniciar Fase 7: Sistema de Asistencias y Justificaciones
+3. Crear mockups para módulos de asistencia
+4. Continuar implementación fase por fase
 
 ---
 
 **Fecha inicio:** 24 de diciembre de 2025  
-**Estado:** En planificación
+**Última actualización:** 02 de febrero de 2026
+**Estado:** Fase 6 completada ✅

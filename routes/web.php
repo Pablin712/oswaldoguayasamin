@@ -22,6 +22,8 @@ use App\Http\Controllers\DocenteMateriaController;
 use App\Http\Controllers\ConfiguracionMatriculaController;
 use App\Http\Controllers\SolicitudMatriculaController;
 use App\Http\Controllers\OrdenPagoController;
+use App\Http\Controllers\CalificacionController;
+use App\Http\Controllers\ComponenteCalificacionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -117,6 +119,22 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::post('ordenes-pago/{ordenPago}/aprobar', [OrdenPagoController::class, 'aprobar'])->name('ordenes-pago.aprobar');
     Route::post('ordenes-pago/{ordenPago}/rechazar', [OrdenPagoController::class, 'rechazar'])->name('ordenes-pago.rechazar');
     Route::get('ordenes-pago/{ordenPago}/download-comprobante', [OrdenPagoController::class, 'downloadComprobante'])->name('ordenes-pago.download-comprobante');
+
+    // Fase 6: Sistema de Calificaciones
+    Route::get('calificaciones', [CalificacionController::class, 'index'])->name('calificaciones.index')->middleware('can:ver calificaciones');
+    Route::get('calificaciones/contexto', [CalificacionController::class, 'cargarContexto'])->name('calificaciones.contexto')->middleware('can:ver calificaciones');
+    Route::get('calificaciones/estudiantes', [CalificacionController::class, 'cargarEstudiantes'])->name('calificaciones.estudiantes')->middleware('can:ver calificaciones');
+    Route::get('calificaciones/estadisticas', [CalificacionController::class, 'estadisticas'])->name('calificaciones.estadisticas')->middleware('can:ver calificaciones');
+    Route::post('calificaciones', [CalificacionController::class, 'store'])->name('calificaciones.store')->middleware('can:registrar calificaciones');
+    Route::put('calificaciones/{calificacion}', [CalificacionController::class, 'update'])->name('calificaciones.update')->middleware('can:editar calificaciones');
+    Route::delete('calificaciones/{calificacion}', [CalificacionController::class, 'destroy'])->name('calificaciones.destroy')->middleware('can:eliminar calificaciones');
+    Route::post('calificaciones/publicar', [CalificacionController::class, 'publicar'])->name('calificaciones.publicar')->middleware('can:publicar calificaciones');
+
+    // Componentes de Calificación
+    Route::get('componentes-calificacion', [ComponenteCalificacionController::class, 'index'])->name('componentes.index')->middleware('can:ver componentes');
+    Route::post('componentes-calificacion', [ComponenteCalificacionController::class, 'store'])->name('componentes.store')->middleware('can:crear componentes');
+    Route::put('componentes-calificacion/{componente}', [ComponenteCalificacionController::class, 'update'])->name('componentes.update')->middleware('can:editar componentes');
+    Route::delete('componentes-calificacion/{componente}', [ComponenteCalificacionController::class, 'destroy'])->name('componentes.destroy')->middleware('can:eliminar componentes');
 });
 
 require __DIR__.'/auth.php';

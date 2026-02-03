@@ -182,6 +182,22 @@ class RoleSeeder extends Seeder
             // Fase 5: Carpeta Académica
             'generar carpeta academica',
             'ver carpeta academica',
+
+            // Fase 6: Calificaciones
+            'gestionar calificaciones',
+            'ver calificaciones',
+            'registrar calificaciones',
+            'editar calificaciones',
+            'eliminar calificaciones',
+            'publicar calificaciones',
+            'generar reporte calificaciones',
+
+            // Fase 6: Componentes de Calificación
+            'gestionar componentes',
+            'ver componentes',
+            'crear componentes',
+            'editar componentes',
+            'eliminar componentes',
         ];
 
         foreach ($permissions as $permission) {
