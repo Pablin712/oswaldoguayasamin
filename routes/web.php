@@ -182,15 +182,15 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::get('horarios/docente/{docente}', [\App\Http\Controllers\HorarioController::class, 'verDocente'])->name('horarios.docente')->middleware('can:ver horario docente');
     Route::get('horarios/aula/{aula}', [\App\Http\Controllers\HorarioController::class, 'verAula'])->name('horarios.aula')->middleware('can:ver horario aula');
 
-    // Fase 13: Auditoría
+    // Fase 13: Auditoría (rutas específicas ANTES de las dinámicas)
     Route::get('auditoria', [\App\Http\Controllers\AuditoriaAccesoController::class, 'index'])->name('auditoria.index')->middleware('can:ver auditoria');
-    Route::get('auditoria/{auditoria}', [\App\Http\Controllers\AuditoriaAccesoController::class, 'show'])->name('auditoria.show')->middleware('can:ver auditoria');
-    Route::get('auditoria/historial/registro', [\App\Http\Controllers\AuditoriaAccesoController::class, 'historialRegistro'])->name('auditoria.historial-registro')->middleware('can:ver historial registro');
-    Route::get('auditoria/usuario/{usuario}', [\App\Http\Controllers\AuditoriaAccesoController::class, 'actividadUsuario'])->name('auditoria.usuario')->middleware('can:ver actividad usuario');
-    Route::get('auditoria/estadisticas', [\App\Http\Controllers\AuditoriaAccesoController::class, 'estadisticas'])->name('auditoria.estadisticas')->middleware('can:ver estadisticas auditoria');
-    Route::delete('auditoria/limpiar', [\App\Http\Controllers\AuditoriaAccesoController::class, 'limpiar'])->name('auditoria.limpiar')->middleware('can:limpiar auditoria');
-    Route::post('auditoria/exportar', [\App\Http\Controllers\AuditoriaAccesoController::class, 'exportar'])->name('auditoria.exportar')->middleware('can:exportar auditoria');
+    Route::get('auditoria/estadisticas', [\App\Http\Controllers\AuditoriaAccesoController::class, 'estadisticas'])->name('auditoria.estadisticas')->middleware('can:ver auditoria');
     Route::get('auditoria/reciente', [\App\Http\Controllers\AuditoriaAccesoController::class, 'reciente'])->name('auditoria.reciente')->middleware('can:ver auditoria');
+    Route::get('auditoria/historial/registro', [\App\Http\Controllers\AuditoriaAccesoController::class, 'historialRegistro'])->name('auditoria.historial-registro')->middleware('can:ver auditoria');
+    Route::delete('auditoria/limpiar', [\App\Http\Controllers\AuditoriaAccesoController::class, 'limpiar'])->name('auditoria.limpiar')->middleware('can:limpiar auditoria');
+    Route::post('auditoria/exportar', [\App\Http\Controllers\AuditoriaAccesoController::class, 'exportar'])->name('auditoria.exportar')->middleware('can:ver auditoria');
+    Route::get('auditoria/usuario/{usuario}', [\App\Http\Controllers\AuditoriaAccesoController::class, 'actividadUsuario'])->name('auditoria.usuario')->middleware('can:ver auditoria');
+    Route::get('auditoria/{auditoria}', [\App\Http\Controllers\AuditoriaAccesoController::class, 'show'])->name('auditoria.show')->middleware('can:ver auditoria');
 });
 
 require __DIR__.'/auth.php';
