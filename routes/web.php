@@ -135,6 +135,62 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::post('componentes-calificacion', [ComponenteCalificacionController::class, 'store'])->name('componentes.store')->middleware('can:crear componentes');
     Route::put('componentes-calificacion/{componente}', [ComponenteCalificacionController::class, 'update'])->name('componentes.update')->middleware('can:editar componentes');
     Route::delete('componentes-calificacion/{componente}', [ComponenteCalificacionController::class, 'destroy'])->name('componentes.destroy')->middleware('can:eliminar componentes');
+
+    // Fase 8: Asistencias
+    Route::resource('asistencias', \App\Http\Controllers\AsistenciaController::class)->middleware('can:ver asistencias');
+    Route::post('asistencias/registro-masivo', [\App\Http\Controllers\AsistenciaController::class, 'registroMasivo'])->name('asistencias.registro-masivo')->middleware('can:registrar asistencia masiva');
+    Route::get('asistencias/estadisticas', [\App\Http\Controllers\AsistenciaController::class, 'estadisticas'])->name('asistencias.estadisticas')->middleware('can:ver asistencias');
+    Route::get('asistencias/estudiantes', [\App\Http\Controllers\AsistenciaController::class, 'cargarEstudiantes'])->name('asistencias.cargar-estudiantes')->middleware('can:ver asistencias');
+
+    // Fase 8: Justificaciones
+    Route::resource('justificaciones', \App\Http\Controllers\JustificacionController::class)->middleware('can:ver justificaciones');
+    Route::post('justificaciones/{justificacion}/aprobar', [\App\Http\Controllers\JustificacionController::class, 'aprobar'])->name('justificaciones.aprobar')->middleware('can:aprobar justificaciones');
+    Route::post('justificaciones/{justificacion}/rechazar', [\App\Http\Controllers\JustificacionController::class, 'rechazar'])->name('justificaciones.rechazar')->middleware('can:rechazar justificaciones');
+    Route::get('justificaciones/pendientes', [\App\Http\Controllers\JustificacionController::class, 'pendientes'])->name('justificaciones.pendientes')->middleware('can:aprobar justificaciones');
+
+    // Fase 9: Tareas
+    Route::resource('tareas', \App\Http\Controllers\TareaController::class)->middleware('can:ver tareas');
+    Route::delete('tareas/archivos/{archivo}', [\App\Http\Controllers\TareaController::class, 'eliminarArchivo'])->name('tareas.eliminar-archivo')->middleware('can:editar tareas');
+    Route::post('tareas/{tareaEstudiante}/calificar', [\App\Http\Controllers\TareaController::class, 'calificar'])->name('tareas.calificar')->middleware('can:calificar tareas');
+    Route::post('tareas/{tarea}/completar', [\App\Http\Controllers\TareaController::class, 'completar'])->name('tareas.completar');
+    Route::get('tareas/proximas-vencer', [\App\Http\Controllers\TareaController::class, 'proximasVencer'])->name('tareas.proximas-vencer')->middleware('can:ver tareas');
+
+    // Fase 10: Mensajes
+    Route::resource('mensajes', \App\Http\Controllers\MensajeController::class)->middleware('can:ver mensajes');
+    Route::post('mensajes/{mensaje}/marcar-leido', [\App\Http\Controllers\MensajeController::class, 'marcarLeido'])->name('mensajes.marcar-leido');
+    Route::post('mensajes/{mensaje}/marcar-no-leido', [\App\Http\Controllers\MensajeController::class, 'marcarNoLeido'])->name('mensajes.marcar-no-leido');
+    Route::get('mensajes/conteo-no-leidos', [\App\Http\Controllers\MensajeController::class, 'conteoNoLeidos'])->name('mensajes.conteo-no-leidos');
+
+    // Fase 10: Notificaciones
+    Route::resource('notificaciones', \App\Http\Controllers\NotificacionController::class)->middleware('can:ver notificaciones');
+    Route::post('notificaciones/{notificacion}/marcar-leida', [\App\Http\Controllers\NotificacionController::class, 'marcarLeida'])->name('notificaciones.marcar-leida');
+    Route::post('notificaciones/{notificacion}/marcar-no-leida', [\App\Http\Controllers\NotificacionController::class, 'marcarNoLeida'])->name('notificaciones.marcar-no-leida');
+    Route::post('notificaciones/marcar-todas-leidas', [\App\Http\Controllers\NotificacionController::class, 'marcarTodasLeidas'])->name('notificaciones.marcar-todas-leidas');
+    Route::delete('notificaciones/eliminar-leidas', [\App\Http\Controllers\NotificacionController::class, 'eliminarLeidas'])->name('notificaciones.eliminar-leidas');
+    Route::get('notificaciones/conteo-no-leidas', [\App\Http\Controllers\NotificacionController::class, 'conteoNoLeidas'])->name('notificaciones.conteo-no-leidas');
+    Route::get('notificaciones/recientes', [\App\Http\Controllers\NotificacionController::class, 'recientes'])->name('notificaciones.recientes');
+
+    // Fase 11: Eventos
+    Route::resource('eventos', \App\Http\Controllers\EventoController::class)->middleware('can:ver eventos');
+    Route::post('eventos/{evento}/confirmar', [\App\Http\Controllers\EventoController::class, 'confirmar'])->name('eventos.confirmar')->middleware('can:confirmar asistencia eventos');
+    Route::get('eventos/calendario/datos', [\App\Http\Controllers\EventoController::class, 'calendario'])->name('eventos.calendario.datos')->middleware('can:ver calendario eventos');
+    Route::get('eventos/calendario/vista', [\App\Http\Controllers\EventoController::class, 'verCalendario'])->name('eventos.calendario')->middleware('can:ver calendario eventos');
+
+    // Fase 12: Horarios
+    Route::resource('horarios', \App\Http\Controllers\HorarioController::class)->middleware('can:ver horarios');
+    Route::get('horarios/paralelo/{paralelo}', [\App\Http\Controllers\HorarioController::class, 'verParalelo'])->name('horarios.paralelo')->middleware('can:ver horario paralelo');
+    Route::get('horarios/docente/{docente}', [\App\Http\Controllers\HorarioController::class, 'verDocente'])->name('horarios.docente')->middleware('can:ver horario docente');
+    Route::get('horarios/aula/{aula}', [\App\Http\Controllers\HorarioController::class, 'verAula'])->name('horarios.aula')->middleware('can:ver horario aula');
+
+    // Fase 13: Auditoría
+    Route::get('auditoria', [\App\Http\Controllers\AuditoriaAccesoController::class, 'index'])->name('auditoria.index')->middleware('can:ver auditoria');
+    Route::get('auditoria/{auditoria}', [\App\Http\Controllers\AuditoriaAccesoController::class, 'show'])->name('auditoria.show')->middleware('can:ver auditoria');
+    Route::get('auditoria/historial/registro', [\App\Http\Controllers\AuditoriaAccesoController::class, 'historialRegistro'])->name('auditoria.historial-registro')->middleware('can:ver historial registro');
+    Route::get('auditoria/usuario/{usuario}', [\App\Http\Controllers\AuditoriaAccesoController::class, 'actividadUsuario'])->name('auditoria.usuario')->middleware('can:ver actividad usuario');
+    Route::get('auditoria/estadisticas', [\App\Http\Controllers\AuditoriaAccesoController::class, 'estadisticas'])->name('auditoria.estadisticas')->middleware('can:ver estadisticas auditoria');
+    Route::delete('auditoria/limpiar', [\App\Http\Controllers\AuditoriaAccesoController::class, 'limpiar'])->name('auditoria.limpiar')->middleware('can:limpiar auditoria');
+    Route::post('auditoria/exportar', [\App\Http\Controllers\AuditoriaAccesoController::class, 'exportar'])->name('auditoria.exportar')->middleware('can:exportar auditoria');
+    Route::get('auditoria/reciente', [\App\Http\Controllers\AuditoriaAccesoController::class, 'reciente'])->name('auditoria.reciente')->middleware('can:ver auditoria');
 });
 
 require __DIR__.'/auth.php';
