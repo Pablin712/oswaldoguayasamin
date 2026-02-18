@@ -49,34 +49,19 @@
                         >
                         <div class="ml-3 flex-1">
                             <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">Por Curso/Paralelo</span>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Enviar a todos los estudiantes de un curso específico</p>
-                            <div id="curso_paralelo_selects" class="mt-2 grid grid-cols-2 gap-2" style="display: none;">
-                                <div>
-                                    <label for="curso_id_masivo" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Curso
-                                    </label>
-                                    <x-searchable-select
-                                        id="curso_id_masivo"
-                                        name="curso_id"
-                                        placeholder="Seleccione curso..."
-                                        :options="isset($cursos) ? $cursos->map(fn($c) => ['id' => $c->id, 'name' => $c->nombre])->toArray() : []"
-                                        valueField="id"
-                                        labelField="name"
-                                    />
-                                </div>
-                                <div>
-                                    <label for="paralelo_id_masivo" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Paralelo
-                                    </label>
-                                    <x-searchable-select
-                                        id="paralelo_id_masivo"
-                                        name="paralelo_id"
-                                        placeholder="Seleccione paralelo..."
-                                        :options="isset($paralelos) ? $paralelos->map(fn($p) => ['id' => $p->id, 'name' => $p->nombre])->toArray() : []"
-                                        valueField="id"
-                                        labelField="name"
-                                    />
-                                </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Enviar a todos los estudiantes de un curso y paralelo específico</p>
+                            <div id="paralelo_select_container" class="mt-2" style="display: none;">
+                                <label for="paralelo_id_masivo" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Curso y Paralelo
+                                </label>
+                                <x-searchable-select
+                                    id="paralelo_id_masivo"
+                                    name="paralelo_id"
+                                    placeholder="Seleccione curso y paralelo..."
+                                    :options="isset($paralelos) ? $paralelos->map(fn($p) => ['id' => $p->id, 'name' => $p->nombre_completo])->toArray() : []"
+                                    valueField="id"
+                                    labelField="name"
+                                />
                             </div>
                         </div>
                     </label>
@@ -252,22 +237,19 @@
         function toggleDestinatariosOptions(tipo) {
             // Deshabilitar todos los campos
             document.getElementById('rol_destinatario').disabled = true;
-            document.getElementById('curso_paralelo_selects').style.display = 'none';
+            document.getElementById('paralelo_select_container').style.display = 'none';
             document.getElementById('destinatarios_manuales').style.display = 'none';
 
-            // Deshabilitar searchable-selects de curso/paralelo
-            const cursoSelect = document.getElementById('curso_id_masivo');
+            // Deshabilitar searchable-select de paralelo
             const paraleloSelect = document.getElementById('paralelo_id_masivo');
-            if (cursoSelect) cursoSelect.disabled = true;
             if (paraleloSelect) paraleloSelect.disabled = true;
 
             // Habilitar el seleccionado
             if (tipo === 'rol') {
                 document.getElementById('rol_destinatario').disabled = false;
             } else if (tipo === 'curso') {
-                document.getElementById('curso_paralelo_selects').style.display = 'grid';
-                // Habilitar searchable-selects de curso/paralelo
-                if (cursoSelect) cursoSelect.disabled = false;
+                document.getElementById('paralelo_select_container').style.display = 'block';
+                // Habilitar searchable-select de paralelo
                 if (paraleloSelect) paraleloSelect.disabled = false;
             } else if (tipo === 'manual') {
                 document.getElementById('destinatarios_manuales').style.display = 'block';

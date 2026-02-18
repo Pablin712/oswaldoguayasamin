@@ -65,11 +65,10 @@ class MensajeController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Cargar cursos y paralelos para mensaje masivo (si es necesario)
-        $cursos = \App\Models\Curso::orderBy('nombre')->get();
-        $paralelos = \App\Models\Paralelo::orderBy('nombre')->get();
+        // Cargar paralelos con curso para mensaje masivo (nombre completo: "1ro Básica - A")
+        $paralelos = \App\Models\Paralelo::with('curso')->orderBy('id')->get();
 
-        return view('comunicacion.mensajes.index', compact('mensajes', 'tipo', 'usuarios', 'cursos', 'paralelos'));
+        return view('comunicacion.mensajes.index', compact('mensajes', 'tipo', 'usuarios', 'paralelos'));
     }
 
     /**
