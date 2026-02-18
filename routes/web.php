@@ -137,16 +137,17 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::delete('componentes-calificacion/{componente}', [ComponenteCalificacionController::class, 'destroy'])->name('componentes.destroy')->middleware('can:eliminar componentes');
 
     // Fase 8: Asistencias
-    Route::resource('asistencias', \App\Http\Controllers\AsistenciaController::class)->middleware('can:ver asistencias');
-    Route::post('asistencias/registro-masivo', [\App\Http\Controllers\AsistenciaController::class, 'registroMasivo'])->name('asistencias.registro-masivo')->middleware('can:registrar asistencia masiva');
+    Route::get('asistencias/registro-masivo', [\App\Http\Controllers\AsistenciaController::class, 'registroMasivo'])->name('asistencias.registro-masivo.form')->middleware('can:registrar asistencias');
+    Route::post('asistencias/registro-masivo', [\App\Http\Controllers\AsistenciaController::class, 'registroMasivo'])->name('asistencias.registro-masivo')->middleware('can:registrar asistencias');
     Route::get('asistencias/estadisticas', [\App\Http\Controllers\AsistenciaController::class, 'estadisticas'])->name('asistencias.estadisticas')->middleware('can:ver asistencias');
-    Route::get('asistencias/estudiantes', [\App\Http\Controllers\AsistenciaController::class, 'cargarEstudiantes'])->name('asistencias.cargar-estudiantes')->middleware('can:ver asistencias');
+    Route::get('asistencias/cargar-estudiantes', [\App\Http\Controllers\AsistenciaController::class, 'cargarEstudiantes'])->name('asistencias.cargar-estudiantes')->middleware('can:ver asistencias');
+    Route::resource('asistencias', \App\Http\Controllers\AsistenciaController::class)->middleware('can:ver asistencias');
 
     // Fase 8: Justificaciones
-    Route::resource('justificaciones', \App\Http\Controllers\JustificacionController::class)->middleware('can:ver justificaciones');
+    Route::get('justificaciones/pendientes', [\App\Http\Controllers\JustificacionController::class, 'pendientes'])->name('justificaciones.pendientes')->middleware('can:aprobar justificaciones');
     Route::post('justificaciones/{justificacion}/aprobar', [\App\Http\Controllers\JustificacionController::class, 'aprobar'])->name('justificaciones.aprobar')->middleware('can:aprobar justificaciones');
     Route::post('justificaciones/{justificacion}/rechazar', [\App\Http\Controllers\JustificacionController::class, 'rechazar'])->name('justificaciones.rechazar')->middleware('can:rechazar justificaciones');
-    Route::get('justificaciones/pendientes', [\App\Http\Controllers\JustificacionController::class, 'pendientes'])->name('justificaciones.pendientes')->middleware('can:aprobar justificaciones');
+    Route::resource('justificaciones', \App\Http\Controllers\JustificacionController::class)->middleware('can:ver justificaciones');
 
     // Fase 9: Tareas
     Route::resource('tareas', \App\Http\Controllers\TareaController::class)->middleware('can:ver tareas');

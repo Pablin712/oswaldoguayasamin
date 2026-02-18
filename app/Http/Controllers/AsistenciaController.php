@@ -94,9 +94,24 @@ class AsistenciaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Asistencia $asistencia)
+    public function show(Asistencia $asistencia, Request $request)
     {
         $asistencia->load(['estudiante.user', 'paralelo.curso', 'materia', 'docente.user', 'justificaciones']);
+
+        // Si es una petición AJAX, retornar JSON
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'id' => $asistencia->id,
+                'estudiante_id' => $asistencia->estudiante_id,
+                'paralelo_id' => $asistencia->paralelo_id,
+                'materia_id' => $asistencia->materia_id,
+                'docente_id' => $asistencia->docente_id,
+                'fecha' => $asistencia->fecha->format('Y-m-d'),
+                'hora' => $asistencia->hora?->format('H:i'),
+                'estado' => $asistencia->estado,
+                'observaciones' => $asistencia->observaciones,
+            ]);
+        }
 
         return view('academico.asistencias.show', compact('asistencia'));
     }
@@ -158,6 +173,16 @@ class AsistenciaController extends Controller
      */
     public function registroMasivo(Request $request)
     {
+        // Si es GET, mostrar el formulario
+        if ($request->isMethod('get')) {
+            $paralelos = Paralelo::with('curso')->get();
+
+            $materias = Materia::select('id', 'nombre')->get();
+
+            return view('academico.asistencias.registro-masivo', compact('paralelos', 'materias'));
+        }
+
+        // Si es POST, procesar el registro
         $request->validate([
             'paralelo_id' => 'required|exists:paralelos,id',
             'fecha' => 'required|date',

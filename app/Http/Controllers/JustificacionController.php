@@ -18,7 +18,7 @@ class JustificacionController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Justificacion::with(['asistencia.estudiante.user', 'padre.user', 'revisadoPor']);
+        $query = Justificacion::with(['asistencia.estudiante.user', 'padre.user', 'revisor']);
 
         // Filtros
         if ($request->filled('estado')) {
@@ -112,7 +112,7 @@ class JustificacionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Justificacion $justificacion)
+    public function show(Request $request, Justificacion $justificacion)
     {
         // Verificar permisos
         $user = Auth::user();
@@ -120,7 +120,12 @@ class JustificacionController extends Controller
             abort(403, 'No autorizado para ver esta justificación.');
         }
 
-        $justificacion->load(['asistencia.estudiante.user', 'asistencia.paralelo.curso', 'padre.user', 'revisadoPor']);
+        $justificacion->load(['asistencia.estudiante.user', 'asistencia.paralelo.curso', 'padre.user', 'revisor']);
+
+        // Si es una petición AJAX, devolver JSON
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json($justificacion);
+        }
 
         return view('academico.justificaciones.show', compact('justificacion'));
     }

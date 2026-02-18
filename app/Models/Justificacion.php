@@ -17,6 +17,7 @@ class Justificacion extends Model
         'estado',
         'revisado_por',
         'fecha_revision',
+        'motivo_rechazo',
     ];
 
     protected $casts = [
