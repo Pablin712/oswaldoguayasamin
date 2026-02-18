@@ -65,7 +65,7 @@
                                         @endcanany
 
                                         @canany(['rechazar justificaciones', 'gestionar justificaciones'])
-                                            <button x-data @click="$dispatch('open-modal-data', { modal: 'reject-justificacion-modal', data: { id: {{ $justificacion->id }}, estudiante: '{{ $justificacion->asistencia->estudiante->user->name }}' } })"
+                                            <button x-data @click="$dispatch('open-modal-data', { modal: 'reject-justificacion-modal', data: { id: {{ $justificacion->id }}, estudiante: '{{ $justificacion->asistencia?->estudiante?->user?->name ?? 'N/A' }}' } })"
                                                     class="inline-flex items-center px-3 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 transition">
                                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -90,14 +90,14 @@
                                 <div>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">Fecha de Solicitud</p>
                                     <p class="text-base font-medium text-gray-900 dark:text-gray-100">
-                                        {{ $justificacion->created_at->format('d/m/Y H:i') }}
+                                        {{ $justificacion->created_at?->format('d/m/Y H:i') ?? 'N/A' }}
                                     </p>
                                 </div>
 
                                 <div>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">Última Actualización</p>
                                     <p class="text-base font-medium text-gray-900 dark:text-gray-100">
-                                        {{ $justificacion->updated_at->format('d/m/Y H:i') }}
+                                        {{ $justificacion->updated_at?->format('d/m/Y H:i') ?? 'N/A' }}
                                     </p>
                                 </div>
 
@@ -105,7 +105,7 @@
                                     <div class="col-span-2">
                                         <p class="text-sm text-gray-500 dark:text-gray-400">Fecha de Revisión</p>
                                         <p class="text-base font-medium text-gray-900 dark:text-gray-100">
-                                            {{ $justificacion->fecha_revision->format('d/m/Y H:i') }}
+                                            {{ $justificacion->fecha_revision?->format('d/m/Y H:i') }}
                                         </p>
                                     </div>
                                 @endif
@@ -155,14 +155,14 @@
                                 <div>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">Nombre</p>
                                     <p class="text-base font-medium text-gray-900 dark:text-gray-100">
-                                        {{ $justificacion->asistencia->estudiante->user->name }}
+                                        {{ $justificacion->asistencia?->estudiante?->user?->name ?? 'N/A' }}
                                     </p>
                                 </div>
                                 <div>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">Curso</p>
                                     <p class="text-base font-medium text-gray-900 dark:text-gray-100">
-                                        {{ $justificacion->asistencia->paralelo->curso->nombre ?? 'N/A' }}
-                                        {{ $justificacion->asistencia->paralelo->nombre ?? '' }}
+                                        {{ $justificacion->asistencia?->paralelo?->curso?->nombre ?? 'N/A' }}
+                                        {{ $justificacion->asistencia?->paralelo?->nombre ?? '' }}
                                     </p>
                                 </div>
                             </div>
@@ -179,14 +179,14 @@
                                 <div>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">Nombre</p>
                                     <p class="text-base font-medium text-gray-900 dark:text-gray-100">
-                                        {{ $justificacion->padre->user->name }}
+                                        {{ $justificacion->padre?->user?->name ?? 'N/A' }}
                                     </p>
                                 </div>
-                                @if($justificacion->padre->user->email)
+                                @if($justificacion->padre?->user?->email)
                                     <div>
                                         <p class="text-sm text-gray-500 dark:text-gray-400">Email</p>
                                         <p class="text-base text-gray-900 dark:text-gray-100">
-                                            {{ $justificacion->padre->user->email }}
+                                            {{ $justificacion->padre?->user?->email }}
                                         </p>
                                     </div>
                                 @endif
@@ -204,27 +204,31 @@
                                 <div>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">Fecha</p>
                                     <p class="text-base font-medium text-gray-900 dark:text-gray-100">
-                                        {{ \Carbon\Carbon::parse($justificacion->asistencia->fecha)->format('d/m/Y') }}
+                                        {{ $justificacion->asistencia?->fecha ? \Carbon\Carbon::parse($justificacion->asistencia?->fecha)->format('d/m/Y') : 'N/A' }}
                                     </p>
                                 </div>
                                 <div>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">Estado Original</p>
                                     <div class="mt-1">
-                                        @if($justificacion->asistencia->estado == 'presente')
+                                        @if($justificacion->asistencia?->estado == 'presente')
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                                                 Presente
                                             </span>
-                                        @elseif($justificacion->asistencia->estado == 'ausente')
+                                        @elseif($justificacion->asistencia?->estado == 'ausente')
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
                                                 Ausente
                                             </span>
-                                        @elseif($justificacion->asistencia->estado == 'atrasado')
+                                        @elseif($justificacion->asistencia?->estado == 'atrasado')
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
                                                 Atrasado
                                             </span>
-                                        @elseif($justificacion->asistencia->estado == 'justificado')
+                                        @elseif($justificacion->asistencia?->estado == 'justificado')
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                                                 Justificado
+                                            </span>
+                                        @else
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200">
+                                                N/A
                                             </span>
                                         @endif
                                     </div>
@@ -244,14 +248,14 @@
                                     <div>
                                         <p class="text-sm text-gray-500 dark:text-gray-400">Nombre</p>
                                         <p class="text-base font-medium text-gray-900 dark:text-gray-100">
-                                            {{ $justificacion->revisor->name }}
+                                            {{ $justificacion->revisor?->name ?? 'N/A' }}
                                         </p>
                                     </div>
                                     @if($justificacion->fecha_revision)
                                         <div>
                                             <p class="text-sm text-gray-500 dark:text-gray-400">Fecha</p>
                                             <p class="text-base text-gray-900 dark:text-gray-100">
-                                                {{ $justificacion->fecha_revision->format('d/m/Y H:i') }}
+                                                {{ $justificacion->fecha_revision?->format('d/m/Y H:i') }}
                                             </p>
                                         </div>
                                     @endif

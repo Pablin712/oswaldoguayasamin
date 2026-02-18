@@ -1,20 +1,20 @@
 # 🎨 Mockups y Vistas del Sistema (FRONTEND)
 
 **Última actualización:** 17 de febrero de 2026  
-**Estado:** 🔄 En Progreso - Fase 6 Completada | Fases 8-13 Backend Completado (17/02/2026)
+**Estado:** 🔄 En Progreso - Fase 6 Completada | Fase 8 Backend+Frontend Completado (17/02/2026)
 
 ---
 
 ## ⚠️ IMPORTANTE: ESTE DOCUMENTO SE REFIERE AL FRONTEND
 
 **Backend (BD y Modelos):** Consultar [6 - Avances.md](6 - Avances.md) - ✅ 100% Completo  
-**Frontend (Vistas y CRUDs):** Este documento - 🔄 En progreso (29/38 módulos = 76.3%)
+**Frontend (Vistas y CRUDs):** Este documento - 🔄 En progreso (31/38 módulos = 81.6%)
 
 ---
 
 ## 📊 Estado de Vistas
 
-### ✅ Vistas Frontend Completadas (29 de 46 módulos)
+### ✅ Vistas Frontend Completadas (31 de 46 módulos)
 - Login
 - Recuperar contraseña (Recover password)
 - Editar perfil (Edit profile)
@@ -42,13 +42,13 @@
 - Calificaciones (Contexto + Registro + Seeder) ✅ **FASE 6** (03/02/2026)
 - Componentes de Calificación (API CRUD) ✅ **FASE 6** (03/02/2026)
 - Auditoría (Logs + Estadísticas) ✅ **FASE 13** (17/02/2026)
+- Asistencias (CRUD + Registro masivo + Estadísticas) ✅ **FASE 8** (17/02/2026)
+- Justificaciones (Workflow completo de aprobación) ✅ **FASE 8** (17/02/2026)
 
-### 🔧 Backend Completado - Vistas Frontend Pendientes (7 módulos)
+### 🔧 Backend Completado - Vistas Frontend Pendientes (5 módulos)
 **⚠️ IMPORTANTE:** Estos módulos tienen **controllers, models, migrations, seeders, routes y permissions** completados.
 Solo falta la implementación del **frontend (vistas Blade)**.
 
-- Asistencias (Registro masivo + Estadísticas) **FASE 8** ⚡ Backend completado (17/02/2026)
-- Justificaciones (Workflow aprobación/rechazo) **FASE 8** ⚡ Backend completado (17/02/2026)
 - Tareas (CRUD + Calificación + Archivos) **FASE 9** ⚡ Backend completado (17/02/2026)
 - Mensajes (Sistema completo de mensajería) **FASE 10** ⚡ Backend completado (17/02/2026)
 - Notificaciones (Sistema de alertas + Email) **FASE 10** ⚡ Backend completado (17/02/2026)
@@ -456,21 +456,31 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
     - ✅ Permisos: gestionar asistencias, ver, crear, editar, eliminar, registro masivo, ver estadísticas, generar reporte
   - Frontend pendiente: ❌ Vistas Blade no creadas
 
-- [x] **Justificaciones** ⚡ Backend completado
+- [x] **Justificaciones** ✅ COMPLETA
   - Tipo: Workflow de aprobación con archivos adjuntos
-  - Mockup: Requerido (formulario + tabla con estados)
-  - Campos: asistencia_id, padre_id, motivo, archivo_adjunto, estado (pendiente/aprobada/rechazada), fecha_revision, revisado_por
+  - Mockup: No requerido (flujo estándar de aprobación)
+  - Campos: asistencia_id, padre_id, motivo, archivo_adjunto, estado (pendiente/aprobada/rechazada), fecha_revision, revisado_por, motivo_rechazo
   - Backend completado:
     - ✅ Controlador: JustificacionController (9 métodos)
       - index(), create(), store(), edit(), update(), destroy() - CRUD estándar
-      - aprobar() - Aprueba justificación y actualiza asistencia
-      - rechazar() - Rechaza justificación
+      - aprobar() - Aprueba justificación y actualiza asistencia a "justificado"
+      - rechazar() - Rechaza justificación con motivo opcional
       - pendientes() - Lista solo pendientes de aprobación
     - ✅ Form Request: JustificacionRequest con validación de archivos
-    - ✅ Modelo: Justificacion con relaciones y storage de archivos
-    - ✅ Rutas: justificaciones.* + aprobar, rechazar, pendientes
+    - ✅ Modelo: Justificacion con relaciones (asistencia, padre, revisor)
+    - ✅ Rutas: justificaciones.* + aprobar, rechazar, pendientes (ordenadas correctamente)
     - ✅ Permisos: gestionar justificaciones, ver, crear, editar, eliminar, aprobar, rechazar
-  - Frontend pendiente: ❌ Vistas Blade no creadas
+    - ✅ Migración adicional: Campo motivo_rechazo agregado
+  - Frontend completado: ✅
+    - ✅ index.blade.php - Tabla con filtros por estado
+    - ✅ create.blade.php - Modal de creación con archivo adjunto
+    - ✅ edit.blade.php - Modal de edición (solo pendientes)
+    - ✅ delete.blade.php - Modal de confirmación
+    - ✅ show.blade.php - Vista detalle con información completa
+    - ✅ pendientes.blade.php - Vista especial para revisión rápida
+    - ✅ approve.blade.php - Modal de aprobación
+    - ✅ reject.blade.php - Modal de rechazo con motivo
+  - **Fecha completada:** 17/02/2026
 
 ---
 
@@ -757,4 +767,212 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 
 **Fecha inicio:** 24 de diciembre de 2025  
 **Última actualización:** 17 de febrero de 2026  
-**Estado:** Fase 6 validada ✅ | Fases 8-13 backend completado ⚡ | Sidebar actualizado ✅
+**Estado:** Fase 8 completada ✅ | Asistencias y Justificaciones frontend completados ✅ | Sidebar actualizado ✅
+
+---
+
+## 📝 Detalle de Implementación - Fase 8: Justificaciones
+
+### Vistas Completadas: 17/02/2026
+
+#### Archivos Creados:
+1. **index.blade.php**
+   - Enhanced-table con 7 columnas (Fecha Solicitud, Estudiante, Padre/Representante, Asistencia, Estado, Revisado Por, Acciones)
+   - Filtro por estado (pendiente, aprobada, rechazada)
+   - Badges de estado con colores: pendiente (amarillo), aprobada (verde), rechazada (rojo)
+   - Botón "Pendientes" que redirige a vista de revisión
+   - Botón "Nueva Justificación" que abre modal
+   - Acciones por fila según estado: Ver (siempre), Aprobar/Rechazar (pendientes), Editar (pendientes), Eliminar (pendientes y rechazadas)
+
+2. **create.blade.php**
+   - Modal x-modal con asistencia_id, motivo, archivo_adjunto
+   - Upload de archivos (PDF, JPG, PNG, máx 2MB)
+   - Selectbox para asistencias del estudiante sin justificación
+   - Validación de archivos y campos requeridos
+
+3. **edit.blade.php**
+   - Modal x-modal con Alpine.js
+   - Event listener para 'open-modal-data'
+   - Fetch API para cargar datos: `/justificaciones/${id}`
+   - Edición de motivo y reemplazo de archivo
+   - Solo editable si estado = 'pendiente'
+
+4. **delete.blade.php**
+   - Modal de confirmación
+   - Muestra nombre del estudiante
+   - Alpine.js para capturar datos del evento
+   - Action dinámico con método DELETE
+   - Solo permite eliminar pendientes o rechazadas
+
+5. **show.blade.php**
+   - Vista de detalle completa con 3 columnas
+   - Información Principal: estado, motivo, archivo adjunto, motivo_rechazo
+   - Sidebar Derecha: datos de estudiante, padre, asistencia relacionada, revisor
+   - Acciones rápidas si estado = pendiente (aprobar/rechazar)
+   - Descarga de archivo adjunto
+
+6. **pendientes.blade.php**
+   - Vista especial para revisión de justificaciones pendientes
+   - Cards expandidos con toda la información
+   - Contador en header con total de pendientes
+   - Acciones rápidas: Ver Detalle, Aprobar, Rechazar
+   - Vista optimizada para flujo de trabajo
+
+7. **approve.blade.php**
+   - Modal de confirmación de aprobación
+   - Muestra nombre del estudiante
+   - Explica consecuencias: asistencia → "justificado", no editable
+   - Form POST a route('justificaciones.aprobar')
+
+8. **reject.blade.php**
+   - Modal de rechazo con campo motivo_rechazo
+   - Textarea opcional para explicar motivo
+   - Muestra nombre del estudiante
+   - Form POST a route('justificaciones.rechazar')
+
+#### Rutas Actualizadas:
+```php
+Route::get('justificaciones/pendientes', [JustificacionController::class, 'pendientes'])
+    ->name('justificaciones.pendientes')
+    ->middleware('can:aprobar justificaciones');
+Route::post('justificaciones/{justificacion}/aprobar', [JustificacionController::class, 'aprobar'])
+    ->name('justificaciones.aprobar')
+    ->middleware('can:aprobar justificaciones');
+Route::post('justificaciones/{justificacion}/rechazar', [JustificacionController::class, 'rechazar'])
+    ->name('justificaciones.rechazar')
+    ->middleware('can:rechazar justificaciones');
+Route::resource('justificaciones', JustificacionController::class)
+    ->middleware('can:ver justificaciones');
+```
+**Nota:** Rutas específicas (pendientes, aprobar, rechazar) ANTES de Route::resource.
+
+#### Controller Actualizado:
+- Método `show()` modificado para manejar JSON cuando `wantsJson()` = true (para edit modal)
+- Método `aprobar()` actualiza estado de justificación y asistencia en transacción
+- Método `rechazar()` almacena motivo_rechazo opcional
+- Filtros en index() según rol (padres solo ven sus justificaciones)
+
+#### Componentes Utilizados:
+- ✅ Enhanced-table (exportación, búsqueda, paginación)
+- ✅ X-modal (create, edit, delete, approve, reject)
+- ✅ Alpine.js (interactividad, AJAX, open-modal-data events)
+- ✅ Badges con dark mode
+- ✅ File upload con validación
+
+#### Permisos Verificados:
+- `ver justificaciones` - Listado y detalles
+- `crear justificaciones` - Crear justificación
+- `editar justificaciones` - Modificar pendientes
+- `eliminar justificaciones` - Eliminar pendientes/rechazadas
+- `aprobar justificaciones` - Aprobar y ver pendientes
+- `rechazar justificaciones` - Rechazar con motivo
+
+#### Migración Adicional:
+- Campo `motivo_rechazo` agregado a tabla justificaciones (TEXT nullable)
+- Actualizado fillable en modelo Justificacion
+
+#### Estado Final:
+✅ CRUD completo funcional  
+✅ Workflow aprobación/rechazo implementado  
+✅ Vista de pendientes implementada  
+✅ Vistas siguen patrón de documentación  
+✅ Componentes enhanced-table y x-modal usados correctamente  
+✅ Rutas ordenadas correctamente  
+✅ Dark mode compatible  
+✅ Responsive design  
+✅ Relación `revisor` corregida en controlador
+
+---
+
+## 📝 Detalle de Implementación - Fase 8: Asistencias
+
+### Vista Completada: 17/02/2026
+
+#### Archivos Creados:
+1. **index.blade.php**
+   - Enhanced-table con 7 columnas (Fecha/Hora, Estudiante, Paralelo, Materia, Estado, Docente, Acciones)
+   - 4 filtros: paralelo (searchable-select), estudiante (searchable-select), fecha, estado (dropdown)
+   - Badges de estado con colores: presente (verde), ausente (rojo), atrasado (amarillo), justificado (azul)
+   - Botón "Registro Masivo" que redirige a vista especial
+   - Botón "Nueva Asistencia" que abre modal
+   - Botones de acción por fila: Ver, Editar, Eliminar
+
+2. **create.blade.php**
+   - Modal x-modal con width 2xl
+   - 8 campos: paralelo_id*, estudiante_id*, fecha*, hora, estado*, materia_id, observaciones
+   - Searchable-select para paralelo, estudiante y materia
+   - Dropdown para estado (presente, ausente, atrasado, justificado)
+   - Date y time inputs con validación HTML5
+
+3. **edit.blade.php**
+   - Modal x-modal con Alpine.js
+   - Event listener para 'open-edit-modal'
+   - Fetch API para cargar datos de asistencia: `/asistencias/${id}`
+   - Mismo formulario que create pero con datos precargados
+   - Action dinámico: `/asistencias/${id}` con método PUT
+
+4. **delete.blade.php**
+   - Modal de confirmación
+   - Muestra nombre del estudiante y fecha
+   - Alpine.js para capturar datos del evento
+   - Action dinámico con método DELETE
+
+5. **show.blade.php**
+   - Vista de detalle completa
+   - 2 secciones: "Información General" y "Justificaciones"
+   - Grid responsive con 9 campos de información
+   - Badge de estado con formato condicional
+   - Sección de justificaciones relacionadas con estado (aprobado/rechazado/pendiente)
+   - Botón "Volver" al listado
+
+6. **registro-masivo.blade.php**
+   - Vista especial para registro por paralelo
+   - Alpine.js con función `registroMasivo()`
+   - 3 filtros superiores: paralelo*, fecha*, materia (opcional)
+   - Carga dinámica de estudiantes vía AJAX: `/asistencias/cargar-estudiantes`
+   - Tabla con columnas: #, Estudiante, Estado (select), Observaciones (input)
+   - Botones de acción rápida: "Marcar Todos Presente", "Marcar Todos Ausente"
+   - Detecta asistencias ya registradas y precarga datos
+   - Submit en batch a `/asistencias/registro-masivo` (POST)
+   - Loading states y validaciones
+
+#### Rutas Actualizadas:
+```php
+Route::get('asistencias/registro-masivo', [AsistenciaController::class, 'registroMasivo'])
+    ->name('asistencias.registro-masivo.form');
+Route::post('asistencias/registro-masivo', [AsistenciaController::class, 'registroMasivo'])
+    ->name('asistencias.registro-masivo');
+Route::get('asistencias/estadisticas', [AsistenciaController::class, 'estadisticas'])
+    ->name('asistencias.estadisticas');
+Route::get('asistencias/cargar-estudiantes', [AsistenciaController::class, 'cargarEstudiantes'])
+    ->name('asistencias.cargar-estudiantes');
+Route::resource('asistencias', AsistenciaController::class);
+```
+**Nota:** Rutas específicas antes de Route::resource para evitar captura incorrecta.
+
+#### Controller Actualizado:
+- Método `registroMasivo()` modificado para manejar GET (mostrar vista) y POST (guardar)
+- GET retorna vista con $paralelos y $materias
+- POST valida y ejecuta updateOrCreate en transacción DB
+
+#### Componentes Utilizados:
+- ✅ Enhanced-table (exportación, búsqueda, paginación, ordenamiento)
+- ✅ Searchable-select (paralelos, estudiantes, materias)
+- ✅ X-modal (create, edit, delete)
+- ✅ Alpine.js (interactividad, AJAX)
+- ✅ Badges con dark mode
+
+#### Permisos Verificados:
+- `ver asistencias` - Listado y detalles
+- `crear asistencias` - Crear individual y registro masivo
+- `editar asistencias` - Modificar asistencias
+- `eliminar asistencias` - Eliminar registros
+
+#### Estado Final:
+✅ CRUD completo funcional  
+✅ Registro masivo implementado  
+✅ Vistas siguen patrón de documentación  
+✅ Componentes enhanced-table y searchable-select usados correctamente  
+✅ Rutas ordenadas correctamente  
+✅ Dark mode compatible  
+✅ Responsive design

@@ -147,7 +147,9 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::get('justificaciones/pendientes', [\App\Http\Controllers\JustificacionController::class, 'pendientes'])->name('justificaciones.pendientes')->middleware('can:aprobar justificaciones');
     Route::post('justificaciones/{justificacion}/aprobar', [\App\Http\Controllers\JustificacionController::class, 'aprobar'])->name('justificaciones.aprobar')->middleware('can:aprobar justificaciones');
     Route::post('justificaciones/{justificacion}/rechazar', [\App\Http\Controllers\JustificacionController::class, 'rechazar'])->name('justificaciones.rechazar')->middleware('can:rechazar justificaciones');
-    Route::resource('justificaciones', \App\Http\Controllers\JustificacionController::class)->middleware('can:ver justificaciones');
+    Route::resource('justificaciones', \App\Http\Controllers\JustificacionController::class)
+        ->parameter('justificaciones', 'justificacion')
+        ->middleware('can:ver justificaciones');
 
     // Fase 9: Tareas
     Route::resource('tareas', \App\Http\Controllers\TareaController::class)->middleware('can:ver tareas');
