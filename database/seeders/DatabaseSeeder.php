@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             RelacionesAcademicasSeeder::class,
             UsuariosEspecializadosSeeder::class,
             AsignacionesAcademicasSeeder::class,
+            CalificacionesSeeder::class, // Fase 6
             AsistenciaSeeder::class, // Fase 8
             TareaSeeder::class, // Fase 9
             ComunicacionSeeder::class, // Fase 10

@@ -198,6 +198,79 @@ class RoleSeeder extends Seeder
             'crear componentes',
             'editar componentes',
             'eliminar componentes',
+
+            // Fase 8: Asistencias
+            'gestionar asistencias',
+            'ver asistencias',
+            'registrar asistencias',
+            'editar asistencias',
+            'eliminar asistencias',
+            'registrar asistencia masiva',
+            'generar reporte asistencias',
+
+            // Fase 8: Justificaciones
+            'gestionar justificaciones',
+            'ver justificaciones',
+            'crear justificaciones',
+            'editar justificaciones',
+            'eliminar justificaciones',
+            'aprobar justificaciones',
+            'rechazar justificaciones',
+
+            // Fase 9: Tareas
+            'gestionar tareas',
+            'ver tareas',
+            'crear tareas',
+            'editar tareas',
+            'eliminar tareas',
+            'calificar tareas',
+            'completar tareas',
+            'generar reporte tareas',
+
+            // Fase 10: Mensajes
+            'gestionar mensajes',
+            'ver mensajes',
+            'enviar mensajes',
+            'editar mensajes',
+            'eliminar mensajes',
+            'enviar mensajes masivos',
+
+            // Fase 10: Notificaciones
+            'gestionar notificaciones',
+            'ver notificaciones',
+            'crear notificaciones',
+            'eliminar notificaciones',
+            'marcar notificaciones leidas',
+
+            // Fase 11: Eventos
+            'gestionar eventos',
+            'ver eventos',
+            'crear eventos',
+            'editar eventos',
+            'eliminar eventos',
+            'confirmar asistencia eventos',
+            'ver calendario eventos',
+            'generar reporte eventos',
+
+            // Fase 12: Horarios
+            'gestionar horarios',
+            'ver horarios',
+            'crear horarios',
+            'editar horarios',
+            'eliminar horarios',
+            'ver horario paralelo',
+            'ver horario docente',
+            'ver horario aula',
+            'generar reporte horarios',
+
+            // Fase 13: Auditoría
+            'gestionar auditoria',
+            'ver auditoria',
+            'ver historial registro',
+            'ver actividad usuario',
+            'ver estadisticas auditoria',
+            'limpiar auditoria',
+            'exportar auditoria',
         ];
 
         foreach ($permissions as $permission) {

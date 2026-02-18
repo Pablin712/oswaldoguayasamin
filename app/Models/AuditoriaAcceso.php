@@ -38,6 +38,12 @@ class AuditoriaAcceso extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    // Alias para consistencia con otras partes del código
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     // Scopes
     public function scopeDelUsuario($query, $userId)
     {

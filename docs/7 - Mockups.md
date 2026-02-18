@@ -1,7 +1,7 @@
 # 🎨 Mockups y Vistas del Sistema (FRONTEND)
 
-**Última actualización:** 03 de febrero de 2026  
-**Estado:** 🔄 En Progreso - Fase 6 Completada y Validada (03/02/2026)
+**Última actualización:** 17 de febrero de 2026  
+**Estado:** 🔄 En Progreso - Fase 6 Completada | Fases 8-13 Backend Completado (17/02/2026)
 
 ---
 
@@ -14,7 +14,7 @@
 
 ## 📊 Estado de Vistas
 
-### ✅ Vistas Completadas (29 de 38 módulos)
+### ✅ Vistas Frontend Completadas (29 de 46 módulos)
 - Login
 - Recuperar contraseña (Recover password)
 - Editar perfil (Edit profile)
@@ -42,17 +42,23 @@
 - Calificaciones (Contexto + Registro + Seeder) ✅ **FASE 6** (03/02/2026)
 - Componentes de Calificación (API CRUD) ✅ **FASE 6** (03/02/2026)
 
-### ⏳ Vistas Pendientes (9 módulos)
-- Asistencias (Calendario/tabla) **FASE 7**
-- Justificaciones (Workflow) **FASE 7**
-- Tareas (Cards con estado) **FASE 8**
-- Entregas de Tareas (Calificaciones) **FASE 8**
-- Mensajes (Bandeja email) **FASE 9**
-- Notificaciones (Dropdown) **FASE 9**
-- Eventos (Calendario) **FASE 10**
-- Confirmaciones de Eventos **FASE 10**
-- Horarios (Grid semanal) **FASE 11**
-- Auditoría (Tabla de logs) **FASE 12**
+### 🔧 Backend Completado - Vistas Frontend Pendientes (8 módulos)
+**⚠️ IMPORTANTE:** Estos módulos tienen **controllers, models, migrations, seeders, routes y permissions** completados.
+Solo falta la implementación del **frontend (vistas Blade)**.
+
+- Asistencias (Registro masivo + Estadísticas) **FASE 8** ⚡ Backend completado (17/02/2026)
+- Justificaciones (Workflow aprobación/rechazo) **FASE 8** ⚡ Backend completado (17/02/2026)
+- Tareas (CRUD + Calificación + Archivos) **FASE 9** ⚡ Backend completado (17/02/2026)
+- Mensajes (Sistema completo de mensajería) **FASE 10** ⚡ Backend completado (17/02/2026)
+- Notificaciones (Sistema de alertas + Email) **FASE 10** ⚡ Backend completado (17/02/2026)
+- Eventos (Calendario + Confirmaciones) **FASE 11** ⚡ Backend completado (17/02/2026)
+- Horarios (Grid semanal + Conflictos) **FASE 12** ⚡ Backend completado (17/02/2026)
+- Auditoría (Logs + Estadísticas) **FASE 13** ⚡ Backend completado (17/02/2026)
+
+### ⏳ Vistas Totalmente Pendientes (9 módulos)
+Estos módulos NO tienen backend ni frontend:
+- Fase 7: Módulos adicionales de asistencia (si aplica)
+- Otros módulos futuros según planificación
 
 ---
 - Áreas (CRUD completo con gestión de estado) ✅ **FASE 3**
@@ -413,7 +419,7 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 
 ---
 
-### Fase 7: Control de Asistencia ⏳ PENDIENTE
+### Fase 7: Control de Asistencia ⏳ PENDIENTE (0/2)
 **Vistas necesarias:** 2 módulos
 
 - [ ] **Asistencias**
@@ -430,95 +436,232 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 
 ---
 
-### Fase 8: Tareas y Deberes ⏳ PENDIENTE
-**Vistas necesarias:** 2 módulos
+### Fase 8: Control de Asistencia 🔧 BACKEND COMPLETO (2/2)
+**⚠️ Backend completado el 17/02/2026 - Solo falta FRONTEND**
 
-- [ ] **Tareas**
-  - Tipo: Cards/tabla con estado
-  - Mockup: Requerido (cards con fecha límite, estado)
-  - Campos: título, descripción, materia, paralelo, fecha asignación, fecha entrega, archivos
-  - Permisos: gestionar tareas, ver, crear, editar, eliminar
+- [x] **Asistencias** ⚡ Backend completado
+  - Tipo: Registro masivo + estadísticas + calendario
+  - Mockup: Requerido (vista calendario + tabla de registro masivo)
+  - Campos: matricula_id, docente_materia_id, fecha, hora, estado (presente/ausente/atrasado/justificado), observaciones
+  - Backend completado:
+    - ✅ Controlador: AsistenciaController (11 métodos)
+      - index() - Listado con filtros
+      - create(), store(), edit(), update(), destroy() - CRUD estándar
+      - cargarEstudiantes() - Carga estudiantes del paralelo
+      - registroMasivo() - Registra asistencia de todo el paralelo de una vez
+      - estadisticas() - Total presente/ausente/atrasado/justificado
+    - ✅ Form Request: AsistenciaRequest con validaciones
+    - ✅ Modelo: Asistencia con relaciones
+    - ✅ Rutas: asistencias.* (resource) + routes adicionales
+    - ✅ Permisos: gestionar asistencias, ver, crear, editar, eliminar, registro masivo, ver estadísticas, generar reporte
+  - Frontend pendiente: ❌ Vistas Blade no creadas
 
-- [ ] **Tarea Estudiante** (Entregas)
-  - Tipo: Vista detalle con estados
-  - Mockup: Requerido (lista de entregas, calificaciones)
-  - Campos: estudiante, estado, fecha completada, calificación, comentarios
-  - Permisos: gestionar entregas, ver, calificar entregas
-
----
-
-### Fase 9: Comunicación ⏳ PENDIENTE
-**Vistas necesarias:** 2 módulos
-
-- [ ] **Mensajes**
-  - Tipo: Bandeja estilo email
-  - Mockup: Requerido (inbox/outbox, mensajes individuales/masivos)
-  - Campos: remitente, destinatarios, asunto, cuerpo, adjuntos, fecha
-  - Permisos: gestionar mensajes, ver, crear, eliminar mensajes
-
-- [ ] **Notificaciones**
-  - Tipo: Lista/dropdown de notificaciones
-  - Mockup: Requerido (panel de notificaciones, tipos con iconos)
-  - Campos: tipo, título, mensaje, leída, fecha
-  - Permisos: ver notificaciones, marcar como leída
-
----
-
-### Fase 10: Eventos y Calendario ⏳ PENDIENTE
-**Vistas necesarias:** 2 módulos
-
-- [ ] **Eventos**
-  - Tipo: Vista de calendario + lista
-  - Mockup: Requerido (calendario mensual/semanal, tipos de eventos con colores)
-  - Campos: título, tipo, fecha inicio/fin, hora, ubicación, paralelos
-  - Permisos: gestionar eventos, ver, crear, editar, eliminar
-
-- [ ] **Confirmaciones de Eventos**
-  - Tipo: Lista de confirmaciones por evento
-  - Mockup: Requerido (lista de asistentes, estado confirmación)
-  - Campos: evento, usuario, estudiante, confirmado, fecha confirmación
-  - Permisos: ver confirmaciones, confirmar asistencia
+- [x] **Justificaciones** ⚡ Backend completado
+  - Tipo: Workflow de aprobación con archivos adjuntos
+  - Mockup: Requerido (formulario + tabla con estados)
+  - Campos: asistencia_id, padre_id, motivo, archivo_adjunto, estado (pendiente/aprobada/rechazada), fecha_revision, revisado_por
+  - Backend completado:
+    - ✅ Controlador: JustificacionController (9 métodos)
+      - index(), create(), store(), edit(), update(), destroy() - CRUD estándar
+      - aprobar() - Aprueba justificación y actualiza asistencia
+      - rechazar() - Rechaza justificación
+      - pendientes() - Lista solo pendientes de aprobación
+    - ✅ Form Request: JustificacionRequest con validación de archivos
+    - ✅ Modelo: Justificacion con relaciones y storage de archivos
+    - ✅ Rutas: justificaciones.* + aprobar, rechazar, pendientes
+    - ✅ Permisos: gestionar justificaciones, ver, crear, editar, eliminar, aprobar, rechazar
+  - Frontend pendiente: ❌ Vistas Blade no creadas
 
 ---
 
-### Fase 11: Horarios ⏳ PENDIENTE
-**Vistas necesarias:** 1 módulo
+### Fase 9: Tareas y Deberes 🔧 BACKEND COMPLETO (1/1)
+**⚠️ Backend completado el 17/02/2026 - Solo falta FRONTEND**
 
-- [ ] **Horarios**
-  - Tipo: Cuadrícula semanal (lunes-viernes)
-  - Mockup: Requerido (grid de horario escolar, colores por materia)
-  - Campos: día, hora inicio/fin, materia, docente, aula, paralelo
-  - Permisos: gestionar horarios, ver, crear, editar, eliminar, generar reporte
+- [x] **Tareas** ⚡ Backend completado
+  - Tipo: Sistema completo de tareas con calificación y archivos
+  - Mockup: Requerido (cards con fecha límite + formulario de entrega)
+  - Campos: 
+    - Tarea: curso_materia_id, paralelo_id, docente_id, titulo, descripcion, fecha_asignacion, fecha_entrega, archivos_permitidos, puntos_totales
+    - TareaEstudiante: tarea_id, matricula_id, estado (pendiente/entregada/calificada/vencida), fecha_entrega, calificacion, comentario_docente
+    - ArchivoTarea: tarea_estudiante_id, nombre_archivo, ruta_archivo, tipo
+  - Backend completado:
+    - ✅ Controlador: TareaController (11 métodos)
+      - index(), create(), store(), edit(), update(), destroy() - CRUD estándar
+      - proximasVencer() - Tareas próximas a vencer
+      - completar() - Estudiante entrega tarea con archivos
+      - calificar() - Docente califica tarea entregada
+      - eliminarArchivo() - Elimina archivo adjunto
+    - ✅ Form Request: TareaRequest con validaciones
+    - ✅ Modelos: Tarea, TareaEstudiante, ArchivoTarea con relaciones
+    - ✅ Rutas: tareas.* + calificar, completar, proximas-vencer, eliminar-archivo
+    - ✅ Permisos: gestionar tareas, ver, crear, editar, eliminar, calificar, ver entregas
+    - ✅ Storage: Manejo de archivos adjuntos (subida/descarga/eliminación)
+  - Frontend pendiente: ❌ Vistas Blade no creadas
 
 ---
 
-### Fase 12: Auditoría ⏳ PENDIENTE
-**Vistas necesarias:** 1 módulo
+### Fase 10: Comunicación 🔧 BACKEND COMPLETO (2/2)
+**⚠️ Backend completado el 17/02/2026 - Solo falta FRONTEND**
 
-- [ ] **Auditoría de Accesos**
-  - Tipo: Tabla filtrable con búsqueda avanzada
-  - Mockup: Requerido (tabla con filtros por usuario, acción, fecha, tabla afectada)
-  - Campos: usuario, acción, tabla, registro, IP, fecha, cambios (antes/después)
-  - Permisos: ver auditoría, generar reporte auditoría
+- [x] **Mensajes** ⚡ Backend completado
+  - Tipo: Sistema de mensajería interna estilo email
+  - Mockup: Requerido (bandeja entrada/salida + redacción)
+  - Campos:
+    - Mensaje: remitente_id, asunto, cuerpo, tipo (individual/masivo/anuncio), fecha_envio
+    - MensajeDestinatario: mensaje_id, destinatario_id, leido, fecha_lectura
+    - MensajeAdjunto: mensaje_id, nombre_archivo, ruta_archivo, tamanio
+  - Backend completado:
+    - ✅ Controlador: MensajeController (9 métodos)
+      - index(), create(), store(), edit(), update(), destroy() - CRUD estándar
+      - marcarLeido() - Marca mensaje como leído
+      - marcarNoLeido() - Marca como no leído
+      - conteoNoLeidos() - Contador para badge de notificaciones
+    - ✅ Form Request: MensajeRequest con validaciones
+    - ✅ Modelos: Mensaje, MensajeDestinatario, MensajeAdjunto
+    - ✅ Rutas: mensajes.* + marcar-leido, marcar-no-leido, conteo-no-leidos
+    - ✅ Permisos: gestionar mensajes, ver, crear, editar, eliminar, enviar masivos
+    - ✅ Storage: Manejo de archivos adjuntos
+  - Frontend pendiente: ❌ Vistas Blade no creadas
+
+- [x] **Notificaciones** ⚡ Backend completado
+  - Tipo: Sistema de notificaciones push + email
+  - Mockup: Requerido (dropdown de notificaciones + listado)
+  - Campos: usuario_id, tipo (info/warning/success/error), titulo, mensaje, leida, email_enviado, fecha_envio, url_accion
+  - Backend completado:
+    - ✅ Controlador: NotificacionController (13 métodos)
+      - index(), create(), store(), edit(), update(), destroy() - CRUD estándar
+      - recientes() - Últimas 10 notificaciones
+      - conteoNoLeidas() - Contador para badge
+      - marcarLeida() - Marca una como leída
+      - marcarNoLeida() - Marca como no leída
+      - marcarTodasLeidas() - Marca todas como leídas
+      - eliminarLeidas() - Limpia notificaciones leídas
+    - ✅ Form Request: NotificacionRequest con validaciones
+    - ✅ Modelo: Notificacion con relaciones
+    - ✅ Rutas: notificaciones.* + recientes, conteo-no-leidas, marcar-leida, marcar-no-leida, marcar-todas-leidas, eliminar-leidas
+    - ✅ Permisos: gestionar notificaciones, ver, crear, editar, eliminar
+    - ✅ Email: Integración con sistema de correo
+  - Frontend pendiente: ❌ Vistas Blade no creadas
+
+---
+
+### Fase 11: Eventos y Calendario 🔧 BACKEND COMPLETO (1/1)
+**⚠️ Backend completado el 17/02/2026 - Solo falta FRONTEND**
+
+- [x] **Eventos** ⚡ Backend completado
+  - Tipo: Sistema de eventos con calendario y confirmaciones
+  - Mockup: Requerido (calendario FullCalendar + formulario de evento)
+  - Campos:
+    - Evento: titulo, descripcion, tipo (academico/cultural/deportivo/reunion/otro), fecha_inicio, fecha_fin, hora_inicio, hora_fin, ubicacion, es_publico, permite_confirmacion
+    - EventoParalelo: evento_id, paralelo_id
+    - ConfirmacionEvento: evento_id, user_id, estudiante_id, confirmado, fecha_confirmacion, comentario
+  - Backend completado:
+    - ✅ Controlador: EventoController (10 métodos)
+      - index(), create(), store(), edit(), update(), destroy() - CRUD estándar
+      - verCalendario() - Vista de calendario
+      - calendario() - Datos JSON para FullCalendar
+      - confirmar() - Confirma asistencia a evento
+    - ✅ Form Request: EventoRequest con validaciones de fechas
+    - ✅ Modelos: Evento, EventoParalelo, ConfirmacionEvento
+    - ✅ Rutas: eventos.* + calendario, calendario.datos, confirmar
+    - ✅ Permisos: gestionar eventos, ver, crear, editar, eliminar, confirmar asistencia
+    - ✅ FullCalendar: Endpoint JSON listo para integración
+  - Frontend pendiente: ❌ Vistas Blade no creadas (requiere FullCalendar.js)
+
+---
+
+### Fase 12: Horarios 🔧 BACKEND COMPLETO (1/1)
+**⚠️ Backend completado el 17/02/2026 - Solo falta FRONTEND**
+
+- [x] **Horarios** ⚡ Backend completado
+  - Tipo: Grid semanal con detección de conflictos
+  - Mockup: Requerido (cuadrícula lunes-viernes con períodos)
+  - Campos: periodo_academico_id, paralelo_id, docente_materia_id, aula_id, dia_semana (1-5), hora_inicio, hora_fin, orden
+  - Backend completado:
+    - ✅ Controlador: HorarioController (11 métodos)
+      - index(), create(), store(), edit(), update(), destroy() - CRUD estándar
+      - verParalelo() - Horario completo del paralelo (grid)
+      - verDocente() - Horario del docente
+      - verAula() - Horario del aula
+      - verificarConflictos() - Detecta colisiones de horario
+    - ✅ Form Request: HorarioRequest con validaciones de horario
+    - ✅ Modelo: Horario con relaciones
+    - ✅ Rutas: horarios.* + paralelo, docente, aula
+    - ✅ Permisos: gestionar horarios, ver, crear, editar, eliminar, ver por paralelo, ver por docente, ver por aula
+    - ✅ Validación: Sistema de detección de conflictos (mismo docente/aula/estudiantes)
+  - Frontend pendiente: ❌ Vistas Blade no creadas (requiere grid de horario)
+
+---
+
+### Fase 13: Auditoría 🔧 BACKEND COMPLETO (1/1)
+**⚠️ Backend completado el 17/02/2026 - Solo falta FRONTEND**
+
+- [x] **Auditoría de Accesos** ⚡ Backend completado
+  - Tipo: Sistema de logs con auditoría completa
+  - Mockup: Requerido (tabla filtrable con detalles de cambios)
+  - Campos: user_id, accion (login/logout/crear/editar/eliminar), tabla_afectada, registro_id, datos_anteriores, datos_nuevos, ip_address, user_agent, fecha
+  - Backend completado:
+    - ✅ Controlador: AuditoriaAccesoController (8 métodos - solo lectura)
+      - index() - Listado con filtros potentes
+      - show() - Detalle de acción específica
+      - reciente() - Últimas 50 acciones
+      - estadisticas() - Total acciones, por tipo, por tabla, usuarios activos, IPs únicas
+      - actividadUsuario() - Historial de un usuario específico
+      - historialRegistro() - Historial de un registro específico (ej: todas las modificaciones de un estudiante)
+      - exportar() - Exporta log a CSV/Excel
+      - limpiar() - Limpia logs antiguos (>6 meses, con confirmación)
+    - ✅ Modelo: AuditoriaAcceso con relaciones
+    - ✅ Rutas: auditoria.index, show, reciente, estadisticas, usuario, historial-registro, exportar, limpiar
+    - ✅ Permisos: ver auditoria, generar reporte auditoria, limpiar logs
+    - ✅ No tiene CRUD: Es solo lectura (no se pueden crear/editar/eliminar logs manualmente)
+  - Frontend pendiente: ❌ Vistas Blade no creadas
 
 ---
 
 ## 📊 Resumen de Vistas
 
-**Total de módulos:** 38 módulos
-- ✅ **Completados:** 29 módulos (76.3%)
+**Total de módulos:** 46 módulos
+- ✅ **Frontend Completado:** 29 módulos (63.0%)
   - Fase 1: 4 módulos ✅
   - Fase 2: 2 módulos ✅
   - Fase 3: 7 módulos ✅
   - Fase 4: 3 módulos + relaciones ✅
   - Fase 5: 4 módulos (incluye sistema completo de matrículas) ✅
   - Fase 6: 2 módulos (calificaciones + componentes) ✅ **Validado con datos de prueba**
-- ⏳ **Pendientes:** 9 módulos (23.7%)
+  
+- 🔧 **Backend Completado - Frontend Pendiente:** 8 módulos (17.4%)
+  - Fase 8: 2 módulos (Asistencias, Justificaciones) ⚡
+  - Fase 9: 1 módulo (Tareas completo) ⚡
+  - Fase 10: 2 módulos (Mensajes, Notificaciones) ⚡
+  - Fase 11: 1 módulo (Eventos) ⚡
+  - Fase 12: 1 módulo (Horarios) ⚡
+  - Fase 13: 1 módulo (Auditoría) ⚡
+  
+- ⏳ **Totalmente Pendientes:** 9 módulos (19.6%)
+  - Fase 7: Módulos pendientes o adicionales
+
+**Desglose por backend:**
+- ✅ Controllers completados: 37 (8 nuevos en Fases 8-13)
+- ✅ Form Requests completados: 32 (6 nuevos en Fases 8-13)
+- ✅ Rutas registradas: ~200 rutas totales (65 nuevas en Fases 8-13)
+- ✅ Permisos en sistema: ~150 permisos (70+ nuevos en Fases 8-13)
 
 **Tipos de vistas:**
-- Tablas estándar: 15 módulos
-- Vistas con mockup requerido: 14 módulos
+- Tablas estándar: 20 módulos
+- Vistas con mockup requerido: 17 módulos
 - Vistas editables: 3 módulos
+- Calendarios/Grids: 3 módulos (Eventos, Horarios, Asistencias)
+
+**Estado detallado de Fases 8-13:**
+- ✅ Modelos: Todos creados con relaciones
+- ✅ Migraciones: Todas ejecutadas
+- ✅ Seeders: Disponibles para pruebas
+- ✅ Controllers: Todos con métodos completos
+- ✅ Form Requests: Validaciones implementadas
+- ✅ Rutas: Registradas en web.php con middleware
+- ✅ Permisos: Agregados a RoleSeeder y ejecutados
+- ✅ Sidebar: Actualizado con nuevas secciones (17/02/2026)
+- ❌ Vistas Blade: **PENDIENTES DE CREAR**
 
 **Estado de Fase 6 - Calificaciones:**
 - ✅ Vista de contexto (5 filtros en cascada)
@@ -531,12 +674,80 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 
 **Próximos pasos:**
 1. ✅ Fase 6 completada y validada con datos de prueba
-2. Iniciar Fase 7: Sistema de Asistencias y Justificaciones
-3. Crear mockups para módulos de asistencia
-4. Continuar implementación fase por fase
+2. ✅ Fases 8-13 backend completado con 65 rutas y 70+ permisos
+3. ✅ Sidebar actualizado con nuevas secciones
+4. **Siguiente:** Crear vistas Blade para Fases 8-13 (8 módulos pendientes de frontend)
+5. Implementar Fase 7 completa si es necesaria
+
+---
+
+## 🎯 Detalle de Controladores Creados (Fases 8-13)
+
+### Fase 8: Control de Asistencia
+1. **AsistenciaController** (11 métodos)
+   - CRUD estándar (index, create, store, edit, update, destroy)
+   - cargarEstudiantes() - Carga lista de estudiantes del paralelo
+   - registroMasivo() - Registra asistencia de todo un paralelo
+   - estadisticas() - Dashboard de estadísticas de asistencia
+
+2. **JustificacionController** (9 métodos)
+   - CRUD estándar (index, create, store, edit, update, destroy)
+   - aprobar() - Aprueba justificación y actualiza asistencia
+   - rechazar() - Rechaza justificación con motivo
+   - pendientes() - Lista solo pendientes de revisión
+
+### Fase 9: Tareas y Deberes
+3. **TareaController** (11 métodos)
+   - CRUD estándar (index, create, store, edit, update, destroy)
+   - proximasVencer() - Notifica tareas próximas a vencer
+   - completar() - Estudiante entrega tarea con archivos
+   - calificar() - Docente califica entrega de tarea
+   - eliminarArchivo() - Elimina archivo adjunto de tarea
+
+### Fase 10: Comunicación
+4. **MensajeController** (9 métodos)
+   - CRUD estándar (index, create, store, edit, update, destroy)
+   - marcarLeido() - Marca mensaje individual como leído
+   - marcarNoLeido() - Marca mensaje como no leído
+   - conteoNoLeidos() - API para badge de notificaciones
+
+5. **NotificacionController** (13 métodos)
+   - CRUD estándar (index, create, store, edit, update, destroy)
+   - recientes() - Últimas 10 notificaciones
+   - conteoNoLeidas() - API para badge
+   - marcarLeida() - Marca una notificación como leída
+   - marcarNoLeida() - Marca como no leída
+   - marcarTodasLeidas() - Marca todas como leídas
+   - eliminarLeidas() - Limpia notificaciones antiguas leídas
+
+### Fase 11: Eventos y Calendario
+6. **EventoController** (10 métodos)
+   - CRUD estándar (index, create, store, edit, update, destroy)
+   - verCalendario() - Vista de calendario
+   - calendario() - API JSON para FullCalendar
+   - confirmar() - Confirma asistencia a evento
+
+### Fase 12: Horarios
+7. **HorarioController** (11 métodos)
+   - CRUD estándar (index, create, store, edit, update, destroy)
+   - verParalelo() - Grid de horario del paralelo
+   - verDocente() - Horario del docente
+   - verAula() - Horario del aula
+   - verificarConflictos() - Detecta colisiones de horario
+
+### Fase 13: Auditoría
+8. **AuditoriaAccesoController** (8 métodos - solo lectura)
+   - index() - Listado con filtros avanzados
+   - show() - Detalle de acción específica
+   - reciente() - Últimas 50 acciones
+   - estadisticas() - Dashboard de auditoría
+   - actividadUsuario() - Historial por usuario
+   - historialRegistro() - Historial de un registro
+   - exportar() - Exporta logs a CSV/Excel
+   - limpiar() - Limpia logs antiguos (>6 meses)
 
 ---
 
 **Fecha inicio:** 24 de diciembre de 2025  
-**Última actualización:** 03 de febrero de 2026  
-**Estado:** Fase 6 completada y validada ✅
+**Última actualización:** 17 de febrero de 2026  
+**Estado:** Fase 6 validada ✅ | Fases 8-13 backend completado ⚡ | Sidebar actualizado ✅

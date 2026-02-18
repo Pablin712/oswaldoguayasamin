@@ -21,42 +21,75 @@ class Horario extends Model
         'hora_fin' => 'datetime:H:i',
     ];
 
-    // Relaciones
+    // Relaciones directas
     public function docenteMateria()
     {
         return $this->belongsTo(DocenteMateria::class);
     }
 
-    // Acceso a relaciones a través de docenteMateria
-    public function getDocenteAttribute()
+    // Relaciones a través de docenteMateria usando hasOneThrough
+    public function paralelo()
     {
-        return $this->docenteMateria->docente ?? null;
+        return $this->hasOneThrough(
+            Paralelo::class,
+            DocenteMateria::class,
+            'id',                  // Foreign key en docente_materia
+            'id',                  // Foreign key en paralelos
+            'docente_materia_id',  // Local key en horarios
+            'paralelo_id'          // Local key en docente_materia
+        );
     }
 
-    public function getMateriaAttribute()
+    public function docente()
     {
-        return $this->docenteMateria->materia ?? null;
+        return $this->hasOneThrough(
+            Docente::class,
+            DocenteMateria::class,
+            'id',                  // Foreign key en docente_materia
+            'id',                  // Foreign key en docentes
+            'docente_materia_id',  // Local key en horarios
+            'docente_id'           // Local key en docente_materia
+        );
     }
 
-    public function getParaleloAttribute()
+    public function materia()
     {
-        return $this->docenteMateria->paralelo ?? null;
+        return $this->hasOneThrough(
+            Materia::class,
+            DocenteMateria::class,
+            'id',                  // Foreign key en docente_materia
+            'id',                  // Foreign key en materias
+            'docente_materia_id',  // Local key en horarios
+            'materia_id'           // Local key en docente_materia
+        );
+    }
+
+    // Para aula, usamos un accessor porque está a 3 niveles de profundidad
+    public function getAulaAttribute()
+    {
+        return $this->paralelo->aula ?? null;
     }
 
     // Scopes
     public function scopeDelParalelo($query, $paraleloId)
     {
-        return $query->where('paralelo_id', $paraleloId);
+        return $query->whereHas('docenteMateria', function($q) use ($paraleloId) {
+            $q->where('paralelo_id', $paraleloId);
+        });
     }
 
     public function scopeDelDocente($query, $docenteId)
     {
-        return $query->where('docente_id', $docenteId);
+        return $query->whereHas('docenteMateria', function($q) use ($docenteId) {
+            $q->where('docente_id', $docenteId);
+        });
     }
 
     public function scopeDelAula($query, $aulaId)
     {
-        return $query->where('aula_id', $aulaId);
+        return $query->whereHas('docenteMateria.paralelo', function($q) use ($aulaId) {
+            $q->where('aula_id', $aulaId);
+        });
     }
 
     public function scopePorDia($query, $dia)
@@ -66,7 +99,9 @@ class Horario extends Model
 
     public function scopeDelPeriodo($query, $periodoId)
     {
-        return $query->where('periodo_academico_id', $periodoId);
+        return $query->whereHas('docenteMateria', function($q) use ($periodoId) {
+            $q->where('periodo_academico_id', $periodoId);
+        });
     }
 
     public function scopeOrdenadoPorHora($query)
@@ -90,7 +125,7 @@ class Horario extends Model
     // Métodos de utilidad
     public static function getDiasSemana()
     {
-        return ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'];
+        return ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     }
 
     public function seSuperpone($diaSemanaNuevo, $horaInicioNueva, $horaFinNueva)
