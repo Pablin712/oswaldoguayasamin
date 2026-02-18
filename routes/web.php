@@ -162,10 +162,10 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::resource('tareas', \App\Http\Controllers\TareaController::class)->middleware('can:ver tareas');
 
     // Fase 10: Mensajes
-    Route::resource('mensajes', \App\Http\Controllers\MensajeController::class)->middleware('can:ver mensajes');
+    Route::get('mensajes/conteo-no-leidos', [\App\Http\Controllers\MensajeController::class, 'conteoNoLeidos'])->name('mensajes.conteo-no-leidos');
     Route::post('mensajes/{mensaje}/marcar-leido', [\App\Http\Controllers\MensajeController::class, 'marcarLeido'])->name('mensajes.marcar-leido');
     Route::post('mensajes/{mensaje}/marcar-no-leido', [\App\Http\Controllers\MensajeController::class, 'marcarNoLeido'])->name('mensajes.marcar-no-leido');
-    Route::get('mensajes/conteo-no-leidos', [\App\Http\Controllers\MensajeController::class, 'conteoNoLeidos'])->name('mensajes.conteo-no-leidos');
+    Route::resource('mensajes', \App\Http\Controllers\MensajeController::class)->middleware('can:ver mensajes');
 
     // Fase 10: Notificaciones
     Route::resource('notificaciones', \App\Http\Controllers\NotificacionController::class)->middleware('can:ver notificaciones');

@@ -202,6 +202,7 @@ class RoleSeeder extends Seeder
             // Fase 8: Asistencias
             'gestionar asistencias',
             'ver asistencias',
+            'crear asistencias',
             'registrar asistencias',
             'editar asistencias',
             'eliminar asistencias',
@@ -216,6 +217,7 @@ class RoleSeeder extends Seeder
             'eliminar justificaciones',
             'aprobar justificaciones',
             'rechazar justificaciones',
+            'generar reporte justificaciones',
 
             // Fase 9: Tareas
             'gestionar tareas',

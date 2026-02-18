@@ -92,14 +92,14 @@
                         emptyMessage="No se encontraron tareas"
                     >
                     <x-slot name="buttons">
-                        @can('gestionar tareas')
+                        @canany(['gestionar tareas', 'crear tareas'])
                         <button @click="$dispatch('open-modal', 'create-tarea')" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                             </svg>
                             Nueva Tarea
                         </button>
-                        @endcan
+                        @endcanany
                     </x-slot>
                         @foreach($tareas as $tarea)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -158,18 +158,20 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                     </svg>
                                 </a>
-                                @can('gestionar tareas')
-                                <button @click="$dispatch('open-modal', 'edit-tarea-{{ $tarea->id }}')" class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300" title="Editar">
+                                @canany(['gestionar tareas', 'editar tareas'])
+                                <button @click="$dispatch('open-edit-modal', { id: {{ $tarea->id }} })" class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300" title="Editar">
                                     <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                     </svg>
                                 </button>
-                                <button @click="$dispatch('open-modal', 'delete-tarea-{{ $tarea->id }}')" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300" title="Eliminar">
+                                @endcanany
+                                @canany(['gestionar tareas', 'eliminar tareas'])
+                                <button @click="$dispatch('open-delete-modal', { id: {{ $tarea->id }}, titulo: '{{ addslashes($tarea->titulo) }}' })" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300" title="Eliminar">
                                     <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                     </svg>
                                 </button>
-                                @endcan
+                                @endcanany
                             </td>
                         </tr>
                         @endforeach
@@ -184,17 +186,18 @@
     </div>
 
     <!-- Modales de creación -->
-    @can('gestionar tareas')
+    @canany(['gestionar tareas', 'crear tareas'])
     @include('academico.tareas.create')
-    @endcan
+    @endcanany
 
     <!-- Modales de edición y eliminación -->
-    @can('gestionar tareas')
-    @foreach($tareas as $tarea)
-        @include('academico.tareas.edit', ['tarea' => $tarea])
-        @include('academico.tareas.delete', ['tarea' => $tarea])
-    @endforeach
-    @endcan
+    @canany(['gestionar tareas', 'editar tareas'])
+    @include('academico.tareas.edit')
+    @endcanany
+
+    @canany(['gestionar tareas', 'eliminar tareas'])
+    @include('academico.tareas.delete')
+    @endcanany
 
     @else
     <div class="py-12">

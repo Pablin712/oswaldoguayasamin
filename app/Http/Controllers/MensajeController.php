@@ -59,7 +59,17 @@ class MensajeController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        return view('comunicacion.mensajes.index', compact('mensajes', 'tipo'));
+        // Cargar usuarios activos para los modales de creación
+        $usuarios = User::where('id', '!=', Auth::id())
+            ->where('estado', 'activo')
+            ->orderBy('name')
+            ->get();
+
+        // Cargar cursos y paralelos para mensaje masivo (si es necesario)
+        $cursos = \App\Models\Curso::orderBy('nombre')->get();
+        $paralelos = \App\Models\Paralelo::orderBy('nombre')->get();
+
+        return view('comunicacion.mensajes.index', compact('mensajes', 'tipo', 'usuarios', 'cursos', 'paralelos'));
     }
 
     /**
@@ -282,25 +292,35 @@ class MensajeController extends Controller
     /**
      * Marcar mensaje como leído
      */
-    public function marcarLeido(Mensaje $mensaje)
+    public function marcarLeido(Request $request, Mensaje $mensaje)
     {
         $user = Auth::user();
 
         if ($mensaje->destinatario_id === $user->id) {
             $mensaje->update([
-                'es_leido' => true,
-                'fecha_lectura' => now(),
+                'es_leido' => !$mensaje->es_leido,
+                'fecha_lectura' => !$mensaje->es_leido ? now() : null,
             ]);
         } elseif ($mensaje->tipo === 'masivo') {
-            $mensaje->destinatarios()
+            $destinatario = $mensaje->destinatarios()
                 ->where('destinatario_id', $user->id)
-                ->update([
-                    'es_leido' => true,
-                    'fecha_lectura' => now(),
+                ->first();
+
+            if ($destinatario) {
+                $destinatario->update([
+                    'es_leido' => !$destinatario->es_leido,
+                    'fecha_lectura' => !$destinatario->es_leido ? now() : null,
                 ]);
+            }
         }
 
-        return response()->json(['success' => true]);
+        // Si es petición AJAX, retornar JSON
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true]);
+        }
+
+        // Si no, redirigir de vuelta
+        return back()->with('success', 'Estado del mensaje actualizado.');
     }
 
     /**
