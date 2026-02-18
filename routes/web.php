@@ -152,11 +152,14 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
         ->middleware('can:ver justificaciones');
 
     // Fase 9: Tareas
-    Route::resource('tareas', \App\Http\Controllers\TareaController::class)->middleware('can:ver tareas');
-    Route::delete('tareas/archivos/{archivo}', [\App\Http\Controllers\TareaController::class, 'eliminarArchivo'])->name('tareas.eliminar-archivo')->middleware('can:editar tareas');
-    Route::post('tareas/{tareaEstudiante}/calificar', [\App\Http\Controllers\TareaController::class, 'calificar'])->name('tareas.calificar')->middleware('can:calificar tareas');
-    Route::post('tareas/{tarea}/completar', [\App\Http\Controllers\TareaController::class, 'completar'])->name('tareas.completar');
+    // Rutas específicas ANTES de resource
     Route::get('tareas/proximas-vencer', [\App\Http\Controllers\TareaController::class, 'proximasVencer'])->name('tareas.proximas-vencer')->middleware('can:ver tareas');
+    Route::post('tareas/{tarea}/completar', [\App\Http\Controllers\TareaController::class, 'completar'])->name('tareas.completar');
+    Route::post('tareas/{tareaEstudiante}/calificar', [\App\Http\Controllers\TareaController::class, 'calificar'])->name('tareas.calificar')->middleware('can:calificar tareas');
+    Route::delete('tareas/archivos/{archivo}', [\App\Http\Controllers\TareaController::class, 'eliminarArchivo'])->name('tareas.eliminar-archivo')->middleware('can:gestionar tareas');
+
+    // Resource route
+    Route::resource('tareas', \App\Http\Controllers\TareaController::class)->middleware('can:ver tareas');
 
     // Fase 10: Mensajes
     Route::resource('mensajes', \App\Http\Controllers\MensajeController::class)->middleware('can:ver mensajes');
