@@ -1,20 +1,20 @@
 # 🎨 Mockups y Vistas del Sistema (FRONTEND)
 
-**Última actualización:** 17 de febrero de 2026  
-**Estado:** 🔄 En Progreso - Fase 6 Completada | Fase 8 Backend+Frontend Completado (17/02/2026)
+**Última actualización:** 18 de febrero de 2026  
+**Estado:** 🔄 En Progreso - Fase 6 Completada | Fase 8 Backend+Frontend Completado (17/02/2026) | Fase 10 Notificaciones Completada (18/02/2026)
 
 ---
 
 ## ⚠️ IMPORTANTE: ESTE DOCUMENTO SE REFIERE AL FRONTEND
 
 **Backend (BD y Modelos):** Consultar [6 - Avances.md](6 - Avances.md) - ✅ 100% Completo  
-**Frontend (Vistas y CRUDs):** Este documento - 🔄 En progreso (31/38 módulos = 81.6%)
+**Frontend (Vistas y CRUDs):** Este documento - 🔄 En progreso (32/46 módulos = 69.6%)
 
 ---
 
 ## 📊 Estado de Vistas
 
-### ✅ Vistas Frontend Completadas (31 de 46 módulos)
+### ✅ Vistas Frontend Completadas (32 de 46 módulos)
 - Login
 - Recuperar contraseña (Recover password)
 - Editar perfil (Edit profile)
@@ -44,14 +44,14 @@
 - Auditoría (Logs + Estadísticas) ✅ **FASE 13** (17/02/2026)
 - Asistencias (CRUD + Registro masivo + Estadísticas) ✅ **FASE 8** (17/02/2026)
 - Justificaciones (Workflow completo de aprobación) ✅ **FASE 8** (17/02/2026)
+- Notificaciones (Sistema de alertas + Email) ✅ **FASE 10** (18/02/2026)
 
-### 🔧 Backend Completado - Vistas Frontend Pendientes (5 módulos)
+### 🔧 Backend Completado - Vistas Frontend Pendientes (4 módulos)
 **⚠️ IMPORTANTE:** Estos módulos tienen **controllers, models, migrations, seeders, routes y permissions** completados.
 Solo falta la implementación del **frontend (vistas Blade)**.
 
 - Tareas (CRUD + Calificación + Archivos) **FASE 9** ⚡ Backend completado (17/02/2026)
 - Mensajes (Sistema completo de mensajería) **FASE 10** ⚡ Backend completado (17/02/2026)
-- Notificaciones (Sistema de alertas + Email) **FASE 10** ⚡ Backend completado (17/02/2026)
 - Eventos (Calendario + Confirmaciones) **FASE 11** ⚡ Backend completado (17/02/2026)
 - Horarios (Grid semanal + Conflictos) **FASE 12** ⚡ Backend completado (17/02/2026)
 
@@ -510,8 +510,8 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 
 ---
 
-### Fase 10: Comunicación 🔧 BACKEND COMPLETO (2/2)
-**⚠️ Backend completado el 17/02/2026 - Solo falta FRONTEND**
+### Fase 10: Comunicación 🔧 BACKEND COMPLETO - 1/2 FRONTEND COMPLETO
+**✅ Notificaciones frontend completado el 18/02/2026 - Solo falta Mensajes**
 
 - [x] **Mensajes** ⚡ Backend completado
   - Tipo: Sistema de mensajería interna estilo email
@@ -533,9 +533,9 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
     - ✅ Storage: Manejo de archivos adjuntos
   - Frontend pendiente: ❌ Vistas Blade no creadas
 
-- [x] **Notificaciones** ⚡ Backend completado
+- [x] **Notificaciones** ✅ **COMPLETADO**
   - Tipo: Sistema de notificaciones push + email
-  - Mockup: Requerido (dropdown de notificaciones + listado)
+  - Mockup: ✅ Completado (18/02/2026)
   - Campos: usuario_id, tipo (info/warning/success/error), titulo, mensaje, leida, email_enviado, fecha_envio, url_accion
   - Backend completado:
     - ✅ Controlador: NotificacionController (13 métodos)
@@ -549,9 +549,20 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
     - ✅ Form Request: NotificacionRequest con validaciones
     - ✅ Modelo: Notificacion con relaciones
     - ✅ Rutas: notificaciones.* + recientes, conteo-no-leidas, marcar-leida, marcar-no-leida, marcar-todas-leidas, eliminar-leidas
-    - ✅ Permisos: gestionar notificaciones, ver, crear, editar, eliminar
+    - ✅ Permisos: 7 permisos completos (gestionar, ver, crear, editar, eliminar, marcar leidas, generar reporte)
     - ✅ Email: Integración con sistema de correo
-  - Frontend pendiente: ❌ Vistas Blade no creadas
+  - Frontend completado:
+    - ✅ vista index.blade.php con enhanced-table (6 columnas: Estado, Tipo, Título, Mensaje, Fecha, Acciones)
+    - ✅ Modal create.blade.php (x-modal con selección múltiple usuarios, tipo, título, mensaje, URL, enviar email)
+    - ✅ Modal delete.blade.php (x-modal de confirmación)
+    - ✅ Permisos @canany(['gestionar notificaciones', 'ver notificaciones'])
+    - ✅ Permisos granulares: @can('crear'), @can('eliminar'), @can('marcar leidas')
+    - ✅ Sistema de filtros por tipo (info/warning/success/error) y estado (leídas/no leídas)
+    - ✅ Badges dinámicos según tipo (azul/amarillo/verde/rojo) y estado (gris/azul)
+    - ✅ Acciones: Marcar leída/no leída individual, Marcar todas leídas, Eliminar
+    - ✅ Enhanced-table con búsqueda y exportación
+    - ✅ Contador de no leídas en header
+    - ✅ Navegación: Agregada en dropdown de perfil (no en sidebar)
 
 ---
 

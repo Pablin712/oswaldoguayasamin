@@ -39,7 +39,12 @@ class NotificacionController extends Controller
             ->where('es_leida', false)
             ->count();
 
-        return view('comunicacion.notificaciones.index', compact('notificaciones', 'noLeidas'));
+        // Usuarios activos para el formulario de creación
+        $usuarios = User::where('estado', 'activo')
+            ->orderBy('name')
+            ->get();
+
+        return view('comunicacion.notificaciones.index', compact('notificaciones', 'noLeidas', 'usuarios'));
     }
 
     /**

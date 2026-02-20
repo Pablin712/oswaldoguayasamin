@@ -101,6 +101,32 @@
                             </div>
                         </div>
 
+                        <!-- Comunicación -->
+                        @canany(['gestionar mensajes', 'ver mensajes', 'gestionar notificaciones', 'ver notificaciones'])
+                        <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                            <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-2">Comunicación</p>
+                            <div class="space-y-1">
+                                @canany(['gestionar notificaciones', 'ver notificaciones'])
+                                <x-dropdown-link :href="route('notificaciones.index')" class="flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                    </svg>
+                                    <span>Notificaciones</span>
+                                </x-dropdown-link>
+                                @endcanany
+
+                                @canany(['gestionar mensajes', 'ver mensajes'])
+                                <x-dropdown-link :href="route('mensajes.index')" class="flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span>Mensajes</span>
+                                </x-dropdown-link>
+                                @endcanany
+                            </div>
+                        </div>
+                        @endcanany
+
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
@@ -183,6 +209,32 @@
                     </button>
                 </div>
             </div>
+
+            <!-- Comunicación (Responsive) -->
+            @canany(['gestionar mensajes', 'ver mensajes', 'gestionar notificaciones', 'ver notificaciones'])
+            <div class="px-4 pb-3 border-b border-gray-200 dark:border-gray-700 mb-3">
+                <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-2">Comunicación</p>
+                <div class="space-y-1">
+                    @canany(['gestionar notificaciones', 'ver notificaciones'])
+                    <x-responsive-nav-link :href="route('notificaciones.index')" class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span>Notificaciones</span>
+                    </x-responsive-nav-link>
+                    @endcanany
+
+                    @canany(['gestionar mensajes', 'ver mensajes'])
+                    <x-responsive-nav-link :href="route('mensajes.index')" class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        <span>Mensajes</span>
+                    </x-responsive-nav-link>
+                    @endcanany
+                </div>
+            </div>
+            @endcanany
 
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>

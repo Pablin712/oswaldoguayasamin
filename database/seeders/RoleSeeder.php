@@ -241,8 +241,10 @@ class RoleSeeder extends Seeder
             'gestionar notificaciones',
             'ver notificaciones',
             'crear notificaciones',
+            'editar notificaciones',
             'eliminar notificaciones',
             'marcar notificaciones leidas',
+            'generar reporte notificaciones',
 
             // Fase 11: Eventos
             'gestionar eventos',

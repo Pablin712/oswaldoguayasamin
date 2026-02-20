@@ -10,7 +10,6 @@
         calificaciones: {{ request()->routeIs(['calificaciones.*', 'componentes.*']) ? 'true' : 'false' }},
         asistenciaDropdown: {{ request()->routeIs(['asistencias.*', 'justificaciones.*']) ? 'true' : 'false' }},
         tareasDropdown: {{ request()->routeIs(['tareas.*']) ? 'true' : 'false' }},
-        comunicacionDropdown: {{ request()->routeIs(['mensajes.*', 'notificaciones.*']) ? 'true' : 'false' }},
         eventosDropdown: {{ request()->routeIs(['eventos.*']) ? 'true' : 'false' }},
         horariosMenu: {{ request()->routeIs('horarios.*') ? 'true' : 'false' }},
         auditoriaMenu: {{ request()->routeIs('auditoria.*') ? 'true' : 'false' }}
@@ -487,54 +486,6 @@ class="fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gra
                         </svg>
                         <span class="text-sm">Gestión de Tareas</span>
                     </a>
-                </div>
-            </div>
-            @endcanany
-
-            <!-- Comunicación Dropdown -->
-            @canany(['gestionar mensajes', 'ver mensajes', 'gestionar notificaciones', 'ver notificaciones'])
-            <div class="space-y-1">
-                <button @click="toggleDropdown('comunicacionDropdown')"
-                        class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg transition-colors text-gray-900 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                        </svg>
-                        <span x-show="sidebarOpen" class="font-medium">Comunicación</span>
-                    </div>
-                    <svg x-show="sidebarOpen"
-                         :class="dropdowns.comunicacionDropdown ? 'rotate-180' : ''"
-                         class="w-4 h-4 flex-shrink-0 transition-transform duration-200"
-                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </button>
-
-                <!-- Submenu Items -->
-                <div x-show="dropdowns.comunicacionDropdown && sidebarOpen"
-                     x-collapse
-                     class="ml-3 space-y-1 border-l-2 border-gray-200 dark:border-gray-700">
-                    @canany(['gestionar mensajes', 'ver mensajes'])
-                        <!-- Mensajes -->
-                        <a href="{{ route('mensajes.index') }}"
-                        class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors {{ request()->routeIs('mensajes.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300' }}">
-                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                            </svg>
-                            <span class="text-sm">Mensajes</span>
-                        </a>
-                    @endcanany
-
-                    @canany(['gestionar notificaciones', 'ver notificaciones'])
-                        <!-- Notificaciones -->
-                        <a href="{{ route('notificaciones.index') }}"
-                        class="flex items-center gap-3 pl-6 pr-3 py-2 rounded-lg transition-colors {{ request()->routeIs('notificaciones.*') ? 'bg-theme-primary dark:bg-theme-third text-white shadow-md font-semibold' : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300' }}">
-                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                            </svg>
-                            <span class="text-sm">Notificaciones</span>
-                        </a>
-                    @endcanany
                 </div>
             </div>
             @endcanany
