@@ -1,4 +1,4 @@
-<x-modal name="delete-mensaje" :show="false" maxWidth="md">
+<x-modal name="delete-mensaje" maxWidth="md">
     <div x-data="{
         mensajeId: null,
         mensajeAsunto: '',

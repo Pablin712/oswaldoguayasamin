@@ -236,6 +236,7 @@ class RoleSeeder extends Seeder
             'editar mensajes',
             'eliminar mensajes',
             'enviar mensajes masivos',
+            'generar reporte mensajes',
 
             // Fase 10: Notificaciones
             'gestionar notificaciones',

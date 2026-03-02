@@ -221,13 +221,18 @@
     </div>
 
     <!-- Modales de creación -->
+    @canany(['gestionar mensajes', 'enviar mensajes'])
     @include('comunicacion.mensajes.create')
-    @can('gestionar mensajes')
+    @endcanany
+
+    @can('enviar mensajes masivos')
     @include('comunicacion.mensajes.create-masivo')
     @endcan
 
     <!-- Modal de eliminación -->
+    @canany(['gestionar mensajes', 'eliminar mensajes'])
     @include('comunicacion.mensajes.delete')
+    @endcanany
 
     @else
     <div class="py-12">

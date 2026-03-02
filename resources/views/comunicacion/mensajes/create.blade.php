@@ -1,4 +1,4 @@
-<x-modal name="create-mensaje" :show="false" maxWidth="2xl">
+<x-modal name="create-mensaje" maxWidth="2xl">
     <form method="POST" action="{{ route('mensajes.store') }}" enctype="multipart/form-data" class="p-6">
         @csrf
         <input type="hidden" name="tipo" value="individual">

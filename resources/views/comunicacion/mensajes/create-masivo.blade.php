@@ -1,4 +1,4 @@
-<x-modal name="create-mensaje-masivo" :show="false" maxWidth="3xl">
+<x-modal name="create-mensaje-masivo" maxWidth="3xl">
     <form method="POST" action="{{ route('mensajes.store') }}" enctype="multipart/form-data" class="p-6">
         @csrf
         <input type="hidden" name="tipo" value="masivo">

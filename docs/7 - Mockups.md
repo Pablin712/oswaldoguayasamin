@@ -1,20 +1,20 @@
 # 🎨 Mockups y Vistas del Sistema (FRONTEND)
 
-**Última actualización:** 18 de febrero de 2026  
-**Estado:** 🔄 En Progreso - Fase 6 Completada | Fase 8 Backend+Frontend Completado (17/02/2026) | Fase 10 Notificaciones Completada (18/02/2026)
+**Última actualización:** 2 de marzo de 2026  
+**Estado:** 🔄 En Progreso - Fase 6 Completada | Fase 8 Backend+Frontend Completado (17/02/2026) | Fase 10 Comunicación Completada (02/03/2026)
 
 ---
 
 ## ⚠️ IMPORTANTE: ESTE DOCUMENTO SE REFIERE AL FRONTEND
 
 **Backend (BD y Modelos):** Consultar [6 - Avances.md](6 - Avances.md) - ✅ 100% Completo  
-**Frontend (Vistas y CRUDs):** Este documento - 🔄 En progreso (32/46 módulos = 69.6%)
+**Frontend (Vistas y CRUDs):** Este documento - 🔄 En progreso (33/46 módulos = 71.7%)
 
 ---
 
 ## 📊 Estado de Vistas
 
-### ✅ Vistas Frontend Completadas (32 de 46 módulos)
+### ✅ Vistas Frontend Completadas (33 de 46 módulos)
 - Login
 - Recuperar contraseña (Recover password)
 - Editar perfil (Edit profile)
@@ -45,13 +45,13 @@
 - Asistencias (CRUD + Registro masivo + Estadísticas) ✅ **FASE 8** (17/02/2026)
 - Justificaciones (Workflow completo de aprobación) ✅ **FASE 8** (17/02/2026)
 - Notificaciones (Sistema de alertas + Email) ✅ **FASE 10** (18/02/2026)
+- Mensajes (Sistema de mensajería interna) ✅ **FASE 10** (02/03/2026)
 
-### 🔧 Backend Completado - Vistas Frontend Pendientes (4 módulos)
+### 🔧 Backend Completado - Vistas Frontend Pendientes (3 módulos)
 **⚠️ IMPORTANTE:** Estos módulos tienen **controllers, models, migrations, seeders, routes y permissions** completados.
 Solo falta la implementación del **frontend (vistas Blade)**.
 
 - Tareas (CRUD + Calificación + Archivos) **FASE 9** ⚡ Backend completado (17/02/2026)
-- Mensajes (Sistema completo de mensajería) **FASE 10** ⚡ Backend completado (17/02/2026)
 - Eventos (Calendario + Confirmaciones) **FASE 11** ⚡ Backend completado (17/02/2026)
 - Horarios (Grid semanal + Conflictos) **FASE 12** ⚡ Backend completado (17/02/2026)
 
@@ -987,3 +987,162 @@ Route::resource('asistencias', AsistenciaController::class);
 ✅ Rutas ordenadas correctamente  
 ✅ Dark mode compatible  
 ✅ Responsive design
+
+---
+
+## 📝 Detalle de Implementación - Fase 10: Mensajes
+
+### Vista Completada: 02/03/2026
+
+#### Archivos de Vista Implementados:
+1. **index.blade.php**
+2. **create.blade.php**
+3. **create-masivo.blade.php**
+4. **show.blade.php**
+5. **delete.blade.php**
+
+#### Descripción Detallada:
+
+##### 1. **index.blade.php**
+   - Layout con 2 pestañas: "Recibidos" y "Enviados"
+   - Filtros: tipo_mensaje (individual, masivo, anuncio), estado de lectura
+   - Diseño tipo card para cada mensaje en lugar de enhanced-table
+   - Columna izquierda: remitente, asunto, preview del contenido
+   - Columna derecha: fecha, hora, badges (masivo/anuncio), estado leído/no leído
+   - Acciones rápidas: ver detalle, marcar leído/no leído, eliminar
+   - Contador de mensajes no leídos en header
+   - Búsqueda por asunto, remitente o contenido
+   - Paginación con 20 mensajes por página
+   - Botones del header con permisos:
+     - "Nuevo Mensaje" → @canany(['gestionar mensajes', 'enviar mensajes'])
+     - "Mensaje Masivo" → @can('enviar mensajes masivos')
+
+##### 2. **create.blade.php**
+   - Modal x-modal con Alpine.js (`name="create-mensaje"`)
+   - Campos:
+     - destinatario_id (x-searchable-select de usuarios)
+     - asunto (input text, max 200)
+     - mensaje (textarea, requerido)
+     - adjuntos[] (file upload múltiple, máx 5 archivos, 5MB c/u)
+     - programar_envio (opcional, datetime-local)
+   - Tipos de mensaje: individual (default), anuncio
+   - Validación de campos en frontend
+   - Submit a route('mensajes.store')
+
+##### 3. **create-masivo.blade.php**
+   - Modal x-modal con Alpine.js (`name="create-mensaje-masivo"`)
+   - Radio buttons para destinatarios:
+     - Por rol (administradores, docentes, estudiantes, padres)
+     - Por curso/paralelo (x-searchable-select de paralelos)
+     - Selección manual (x-searchable-select múltiple de usuarios)
+   - Campos compartidos con create.blade.php
+   - Alpine.js para mostrar/ocultar opciones según radio seleccionado
+   - Badge "MASIVO" visible en el header del modal
+   - Submit a route('mensajes.store') con tipo='masivo'
+
+##### 4. **show.blade.php**
+   - Vista de detalle completa con diseño de email
+   - Header con gradiente y badges (masivo/anuncio)
+   - Sección remitente: foto, nombre, email, fecha/hora
+   - Asunto destacado con tipografía grande
+   - Contenido del mensaje con formato preservado
+   - Sección de adjuntos con iconos según tipo de archivo
+   - Botones de acción:
+     - "Responder" (abre create.blade.php con destinatario precargado)
+     - "Marcar leído/no leído" (toggle dinámico)
+     - "Eliminar" (solo si mensaje recibido)
+   - Marca automáticamente como leído al abrir
+   - Lista de destinatarios si es mensaje masivo
+
+##### 5. **delete.blade.php**
+   - Modal de confirmación (`name="delete-mensaje"`)
+   - Muestra asunto del mensaje a eliminar
+   - Alpine.js con x-data para manejar mensajeId y mensajeAsunto dinámicos
+   - Event listener @open-delete-modal.window
+   - Action dinámico con método DELETE
+   - Advertencia sobre eliminación permanente
+
+#### Rutas Actualizadas:
+```php
+Route::get('mensajes/conteo-no-leidos', [MensajeController::class, 'conteoNoLeidos'])
+    ->name('mensajes.conteo-no-leidos');
+Route::post('mensajes/{mensaje}/marcar-leido', [MensajeController::class, 'marcarLeido'])
+    ->name('mensajes.marcar-leido');
+Route::post('mensajes/{mensaje}/marcar-no-leido', [MensajeController::class, 'marcarNoLeido'])
+    ->name('mensajes.marcar-no-leido');
+Route::resource('mensajes', MensajeController::class)
+    ->middleware('can:ver mensajes');
+```
+**Nota:** Rutas específicas ANTES de Route::resource para evitar conflictos.
+
+#### Controller Actualizado:
+- Método `index()` filtra mensajes por tipo (recibidos/enviados) y tipo_mensaje
+- Método `store()` maneja 3 tipos: individual, masivo (por rol/paralelo/manual), anuncio
+- Método `store()` guarda adjuntos en storage/app/public/mensajes con nombres únicos
+- Método `show()` marca automáticamente como leído si es mensaje recibido
+- Método `marcarLeido()` actualiza campo leido=true en tabla mensaje_destinatarios
+- Método `marcarNoLeido()` actualiza campo leido=false
+- Método `conteoNoLeidos()` retorna JSON con cantidad para badge en navbar
+- Filtro por roles: docentes/padres solo ven sus mensajes, admin ve todos
+
+#### Modelos Relacionados:
+- **Mensaje**: asunto, mensaje, remitente_id, tipo (individual/masivo/anuncio)
+- **MensajeDestinatario**: mensaje_id, destinatario_id, leido (boolean), leido_en (timestamp)
+- **MensajeAdjunto**: mensaje_id, nombre_original, nombre_archivo, ruta, tipo_archivo, tamaño
+
+#### Componentes Utilizados:
+- ✅ X-searchable-select (usuarios, paralelos con selección múltiple)
+- ✅ X-modal (create, create-masivo, delete)
+- ✅ Alpine.js (interactividad, eventos open-modal, manejo de estado)
+- ✅ Badges con dark mode (masivo, anuncio, leído/no leído)
+- ✅ File upload con validación (múltiples archivos)
+- ✅ Cards layout para mensajes (mejor UX que tabla)
+
+#### Permisos Verificados (7 permisos completos):
+- `gestionar mensajes` - Acceso total al módulo
+- `ver mensajes` - Ver listado y detalles
+- `enviar mensajes` - Crear mensajes individuales
+- `editar mensajes` - Modificar mensajes (no implementado en UI, solo backend)
+- `eliminar mensajes` - Eliminar mensajes propios
+- `enviar mensajes masivos` - Crear mensajes masivos (por rol/curso)
+- `generar reporte mensajes` - Generar reportes (pendiente implementación)
+
+#### Permisos en Includes:
+```blade
+@canany(['gestionar mensajes', 'enviar mensajes'])
+    @include('comunicacion.mensajes.create')
+@endcanany
+
+@can('enviar mensajes masivos')
+    @include('comunicacion.mensajes.create-masivo')
+@endcan
+
+@canany(['gestionar mensajes', 'eliminar mensajes'])
+    @include('comunicacion.mensajes.delete')
+@endcanany
+```
+
+#### Funcionalidad Especial:
+- **Envío programado**: Campo opcional `programar_envio` para mensajes futuros
+- **Adjuntos múltiples**: Hasta 5 archivos por mensaje, 5MB cada uno
+- **Tipos de destinatarios masivos**:
+  1. Por rol: todos los usuarios con rol específico
+  2. Por curso/paralelo: todos los estudiantes + padres del paralelo
+  3. Selección manual: lista personalizada de usuarios
+- **Estado de lectura**: tracking individual por destinatario con timestamp
+- **Contador en tiempo real**: Badge en navbar con mensajes no leídos
+- **Responder**: Botón en show.blade.php que abre modal con destinatario precargado
+
+#### Estado Final:
+✅ CRUD completo funcional  
+✅ Sistema de mensajería individual y masiva implementado  
+✅ Gestión de adjuntos con upload múltiple  
+✅ Estados de lectura con tracking individual  
+✅ Envío programado disponible  
+✅ Vistas siguen patrón de documentación  
+✅ Componentes x-modal y searchable-select usados correctamente  
+✅ Permisos granulares aplicados (7 permisos completos)  
+✅ Rutas ordenadas correctamente  
+✅ Dark mode compatible  
+✅ Responsive design  
+✅ Layout tipo email para mejor UX
