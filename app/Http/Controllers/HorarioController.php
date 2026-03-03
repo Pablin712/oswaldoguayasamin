@@ -152,7 +152,7 @@ class HorarioController extends Controller
     public function edit(Horario $horario, Request $request)
     {
         $horario->load(['docenteMateria']);
-        
+
         // Si es petición AJAX, devolver JSON
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
@@ -167,7 +167,7 @@ class HorarioController extends Controller
                 'hora_fin' => \Carbon\Carbon::parse($horario->hora_fin)->format('H:i'),
             ]);
         }
-        
+
         $paralelos = Paralelo::with('curso')->get();
         $materias = Materia::all();
         $docentes = Docente::with('user')->get();
