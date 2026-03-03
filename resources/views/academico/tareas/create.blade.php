@@ -1,4 +1,4 @@
-<x-modal name="create-tarea" maxWidth="2xl" :show="$errors->any() && !isset($tarea)">
+<x-modal name="create-tarea" maxWidth="2xl">
     <form method="POST" action="{{ route('tareas.store') }}" enctype="multipart/form-data" class="p-6">
         @csrf
 

@@ -177,16 +177,16 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::get('notificaciones/recientes', [\App\Http\Controllers\NotificacionController::class, 'recientes'])->name('notificaciones.recientes');
 
     // Fase 11: Eventos
-    Route::resource('eventos', \App\Http\Controllers\EventoController::class)->middleware('can:ver eventos');
-    Route::post('eventos/{evento}/confirmar', [\App\Http\Controllers\EventoController::class, 'confirmar'])->name('eventos.confirmar')->middleware('can:confirmar asistencia eventos');
-    Route::get('eventos/calendario/datos', [\App\Http\Controllers\EventoController::class, 'calendario'])->name('eventos.calendario.datos')->middleware('can:ver calendario eventos');
     Route::get('eventos/calendario/vista', [\App\Http\Controllers\EventoController::class, 'verCalendario'])->name('eventos.calendario')->middleware('can:ver calendario eventos');
+    Route::get('eventos/calendario/datos', [\App\Http\Controllers\EventoController::class, 'calendario'])->name('eventos.calendario.datos')->middleware('can:ver calendario eventos');
+    Route::post('eventos/{evento}/confirmar', [\App\Http\Controllers\EventoController::class, 'confirmar'])->name('eventos.confirmar')->middleware('can:confirmar asistencia eventos');
+    Route::resource('eventos', \App\Http\Controllers\EventoController::class)->middleware('can:ver eventos');
 
     // Fase 12: Horarios
-    Route::resource('horarios', \App\Http\Controllers\HorarioController::class)->middleware('can:ver horarios');
     Route::get('horarios/paralelo/{paralelo}', [\App\Http\Controllers\HorarioController::class, 'verParalelo'])->name('horarios.paralelo')->middleware('can:ver horario paralelo');
     Route::get('horarios/docente/{docente}', [\App\Http\Controllers\HorarioController::class, 'verDocente'])->name('horarios.docente')->middleware('can:ver horario docente');
     Route::get('horarios/aula/{aula}', [\App\Http\Controllers\HorarioController::class, 'verAula'])->name('horarios.aula')->middleware('can:ver horario aula');
+    Route::resource('horarios', \App\Http\Controllers\HorarioController::class)->middleware('can:ver horarios');
 
     // Fase 13: Auditoría (rutas específicas ANTES de las dinámicas)
     Route::get('auditoria', [\App\Http\Controllers\AuditoriaAccesoController::class, 'index'])->name('auditoria.index')->middleware('can:ver auditoria');

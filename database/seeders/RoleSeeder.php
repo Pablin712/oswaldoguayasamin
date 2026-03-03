@@ -251,6 +251,7 @@ class RoleSeeder extends Seeder
             'gestionar eventos',
             'ver eventos',
             'crear eventos',
+            'crear eventos publicos',
             'editar eventos',
             'eliminar eventos',
             'confirmar asistencia eventos',

@@ -36,6 +36,11 @@ class EventoConfirmacion extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function estudiante()
     {
         return $this->belongsTo(Estudiante::class);

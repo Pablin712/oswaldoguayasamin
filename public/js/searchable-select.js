@@ -98,6 +98,28 @@
         subtree: true
     });
 
+    // Escuchar eventos personalizados de Alpine.js para actualizar valores
+    window.addEventListener('update-searchable-select', function(event) {
+        const detail = event.detail;
+        if (!detail || !detail.id) return;
+
+        const select = document.getElementById(detail.id);
+        if (!select) return;
+
+        const $select = jQuery(select);
+        if (!$select.hasClass('select2-hidden-accessible')) {
+            // Si no está inicializado, esperar un poco
+            setTimeout(() => {
+                const $retrySelect = jQuery(select);
+                if ($retrySelect.hasClass('select2-hidden-accessible')) {
+                    $retrySelect.val(detail.value).trigger('change');
+                }
+            }, 100);
+        } else {
+            $select.val(detail.value).trigger('change');
+        }
+    });
+
     // Exponer función globalmente para uso manual si es necesario
     window.initializeSearchableSelects = initializeSearchableSelects;
 })();

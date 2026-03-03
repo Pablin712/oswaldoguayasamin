@@ -12,6 +12,7 @@ use App\Http\Requests\EventoRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EventoController extends Controller
 {
@@ -77,8 +78,10 @@ class EventoController extends Controller
             ->paginate(20);
 
         $periodos = PeriodoAcademico::orderBy('fecha_inicio', 'desc')->get();
+        $periodoActivo = PeriodoAcademico::where('estado', 'activo')->first();
+        $paralelos = Paralelo::with('curso')->get();
 
-        return view('academico.eventos.index', compact('eventos', 'periodos'));
+        return view('academico.eventos.index', compact('eventos', 'periodos', 'periodoActivo', 'paralelos'));
     }
 
     /**
@@ -161,6 +164,33 @@ class EventoController extends Controller
      */
     public function edit(Evento $evento)
     {
+        // Si es una petición AJAX, devolver JSON
+        if (request()->ajax() || request()->wantsJson() || request()->header('X-Requested-With') === 'XMLHttpRequest') {
+            try {
+                $evento->load('paralelos');
+                return response()->json([
+                    'id' => $evento->id,
+                    'titulo' => $evento->titulo,
+                    'descripcion' => $evento->descripcion,
+                    'tipo' => $evento->tipo,
+                    'periodo_academico_id' => $evento->periodo_academico_id,
+                    'fecha_inicio' => $evento->fecha_inicio?->format('Y-m-d'),
+                    'hora_inicio' => $evento->hora_inicio,
+                    'fecha_fin' => $evento->fecha_fin?->format('Y-m-d'),
+                    'hora_fin' => $evento->hora_fin,
+                    'ubicacion' => $evento->ubicacion,
+                    'es_publico' => $evento->es_publico,
+                    'requiere_confirmacion' => $evento->requiere_confirmacion,
+                    'paralelos' => $evento->paralelos->pluck('id')->toArray(),
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'error' => 'Error al cargar el evento',
+                    'message' => $e->getMessage()
+                ], 500);
+            }
+        }
+
         $periodos = PeriodoAcademico::orderBy('fecha_inicio', 'desc')->get();
         $paralelos = Paralelo::with('curso')->get();
         $evento->load('paralelos');
@@ -264,14 +294,26 @@ class EventoController extends Controller
 
         $query = Evento::query();
 
-        if ($request->filled('fecha_inicio')) {
-            $query->where('fecha_inicio', '>=', $request->fecha_inicio);
-        }
+        // Filtrar eventos que intersectan con el rango de fechas de FullCalendar
+        if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+            // Convertir las fechas de FullCalendar a solo fecha (sin hora)
+            $fechaInicio = \Carbon\Carbon::parse($request->fecha_inicio)->startOfDay();
+            $fechaFin = \Carbon\Carbon::parse($request->fecha_fin)->endOfDay();
 
-        if ($request->filled('fecha_fin')) {
-            $query->where(function ($q) use ($request) {
-                $q->whereNull('fecha_fin')
-                  ->orWhere('fecha_fin', '<=', $request->fecha_fin);
+            Log::info('Calendario request', [
+                'fecha_inicio_request' => $request->fecha_inicio,
+                'fecha_fin_request' => $request->fecha_fin,
+                'fecha_inicio_parsed' => $fechaInicio->toDateString(),
+                'fecha_fin_parsed' => $fechaFin->toDateString(),
+            ]);
+
+            $query->where(function ($q) use ($fechaInicio, $fechaFin) {
+                // Eventos que empiezan antes del fin del rango y terminan después del inicio del rango
+                $q->where('fecha_inicio', '<=', $fechaFin->toDateString())
+                  ->where(function ($q2) use ($fechaInicio) {
+                      $q2->where('fecha_fin', '>=', $fechaInicio->toDateString())
+                         ->orWhereNull('fecha_fin');
+                  });
             });
         }
 
@@ -279,20 +321,64 @@ class EventoController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
         if (!$user->hasRole('administrador')) {
-            $query->where('es_publico', true);
+            $query->where(function ($q) use ($user) {
+                $q->where('es_publico', true);
+
+                if ($user->estudiante) {
+                    $paralelosIds = $user->estudiante->matriculas()
+                        ->where('estado', 'activa')
+                        ->pluck('paralelo_id');
+                    $q->orWhereHas('paralelos', function ($q2) use ($paralelosIds) {
+                        $q2->whereIn('paralelos.id', $paralelosIds);
+                    });
+                }
+
+                if ($user->docente) {
+                    $q->orWhereHas('paralelos.docenteMaterias', function ($q2) use ($user) {
+                        $q2->where('docente_id', $user->docente->id);
+                    });
+                }
+            });
         }
 
         $eventos = $query->get()->map(function ($evento) {
+            // Formatear fecha de inicio
+            $fechaInicio = $evento->fecha_inicio ? $evento->fecha_inicio->format('Y-m-d') : null;
+            $start = $fechaInicio;
+            if ($evento->hora_inicio) {
+                $start .= 'T' . substr($evento->hora_inicio, 0, 8); // Asegurar formato HH:MM:SS
+            }
+
+            // Formatear fecha fin
+            $fechaFin = $evento->fecha_fin ? $evento->fecha_fin->format('Y-m-d') : $fechaInicio;
+            $end = $fechaFin;
+            if ($evento->hora_fin) {
+                $end .= 'T' . substr($evento->hora_fin, 0, 8);
+            } elseif ($evento->hora_inicio) {
+                // Si no hay hora_fin pero hay hora_inicio, usar hora_inicio + 1 hora
+                $end .= 'T' . substr($evento->hora_inicio, 0, 8);
+            }
+
             return [
                 'id' => $evento->id,
                 'title' => $evento->titulo,
-                'start' => $evento->fecha_inicio . ($evento->hora_inicio ? ' ' . $evento->hora_inicio : ''),
-                'end' => ($evento->fecha_fin ?? $evento->fecha_inicio) . ($evento->hora_fin ? ' ' . $evento->hora_fin : ''),
+                'start' => $start,
+                'end' => $end,
                 'tipo' => $evento->tipo,
                 'backgroundColor' => $this->getColorByTipo($evento->tipo),
+                'borderColor' => $this->getColorByTipo($evento->tipo),
                 'url' => route('eventos.show', $evento),
+                'extendedProps' => [
+                    'ubicacion' => $evento->ubicacion,
+                    'descripcion' => $evento->descripcion,
+                ],
             ];
         });
+
+        Log::info('Calendario response', [
+            'total_eventos' => $eventos->count(),
+            'eventos' => $eventos->take(3), // Solo los primeros 3 para no saturar el log
+        ]);
 
         return response()->json($eventos);
     }

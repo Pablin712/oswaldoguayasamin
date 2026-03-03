@@ -1,14 +1,14 @@
 # 🎨 Mockups y Vistas del Sistema (FRONTEND)
 
 **Última actualización:** 2 de marzo de 2026  
-**Estado:** 🔄 En Progreso - Fase 6 Completada | Fase 8 Backend+Frontend Completado (17/02/2026) | Fase 10 Comunicación Completada (02/03/2026)
+**Estado:** 🔄 En Progreso - Fase 6 Completada | Fase 8 Backend+Frontend Completado (17/02/2026) | Fase 9 Tareas Completada (02/03/2026) | Fase 10 Comunicación Completada (02/03/2026) | Fase 11 Eventos Completada (02/03/2026)
 
 ---
 
 ## ⚠️ IMPORTANTE: ESTE DOCUMENTO SE REFIERE AL FRONTEND
 
 **Backend (BD y Modelos):** Consultar [6 - Avances.md](6 - Avances.md) - ✅ 100% Completo  
-**Frontend (Vistas y CRUDs):** Este documento - 🔄 En progreso (33/46 módulos = 71.7%)
+**Frontend (Vistas y CRUDs):** Este documento - 🔄 En progreso (35/46 módulos = 76.1%)
 
 ---
 
@@ -46,13 +46,13 @@
 - Justificaciones (Workflow completo de aprobación) ✅ **FASE 8** (17/02/2026)
 - Notificaciones (Sistema de alertas + Email) ✅ **FASE 10** (18/02/2026)
 - Mensajes (Sistema de mensajería interna) ✅ **FASE 10** (02/03/2026)
+- Tareas (CRUD + Calificación + Archivos) ✅ **FASE 9** (02/03/2026)
+- Eventos (Calendario + Confirmaciones) ✅ **FASE 11** (02/03/2026)
 
-### 🔧 Backend Completado - Vistas Frontend Pendientes (3 módulos)
+### 🔧 Backend Completado - Vistas Frontend Pendientes (1 módulo)
 **⚠️ IMPORTANTE:** Estos módulos tienen **controllers, models, migrations, seeders, routes y permissions** completados.
 Solo falta la implementación del **frontend (vistas Blade)**.
 
-- Tareas (CRUD + Calificación + Archivos) **FASE 9** ⚡ Backend completado (17/02/2026)
-- Eventos (Calendario + Confirmaciones) **FASE 11** ⚡ Backend completado (17/02/2026)
 - Horarios (Grid semanal + Conflictos) **FASE 12** ⚡ Backend completado (17/02/2026)
 
 ### ⏳ Vistas Totalmente Pendientes (9 módulos)
@@ -1146,3 +1146,405 @@ Route::resource('mensajes', MensajeController::class)
 ✅ Dark mode compatible  
 ✅ Responsive design  
 ✅ Layout tipo email para mejor UX
+
+---
+
+## 📝 Detalle de Implementación - Fase 9: Tareas
+
+### Vista Completada: 02/03/2026
+
+#### Archivos de Vista Implementados:
+1. **index.blade.php**
+2. **create.blade.php**
+3. **edit.blade.php**
+4. **show.blade.php**
+5. **delete.blade.php**
+
+#### Descripción Detallada:
+
+##### 1. **index.blade.php**
+   - Layout con filtros avanzados (materia, paralelo, estado)
+   - Enhanced-table con 7 columnas:
+     - Título con badge si es calificada (puntaje máximo)
+     - Materia
+     - Curso/Paralelo
+     - Fecha de asignación
+     - Fecha de entrega con badges (Vencida/Próxima según contexto)
+     - Estado (Vencida/Vigente)
+     - Acciones (Ver, Editar, Eliminar)
+   - Botón "Nueva Tarea" con @canany(['gestionar tareas', 'crear tareas'])
+   - Filtrado por rol:
+     - Docentes: solo sus tareas
+     - Estudiantes: solo tareas de sus paralelos activos
+     - Admin: todas las tareas
+   - Paginación 20 por página
+   - Badges dinámicos según fecha:
+     - Vencida (roja) si fecha_entrega < hoy
+     - Próxima (amarilla) si fecha_entrega <= 2 días
+     - Vigente (verde) caso contrario
+
+##### 2. **create.blade.php**
+   - Modal x-modal con Alpine.js (`name="create-tarea"`)
+   - Campos principales:
+     - titulo (text, max 255, requerido)
+     - materia_id (x-searchable-select, requerido)
+     - paralelo_id (x-searchable-select por curso, requerido)
+     - descripcion (textarea, requerido)
+     - fecha_asignacion (date, requerido, default: hoy)
+     - fecha_entrega (date, requerido)
+   - Checkbox es_calificada con contenedor condicional:
+     - Si marcado: muestra input puntaje_maximo (number, 0-100, default: 10)
+     - Si desmarcado: oculta campo con Alpine.js
+   - Upload múltiple de archivos adjuntos (opcional):
+     - Formatos: PDF, Word, Excel, PowerPoint, imágenes
+     - Campo: archivos[] (multiple)
+   - Submit a route('tareas.store') con enctype="multipart/form-data"
+   - Auto-asigna docente_id si usuario autenticado es docente
+   - Crea automáticamente registros en tarea_estudiantes para todos los estudiantes del paralelo con estado='pendiente'
+
+##### 3. **edit.blade.php**
+   - Modal x-modal con Alpine.js (`name="edit-tarea"`)
+   - Usa evento personalizado @open-edit-modal.window con fetchTareaData()
+   - Mismo formulario que create pero con:
+     - Method PUT
+     - Action dinámico: `/academico/tareas/${tareaId}`
+   - Verificación en controller: solo docente creador puede editar
+   - Permite agregar nuevos archivos adjuntos (no elimina los existentes en el modal)
+   - Campos precargados vía Alpine.js x-data
+
+##### 4. **show.blade.php**
+   - Vista completa (no modal) con layout de 3 columnas
+   - **Header con estadísticas (4 cards)**:
+     - Total Estudiantes (azul)
+     - Pendientes (amarillo)
+     - Completadas (verde)
+     - Revisadas (morado)
+   - **Columna 1 (sidebar izquierda)**:
+     - Información de la Tarea: título, materia, curso/paralelo, docente, tipo (calificada/no calificada)
+     - Fechas: asignación, entrega con badge de estado, tiempo restante (si vigente)
+     - Archivos Adjuntos: lista con iconos y botón de descarga
+   - **Columnas 2-3 (contenido principal)**:
+     - Descripción de la tarea (prose, whitespace-pre-wrap)
+     - Entregas de Estudiantes: enhanced-table con 5 columnas:
+       * Estudiante (nombre)
+       * Estado (badge: pendiente/completada/revisada)
+       * Fecha Completada (datetime)
+       * Calificación (X/puntaje_máximo o "Sin calificar" o "No aplica")
+       * Comentarios (botón "Ver comentarios" si existen)
+   - Botón "Volver" en header
+
+##### 5. **delete.blade.php**
+   - Modal de confirmación (`name="delete-tarea"`)
+   - Alpine.js x-data con tareaId y tareaTitulo
+   - Event listener @open-delete-modal.window
+   - Muestra título de la tarea a eliminar
+   - Advertencia: "Esta acción no se puede deshacer"
+   - Action dinámico con método DELETE
+   - Controller elimina archivos físicos del storage antes de eliminar registro
+
+#### Rutas Actualizadas:
+```php
+Route::get('tareas/proximas-vencer', [TareaController::class, 'proximasVencer'])
+    ->name('tareas.proximas-vencer')
+    ->middleware('can:ver tareas');
+Route::post('tareas/{tarea}/completar', [TareaController::class, 'completar'])
+    ->name('tareas.completar');
+Route::post('tareas/{tareaEstudiante}/calificar', [TareaController::class, 'calificar'])
+    ->name('tareas.calificar')
+    ->middleware('can:calificar tareas');
+Route::delete('tareas/archivos/{archivo}', [TareaController::class, 'eliminarArchivo'])
+    ->name('tareas.eliminar-archivo')
+    ->middleware('can:gestionar tareas');
+Route::resource('tareas', TareaController::class)
+    ->middleware('can:ver tareas');
+```
+**Nota:** Rutas específicas ANTES de Route::resource para evitar conflictos.
+
+#### Controller Actualizado:
+- **index()**: Filtra tareas por materia, paralelo, estado (vencidas/activas) y rol del usuario
+- **store()**: Crea tarea + guarda archivos en storage + crea registros tarea_estudiantes automáticamente
+- **show()**: Carga tarea con relaciones + calcula estadísticas (total, pendientes, completadas, revisadas)
+- **update()**: Actualiza tarea + permite agregar nuevos archivos adjuntos
+- **destroy()**: Elimina archivos físicos del storage + elimina tarea (cascade elimina tarea_estudiantes y archivos)
+- **eliminarArchivo()**: Elimina archivo específico del storage y BD
+- **calificar()**: Califica tarea de estudiante específico (valida calificacion <= puntaje_maximo)
+- **completar()**: Estudiante marca su tarea como completada
+- **proximasVencer()**: Retorna tareas que vencen en los próximos 7 días
+
+#### Modelos Relacionados:
+- **Tarea**: titulo, descripcion, materia_id, paralelo_id, docente_id, fecha_asignacion, fecha_entrega, es_calificada, puntaje_maximo
+- **TareaEstudiante**: tarea_id, estudiante_id, estado (pendiente/completada/revisada), fecha_completada, fecha_revision, calificacion, comentarios_docente
+- **ArchivoTarea**: tarea_id, nombre_archivo, ruta_archivo, tipo_mime, tamanio
+
+#### Componentes Utilizados:
+- ✅ Enhanced-table (índice + show para entregas de estudiantes)
+- ✅ X-searchable-select (materias, paralelos)
+- ✅ X-modal (create, edit, delete)
+- ✅ Alpine.js (interactividad, eventos, condicionales)
+- ✅ Badges dinámicos con dark mode (estado, tipo, vencimiento)
+- ✅ File upload múltiple con validación
+- ✅ Cards con estadísticas (total, pendientes, completadas, revisadas)
+
+#### Permisos Verificados (8 permisos completos):
+- `gestionar tareas` - Acceso total al módulo
+- `ver tareas` - Ver listado y detalles
+- `crear tareas` - Crear nuevas tareas
+- `editar tareas` - Modificar tareas existentes
+- `eliminar tareas` - Eliminar tareas
+- `calificar tareas` - Asignar calificaciones a entregas de estudiantes
+- `completar tareas` - Estudiantes marcan como completada
+- `generar reporte tareas` - Generar reportes (pendiente implementación)
+
+#### Permisos en Includes:
+```blade
+@canany(['gestionar tareas', 'crear tareas'])
+    @include('academico.tareas.create')
+@endcanany
+
+@canany(['gestionar tareas', 'editar tareas'])
+    @include('academico.tareas.edit')
+@endcanany
+
+@canany(['gestionar tareas', 'eliminar tareas'])
+    @include('academico.tareas.delete')
+@endcanany
+```
+
+#### Funcionalidad Especial:
+- **Auto-asignación a estudiantes**: Al crear tarea, se generan automáticamente registros en tarea_estudiantes para todos los estudiantes activos del paralelo seleccionado
+- **Gestión de archivos**: Upload múltiple en creación/edición, descarga individual, eliminación con limpieza del storage
+- **Sistema de calificación**: Tareas opcionales con calificación (checkbox), validación de calificacion <= puntaje_maximo
+- **Estados de entrega**: pendiente → completada (por estudiante) → revisada (por docente con calificación)
+- **Filtrado por rol**: Docentes solo ven sus tareas, estudiantes solo tareas de sus paralelos activos, admin ve todas
+- **Badges inteligentes**: Colores dinámicos según fecha de entrega (vencida/próxima/vigente)
+- **Estadísticas en tiempo real**: Dashboard en show.blade.php con contadores de entregas
+- **Vista proximas-vencer**: Endpoint para tareas que vencen en 7 días (útil para widgets/notificaciones)
+
+#### Estado Final:
+✅ CRUD completo funcional  
+✅ Sistema de asignación y entrega de tareas implementado  
+✅ Sistema de calificación opcional con validación  
+✅ Gestión de archivos adjuntos múltiples  
+✅ Estados de entrega con workflow (pendiente → completada → revisada)  
+✅ Estadísticas y dashboard de entregas  
+✅ Filtrado inteligente por rol de usuario  
+✅ Badges dinámicos según fechas  
+✅ Vistas siguen patrón de documentación  
+✅ Componentes enhanced-table y x-modal usados correctamente  
+✅ Permisos granulares aplicados (8 permisos completos)  
+✅ Rutas ordenadas correctamente  
+✅ Dark mode compatible  
+✅ Responsive design  
+✅ Auto-eliminación de archivos físicos al eliminar tarea
+
+---
+
+## 📝 Detalle de Implementación - Fase 11: Eventos
+
+### Vista Completada: 02/03/2026
+
+#### Archivos de Vista Implementados:
+1. **index.blade.php**
+2. **create.blade.php**
+3. **edit.blade.php**
+4. **show.blade.php**
+5. **delete.blade.php**
+6. **calendario.blade.php**
+
+#### Descripción Detallada:
+
+##### 1. **index.blade.php**
+   - Layout con filtros avanzados (período académico, tipo, estado)
+   - Enhanced-table con 7 columnas:
+     - Título con badges (requiere confirmación, privado)
+     - Tipo con badge de color según tipo (examen=rojo, reunión=azul, actividad=verde, feriado=morado, ceremonia=naranja, otro=gris)
+     - Fecha Inicio con hora opcional
+     - Fecha Fin con hora opcional
+     - Lugar
+     - Estado (Próximo/En Curso/Finalizado)
+     - Acciones (Ver, Editar, Eliminar)
+   - Botones del header:
+     - "Ver Calendario" → @can('ver calendario eventos')
+     - "Nuevo Evento" → @canany(['gestionar eventos', 'crear eventos'])
+   - Filtrado por rol:
+     - Admin: ve todos los eventos
+     - Docentes: eventos públicos + eventos de sus paralelos
+     - Estudiantes: eventos públicos + eventos de sus paralelos activos
+   - Estados dinámicos:
+     - Próximo (azul) si fecha_inicio > hoy
+     - En Curso (verde) si fecha_inicio <= hoy y (fecha_fin es null o fecha_fin >= hoy)
+     - Finalizado (gris) si fecha_fin < hoy
+
+##### 2. **create.blade.php**
+   - Modal x-modal con Alpine.js (`name="create-evento"`)
+   - Campos principales:
+     - titulo (text, max 255, requerido)
+     - descripcion (textarea, opcional)
+     - tipo (select: examen, reunion, actividad, feriado, ceremonia, otro, requerido)
+     - periodo_academico_id (x-searchable-select, requerido)
+     - fecha_inicio (date, requerido) + hora_inicio (time, opcional)
+     - fecha_fin (date, opcional) + hora_fin (time, opcional)
+     - lugar (text, max 255, opcional)
+     - es_publico (checkbox, default: true) - Evento visible para toda la institución
+     - paralelos[] (x-searchable-select múltiple, opcional) - Cursos y paralelos específicos
+     - requiere_confirmacion (checkbox, default: false) - Solicita confirmación de asistencia
+   - Lógica de visibilidad:
+     - Si es_publico=true: todos pueden ver el evento
+     - Si es_publico=false + paralelos seleccionados: solo estudiantes/padres de esos paralelos
+     - Si es_publico=false + sin paralelos: evento privado, no visible para nadie
+   - Submit a route('eventos.store')
+
+##### 3. **edit.blade.php**
+   - Modal x-modal con Alpine.js (`name="edit-evento"`)
+   - Usa evento personalizado @open-edit-modal.window con fetchEventoData()
+   - Mismo formulario que create pero con:
+     - Method PUT
+     - Action dinámico: `/academico/eventos/${eventoId}`
+   - Controller usa sync() para actualizar paralelos asociados
+
+##### 4. **show.blade.php**
+   - Vista completa (no modal) con layout de 3 columnas
+   - **Header con estadísticas de confirmación (solo si requiere_confirmacion=true)** (4 cards):
+     - Total Respuestas (azul)
+     - Confirmados (verde)
+     - No Asistirán (rojo)
+     - % Confirmación (morado)
+   - **Columna 1 (sidebar izquierda)**:
+     - Información del Evento: título, tipo (badge con color), período, visibilidad (público/privado), lugar
+     - Fechas y Horario: inicio con hora, fin con hora
+     - Cursos y Paralelos: lista de paralelos asociados
+   - **Columnas 2-3 (contenido principal)**:
+     - Descripción del evento (prose, whitespace-pre-wrap)
+     - Confirmaciones de Asistencia: enhanced-table con 4 columnas:
+       * Usuario (nombre del padre/docente que confirma, con estudiante si aplica)
+       * Estado (badge: confirmado/no asistirá)
+       * Fecha Confirmación (datetime)
+       * Observaciones
+   - Botón "Volver" en header
+
+##### 5. **delete.blade.php**
+   - Modal de confirmación (`name="delete-evento"`)
+   - Alpine.js x-data con eventoId y eventoTitulo
+   - Event listener @open-delete-modal.window
+   - Muestra título del evento a eliminar
+   - Advertencia: "Esta acción no se puede deshacer"
+   - Action dinámico con método DELETE
+
+##### 6. **calendario.blade.php**
+   - Vista completa con FullCalendar 6.1.11
+   - Leyenda de colores superior (6 tipos de eventos)
+   - Botón "Vista de Lista" en header para volver a index
+   - Configuración de FullCalendar:
+     - Vistas: mes, semana, día, lista semanal
+     - Idioma: español
+     - Primer día: lunes
+     - Fuente de datos: AJAX a route('eventos.calendario.datos')
+     - Colores dinámicos según tipo de evento
+     - Click en evento redirige a show.blade.php
+     - Tooltips con información del evento
+     - Soporte para dark mode (cambio dinámico de tema)
+   - CDN: FullCalendar JS + CSS + locale español
+
+#### Rutas Actualizadas:
+```php
+Route::get('eventos/calendario/vista', [EventoController::class, 'verCalendario'])
+    ->name('eventos.calendario')
+    ->middleware('can:ver calendario eventos');
+Route::get('eventos/calendario/datos', [EventoController::class, 'calendario'])
+    ->name('eventos.calendario.datos')
+    ->middleware('can:ver calendario eventos');
+Route::post('eventos/{evento}/confirmar', [EventoController::class, 'confirmar'])
+    ->name('eventos.confirmar')
+    ->middleware('can:confirmar asistencia eventos');
+Route::resource('eventos', EventoController::class)
+    ->middleware('can:ver eventos');
+```
+**Nota:** Rutas específicas ANTES de Route::resource para evitar conflictos. CORREGIDO en web.php (estaban después).
+
+#### Controller Actualizado:
+- **index()**: Filtra eventos por período, tipo, estado (próximos/en curso/pasados) + filtrado por rol (admin ve todos, docentes/estudiantes ven públicos + sus paralelos)
+- **store()**: Crea evento + asocia paralelos con attach() en tabla pivot evento_curso
+- **show()**: Carga evento con relaciones + calcula estadísticas de confirmación (total, confirmados, no_confirmados, porcentaje)
+- **update()**: Actualiza evento + sincroniza paralelos con sync()
+- **destroy()**: Elimina evento (cascade elimina confirmaciones y relaciones con paralelos)
+- **confirmar()**: Registra/actualiza confirmación de asistencia (confirmado boolean + observaciones)
+- **calendario()**: Retorna JSON para FullCalendar con eventos filtrados por fecha_inicio/fecha_fin
+- **verCalendario()**: Retorna vista calendario.blade.php
+- **getColorByTipo()**: Método privado que retorna color hex según tipo de evento
+
+#### Modelos Relacionados:
+- **Evento**: titulo, descripcion, tipo, periodo_academico_id, fecha_inicio, hora_inicio, fecha_fin, hora_fin, lugar, es_publico, requiere_confirmacion
+- **EventoCurso** (pivot): evento_id, paralelo_id
+- **EventoConfirmacion**: evento_id, user_id, estudiante_id, confirmado (boolean), fecha_confirmacion, observaciones
+
+#### Componentes Utilizados:
+- ✅ Enhanced-table (índice + confirmaciones en show)
+- ✅ X-searchable-select (período académico, paralelos con selección múltiple)
+- ✅ X-modal (create, edit, delete)
+- ✅ Alpine.js (interactividad, eventos, condicionales)
+- ✅ Badges dinámicos con dark mode (tipo, estado, visibilidad, confirmación)
+- ✅ Cards con estadísticas de confirmación
+- ✅ FullCalendar 6.1.11 (calendario interactivo con múltiples vistas)
+
+#### Permisos Verificados (8 permisos completos):
+- `gestionar eventos` - Acceso total al módulo
+- `ver eventos` - Ver listado y detalles
+- `crear eventos` - Crear nuevos eventos
+- `editar eventos` - Modificar eventos existentes
+- `eliminar eventos` - Eliminar eventos
+- `confirmar asistencia eventos` - Confirmar o declinar asistencia
+- `ver calendario eventos` - Acceso a vista de calendario
+- `generar reporte eventos` - Generar reportes (pendiente implementación)
+
+#### Permisos en Includes:
+```blade
+@canany(['gestionar eventos', 'crear eventos'])
+    @include('academico.eventos.create')
+@endcanany
+
+@canany(['gestionar eventos', 'editar eventos'])
+    @include('academico.eventos.edit')
+@endcanany
+
+@canany(['gestionar eventos', 'eliminar eventos'])
+    @include('academico.eventos.delete')
+@endcanany
+```
+
+#### Funcionalidad Especial:
+- **Sistema de visibilidad flexible**:
+  1. Eventos públicos: visibles para toda la institución
+  2. Eventos por paralelo: visibles solo para estudiantes/padres/docentes de paralelos específicos
+  3. Eventos privados: es_publico=false sin paralelos (solo admin)
+- **Sistema de confirmación de asistencia**: Padres/docentes pueden confirmar o declinar asistencia con observaciones opcionales
+- **Calendario interactivo con FullCalendar**: 4 vistas (mes, semana, día, lista), navegación, colores por tipo, tooltips, click para detalle
+- **Filtros avanzados**: Por período académico, tipo de evento, y estado temporal (próximos/en curso/pasados)
+- **Tipos de eventos con colores distintivos**:
+  - Examen: rojo (#dc2626)
+  - Reunión: azul (#2563eb)
+  - Actividad: verde (#16a34a)
+  - Feriado: morado (#9333ea)
+  - Ceremonia: naranja (#d97706)
+  - Otro: gris (#6b7280)
+- **Estadísticas de confirmación**: Dashboard en show.blade.php con total, confirmados, no confirmados, porcentaje
+- **Fechas flexibles**: fecha_fin y horas son opcionales (eventos de todo el día vs. eventos con horario específico)
+- **Dark mode en calendario**: Observer de MutationObserver detecta cambio de tema y actualiza FullCalendar dinámicamente
+
+#### Estado Final:
+✅ CRUD completo funcional  
+✅ Vista de calendario con FullCalendar 6.1.11  
+✅ Sistema de confirmación de asistencia implementado  
+✅ Eventos públicos y privados por paralelo  
+✅ 6 tipos de eventos con colores distintivos  
+✅ Estadísticas de confirmación en tiempo real  
+✅ Filtrado inteligente por rol de usuario  
+✅ Filtros avanzados (período, tipo, estado)  
+✅ Vistas siguen patrón de documentación  
+✅ Componentes enhanced-table y x-modal usados correctamente  
+✅ Permisos granulares aplicados (8 permisos completos)  
+✅ Rutas ordenadas correctamente (CORREGIDO)  
+✅ Dark mode compatible (incluido calendario)  
+✅ Responsive design  
+✅ Integración con FullCalendar con múltiples vistas
+
+

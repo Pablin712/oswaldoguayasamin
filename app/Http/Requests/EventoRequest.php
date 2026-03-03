@@ -22,14 +22,14 @@ class EventoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'periodo_academico_id' => 'required|exists:periodo_academicos,id',
+            'periodo_academico_id' => 'required|exists:periodos_academicos,id',
             'tipo' => 'required|in:examen,reunion,actividad,feriado,ceremonia,otro',
             'titulo' => 'required|string|max:255',
             'descripcion' => 'nullable|string|max:5000',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
-            'hora_inicio' => 'nullable|date_format:H:i',
-            'hora_fin' => 'nullable|date_format:H:i|after:hora_inicio',
+            'hora_inicio' => 'nullable|date_format:H:i:s,H:i',
+            'hora_fin' => 'nullable|date_format:H:i:s,H:i',
             'ubicacion' => 'nullable|string|max:255',
             'requiere_confirmacion' => 'required|boolean',
             'es_publico' => 'required|boolean',

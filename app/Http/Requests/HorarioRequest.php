@@ -26,7 +26,7 @@ class HorarioRequest extends FormRequest
             'materia_id' => 'required|exists:materias,id',
             'docente_id' => 'required|exists:docentes,id',
             'aula_id' => 'nullable|exists:aulas,id',
-            'periodo_academico_id' => 'required|exists:periodo_academicos,id',
+            'periodo_academico_id' => 'required|exists:periodos_academicos,id',
             'dia_semana' => 'required|in:Lunes,Martes,Miércoles,Jueves,Viernes,Sábado',
             'hora_inicio' => 'required|date_format:H:i',
             'hora_fin' => 'required|date_format:H:i|after:hora_inicio',
