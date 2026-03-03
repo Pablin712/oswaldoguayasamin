@@ -167,25 +167,134 @@ public function auditoriasAccesos(): HasMany
 
 ---
 
-## 🌱 Seeders
+## � Frontend y Vistas Blade
+
+### FASE 12: Vistas de Horarios
+
+**Estado:** ✅ Completamente implementadas (3 de marzo de 2026)
+
+#### Vistas Principales (CRUD):
+
+1. **index.blade.php** - Lista de horarios
+   - ✅ Tabla con enhanced-table component
+   - ✅ Filtros: período académico, paralelo, docente, día de semana
+   - ✅ Acciones con iconos (Ver, Editar, Eliminar)
+   - ✅ Paginación (50 registros por página)
+   - ✅ Cards de acceso rápido a vistas de grid
+   - ✅ Permisos con @canany correctamente implementados
+   - ✅ Exportación a CSV, Excel, PDF, JSON disponible
+
+2. **create.blade.php** - Formulario de creación
+   - ✅ Selección de paralelo, materia, docente
+   - ✅ Selector de día de la semana
+   - ✅ Campos de hora inicio/fin
+   - ✅ Selector de aula (opcional)
+   - ✅ Validación de conflictos en tiempo real
+   - ✅ Integración con searchable-select component
+
+3. **edit.blade.php** - Formulario de edición
+   - ✅ Pre-carga de datos existentes
+   - ✅ Validación de conflictos
+   - ✅ Actualización de horarios
+
+4. **show.blade.php** - Vista de detalles
+   - ✅ Información completa del horario
+   - ✅ Datos de paralelo, materia, docente
+   - ✅ Horario y aula asignada
+   - ✅ Botones de edición y eliminación
+
+#### Vistas de Grid Semanal:
+
+5. **paralelo.blade.php** - Grid por paralelo
+   - ✅ Tabla semanal con días como columnas
+   - ✅ Bloques horarios como filas
+   - ✅ Visualización de materia y docente
+   - ✅ **Receso visual** en naranja (10:20-10:50)
+   - ✅ Color azul para identificación
+   - ✅ Responsiva con scroll horizontal
+
+6. **docente.blade.php** - Grid por docente
+   - ✅ Vista semanal de carga docente
+   - ✅ Muestra paralelo y materia
+   - ✅ **Receso visual** en naranja
+   - ✅ Color verde para identificación
+   - ✅ Permite planificación de tiempo
+
+7. **aula.blade.php** - Grid por aula
+   - ✅ Ocupación semanal del aula
+   - ✅ Muestra paralelo y materia
+   - ✅ **Receso visual** en naranja
+   - ✅ Celdas "Disponible" en verde para horas libres
+   - ✅ Color púrpura para identificación
+
+#### Características Especiales:
+
+**Sistema de Receso:**
+- 🍎 Receso de 30 minutos (10:20-10:50)
+- Visualización con color naranja distintivo
+- Icono de manzana (🍎) + texto "RECESO"
+- Se muestra en todos los días de la semana
+- Presente en las 3 vistas de grid
+
+**Bloques Horarios:**
+```
+08:00 - 08:40  (Bloque 1)
+08:50 - 09:30  (Bloque 2)
+09:40 - 10:20  (Bloque 3)
+10:20 - 10:50  ☕ RECESO (30 min)
+10:50 - 11:30  (Bloque 4)
+11:40 - 12:20  (Bloque 5)
+12:30 - 13:10  (Bloque 6)
+```
+
+**Patrón de UI Consistente:**
+- Iconos SVG para acciones (no texto)
+- Uso correcto de enhanced-table component
+- Paginación fuera del componente (no hay slot de paginación)
+- Permisos con @canany para múltiples permisos
+- Theme colors para botones de edición
+- Confirmación de eliminación inline
+
+---
+
+## �🌱 Seeders
 
 ### HorarioSeeder
 
 **Algoritmo de generación:**
 1. Obtiene asignaciones de docentes a materias por paralelo
-2. Define bloques de 40 minutos (8:00-12:50)
+2. Define bloques de 40 minutos (8:00-13:10 con receso 10:20-10:50)
 3. Distribuye clases según horas semanales de cada materia
 4. Previene conflictos de horario en paralelos
+
+**Bloques Horarios Implementados:**
+```php
+[
+    ['inicio' => '08:00:00', 'fin' => '08:40:00'],  // Bloque 1
+    ['inicio' => '08:50:00', 'fin' => '09:30:00'],  // Bloque 2
+    ['inicio' => '09:40:00', 'fin' => '10:20:00'],  // Bloque 3
+    // RECESO DE 30 MINUTOS: 10:20 - 10:50
+    ['inicio' => '10:50:00', 'fin' => '11:30:00'],  // Bloque 4
+    ['inicio' => '11:40:00', 'fin' => '12:20:00'],  // Bloque 5
+    ['inicio' => '12:30:00', 'fin' => '13:10:00'],  // Bloque 6
+];
+```
 
 **Datos de Prueba Generados:**
 - **900 horarios de clase** distribuidos en la semana
 - Bloques de 40 minutos con descansos de 10 minutos
-- Horario escolar: 8:00 AM - 12:50 PM
+- **Receso de 30 minutos** entre bloque 3 y 4
+- Horario escolar: 8:00 AM - 1:10 PM
 - 6 bloques por día × 5 días = 30 bloques semanales por paralelo
 
 **Distribución:**
 - Lunes a Jueves: 216 clases cada día
 - Viernes: 36 clases (jornada reducida)
+
+**Validaciones:**
+- 150 horarios con inicio 10:50:00 (post-receso)
+- Sin conflictos de aula
+- Distribución equitativa por paralelo
 
 ### AuditoriaSeeder
 
@@ -362,10 +471,17 @@ Registros con datos de cambios: 100 (50%)
 
 ### Horarios:
 - Bloques de 40 minutos con descansos de 10 minutos
+- **RECESO:** 30 minutos entre 10:20-10:50
+- Horario escolar: 8:00 AM - 1:10 PM (6 bloques + receso)
 - Sistema de detección de conflictos
 - Distribución automática basada en horas semanales
 - Constraint único evita duplicados en mismo horario
 - Soporte para asignación de aulas
+- **7 vistas Blade completadas** (index, create, edit, show, paralelo, docente, aula)
+- **Grid views** con visualización de receso en color naranja
+- Filtros avanzados por paralelo, docente, aula, día y período
+- Acciones con iconos siguiendo patrón del sistema
+- Permisos correctamente implementados con @canany
 
 ### Auditoría:
 - Solo tiene created_at (no updated_at)

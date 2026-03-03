@@ -21,7 +21,7 @@ class HorarioController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Horario::with(['docenteMateria.paralelo.curso', 'docenteMateria.materia', 'docenteMateria.docente.user', 'docenteMateria.periodoAcademico', 'paralelo', 'materia', 'docente']);
+        $query = Horario::with(['paralelo.curso', 'materia', 'docente.user', 'docenteMateria.periodoAcademico']);
 
         // Filtros
         if ($request->filled('paralelo_id')) {
@@ -56,11 +56,12 @@ class HorarioController extends Controller
             ->paginate(50);
 
         $paralelos = Paralelo::with('curso')->get();
+        $materias = Materia::all();
         $docentes = Docente::with('user')->get();
         $aulas = Aula::all();
         $periodos = PeriodoAcademico::orderBy('fecha_inicio', 'desc')->get();
 
-        return view('academico.horarios.index', compact('horarios', 'paralelos', 'docentes', 'aulas', 'periodos'));
+        return view('academico.horarios.index', compact('horarios', 'paralelos', 'materias', 'docentes', 'aulas', 'periodos'));
     }
 
     /**
@@ -140,7 +141,7 @@ class HorarioController extends Controller
      */
     public function show(Horario $horario)
     {
-        $horario->load(['docenteMateria.paralelo.curso', 'docenteMateria.materia', 'docenteMateria.docente.user', 'docenteMateria.periodoAcademico', 'paralelo', 'materia', 'docente']);
+        $horario->load(['paralelo.curso', 'materia', 'docente.user', 'docenteMateria.periodoAcademico']);
 
         return view('academico.horarios.show', compact('horario'));
     }
@@ -148,8 +149,25 @@ class HorarioController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Horario $horario)
+    public function edit(Horario $horario, Request $request)
     {
+        $horario->load(['docenteMateria']);
+        
+        // Si es petición AJAX, devolver JSON
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'id' => $horario->id,
+                'periodo_academico_id' => $horario->docenteMateria->periodo_academico_id,
+                'paralelo_id' => $horario->docenteMateria->paralelo_id,
+                'materia_id' => $horario->docenteMateria->materia_id,
+                'docente_id' => $horario->docenteMateria->docente_id,
+                'aula_id' => $horario->docenteMateria->paralelo->aula_id ?? null,
+                'dia_semana' => $horario->dia_semana,
+                'hora_inicio' => \Carbon\Carbon::parse($horario->hora_inicio)->format('H:i'),
+                'hora_fin' => \Carbon\Carbon::parse($horario->hora_fin)->format('H:i'),
+            ]);
+        }
+        
         $paralelos = Paralelo::with('curso')->get();
         $materias = Materia::all();
         $docentes = Docente::with('user')->get();
@@ -240,7 +258,7 @@ class HorarioController extends Controller
         $paralelo = Paralelo::with('curso')->findOrFail($paraleloId);
 
         $horarios = Horario::delParalelo($paraleloId)
-            ->with(['materia', 'docente', 'paralelo'])
+            ->with(['materia', 'docente.user', 'paralelo.curso'])
             ->orderBy('dia_semana')
             ->orderBy('hora_inicio')
             ->get()
@@ -257,7 +275,7 @@ class HorarioController extends Controller
         $docente = Docente::with('user')->findOrFail($docenteId);
 
         $horarios = Horario::delDocente($docenteId)
-            ->with(['paralelo.curso', 'materia', 'docente'])
+            ->with(['paralelo.curso', 'materia', 'docente.user'])
             ->orderBy('dia_semana')
             ->orderBy('hora_inicio')
             ->get()
@@ -274,7 +292,7 @@ class HorarioController extends Controller
         $aula = Aula::findOrFail($aulaId);
 
         $horarios = Horario::delAula($aulaId)
-            ->with(['paralelo.curso', 'materia', 'docente'])
+            ->with(['paralelo.curso', 'materia', 'docente.user'])
             ->orderBy('dia_semana')
             ->orderBy('hora_inicio')
             ->get()

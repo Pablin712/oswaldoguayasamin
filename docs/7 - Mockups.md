@@ -1,20 +1,20 @@
 # 🎨 Mockups y Vistas del Sistema (FRONTEND)
 
-**Última actualización:** 2 de marzo de 2026  
-**Estado:** 🔄 En Progreso - Fase 6 Completada | Fase 8 Backend+Frontend Completado (17/02/2026) | Fase 9 Tareas Completada (02/03/2026) | Fase 10 Comunicación Completada (02/03/2026) | Fase 11 Eventos Completada (02/03/2026)
+**Última actualización:** 3 de marzo de 2026  
+**Estado:** 🔄 En Progreso - Fase 6 Completada | Fase 8 Backend+Frontend Completado (17/02/2026) | Fase 9 Tareas Completada (02/03/2026) | Fase 10 Comunicación Completada (02/03/2026) | Fase 11 Eventos Completada (02/03/2026) | Fase 12 Horarios Completada (03/03/2026)
 
 ---
 
 ## ⚠️ IMPORTANTE: ESTE DOCUMENTO SE REFIERE AL FRONTEND
 
 **Backend (BD y Modelos):** Consultar [6 - Avances.md](6 - Avances.md) - ✅ 100% Completo  
-**Frontend (Vistas y CRUDs):** Este documento - 🔄 En progreso (35/46 módulos = 76.1%)
+**Frontend (Vistas y CRUDs):** Este documento - 🔄 En progreso (34/46 módulos = 73.9%)
 
 ---
 
 ## 📊 Estado de Vistas
 
-### ✅ Vistas Frontend Completadas (33 de 46 módulos)
+### ✅ Vistas Frontend Completadas (34 de 46 módulos)
 - Login
 - Recuperar contraseña (Recover password)
 - Editar perfil (Edit profile)
@@ -48,12 +48,10 @@
 - Mensajes (Sistema de mensajería interna) ✅ **FASE 10** (02/03/2026)
 - Tareas (CRUD + Calificación + Archivos) ✅ **FASE 9** (02/03/2026)
 - Eventos (Calendario + Confirmaciones) ✅ **FASE 11** (02/03/2026)
+- Horarios (Grid semanal + Receso + Conflictos) ✅ **FASE 12** (03/03/2026)
 
-### 🔧 Backend Completado - Vistas Frontend Pendientes (1 módulo)
-**⚠️ IMPORTANTE:** Estos módulos tienen **controllers, models, migrations, seeders, routes y permissions** completados.
-Solo falta la implementación del **frontend (vistas Blade)**.
-
-- Horarios (Grid semanal + Conflictos) **FASE 12** ⚡ Backend completado (17/02/2026)
+### 🔧 Backend Completado - Vistas Frontend Pendientes (0 módulos)
+**🎉 TODOS LOS MÓDULOS CON BACKEND COMPLETADO AHORA TIENEN FRONTEND**
 
 ### ⏳ Vistas Totalmente Pendientes (9 módulos)
 Estos módulos NO tienen backend ni frontend:
@@ -591,13 +589,13 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 
 ---
 
-### Fase 12: Horarios 🔧 BACKEND COMPLETO (1/1)
-**⚠️ Backend completado el 17/02/2026 - Solo falta FRONTEND**
+### Fase 12: Horarios ✅ COMPLETADO (1/1)
+**✅ Backend y Frontend completado el 3/03/2026**
 
-- [x] **Horarios** ⚡ Backend completado
+- [x] **Horarios** ✅ Completado
   - Tipo: Grid semanal con detección de conflictos
-  - Mockup: Requerido (cuadrícula lunes-viernes con períodos)
-  - Campos: periodo_academico_id, paralelo_id, docente_materia_id, aula_id, dia_semana (1-5), hora_inicio, hora_fin, orden
+  - Mockup: ✅ Implementado (cuadrícula lunes-sábado con períodos y receso)
+  - Campos: periodo_academico_id, paralelo_id, docente_materia_id, aula_id, dia_semana, hora_inicio, hora_fin
   - Backend completado:
     - ✅ Controlador: HorarioController (11 métodos)
       - index(), create(), store(), edit(), update(), destroy() - CRUD estándar
@@ -606,11 +604,24 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
       - verAula() - Horario del aula
       - verificarConflictos() - Detecta colisiones de horario
     - ✅ Form Request: HorarioRequest con validaciones de horario
-    - ✅ Modelo: Horario con relaciones
+    - ✅ Modelo: Horario con relaciones y scopes
     - ✅ Rutas: horarios.* + paralelo, docente, aula
     - ✅ Permisos: gestionar horarios, ver, crear, editar, eliminar, ver por paralelo, ver por docente, ver por aula
     - ✅ Validación: Sistema de detección de conflictos (mismo docente/aula/estudiantes)
-  - Frontend pendiente: ❌ Vistas Blade no creadas (requiere grid de horario)
+  - Frontend completado: ✅
+    - ✅ index.blade.php - Tabla con enhanced-table, filtros avanzados, cards de acceso rápido
+    - ✅ create.blade.php - Formulario con validación de conflictos
+    - ✅ edit.blade.php - Edición con validación
+    - ✅ show.blade.php - Vista de detalles
+    - ✅ paralelo.blade.php - Grid semanal por paralelo (azul)
+    - ✅ docente.blade.php - Grid semanal por docente (verde)
+    - ✅ aula.blade.php - Grid semanal por aula con disponibilidad (púrpura)
+    - Características especiales:
+      - 🍎 Receso visual de 30 min (10:20-10:50) en color naranja
+      - Bloques de 40 min con descansos de 10 min
+      - Acciones con iconos SVG
+      - Exportación a CSV, Excel, PDF, JSON
+      - Permisos con @canany correctamente implementados
 
 ---
 
@@ -649,36 +660,38 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 ## 📊 Resumen de Vistas
 
 **Total de módulos:** 46 módulos
-- ✅ **Frontend Completado:** 30 módulos (65.2%)
+- ✅ **Frontend Completado:** 34 módulos (73.9%)
   - Fase 1: 4 módulos ✅
   - Fase 2: 2 módulos ✅
   - Fase 3: 7 módulos ✅
   - Fase 4: 3 módulos + relaciones ✅
   - Fase 5: 4 módulos (incluye sistema completo de matrículas) ✅
-  - Fase 6: 2 módulos (calificaciones + componentes) ✅ **Validado con datos de prueba**
-  - Fase 13: 1 módulo (Auditoría) ✅ **Completado 17/02/2026**
+  - Fase 6: 2 módulos (calificaciones + componentes) ✅
+  - Fase 8: 2 módulos (Asistencias, Justificaciones) ✅
+  - Fase 9: 1 módulo (Tareas completo) ✅
+  - Fase 10: 2 módulos (Mensajes, Notificaciones) ✅
+  - Fase 11: 1 módulo (Eventos) ✅
+  - Fase 12: 1 módulo (Horarios) ✅ **Completado 03/03/2026**
+  - Fase 13: 1 módulo (Auditoría) ✅
   
-- 🔧 **Backend Completado - Frontend Pendiente:** 7 módulos (15.2%)
-  - Fase 8: 2 módulos (Asistencias, Justificaciones) ⚡
-  - Fase 9: 1 módulo (Tareas completo) ⚡
-  - Fase 10: 2 módulos (Mensajes, Notificaciones) ⚡
-  - Fase 11: 1 módulo (Eventos) ⚡
-  - Fase 12: 1 módulo (Horarios) ⚡
+- 🔧 **Backend Completado - Frontend Pendiente:** 0 módulos (0%)
+  - 🎉 **¡Todos los módulos con backend ahora tienen frontend!**
   
-- ⏳ **Totalmente Pendientes:** 9 módulos (19.6%)
+- ⏳ **Totalmente Pendientes:** 12 módulos (26.1%)
   - Fase 7: Módulos pendientes o adicionales
+  - Otros módulos futuros según planificación
 
 **Desglose por backend:**
-- ✅ Controllers completados: 37 (8 nuevos en Fases 8-13)
-- ✅ Form Requests completados: 32 (6 nuevos en Fases 8-13)
-- ✅ Rutas registradas: ~200 rutas totales (65 nuevas en Fases 8-13)
-- ✅ Permisos en sistema: ~150 permisos (70+ nuevos en Fases 8-13)
+- ✅ Controllers completados: 37
+- ✅ Form Requests completados: 32
+- ✅ Rutas registradas: ~200 rutas totales
+- ✅ Permisos en sistema: ~150 permisos
 
 **Tipos de vistas:**
 - Tablas estándar: 20 módulos
 - Vistas con mockup requerido: 17 módulos
 - Vistas editables: 3 módulos
-- Calendarios/Grids: 3 módulos (Eventos, Horarios, Asistencias)
+- Calendarios/Grids: 3 módulos (Eventos ✅, Horarios ✅, Asistencias ✅)
 
 **Estado detallado de Fases 8-13:**
 - ✅ Modelos: Todos creados con relaciones
@@ -687,6 +700,7 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
 - ✅ Controllers: Todos con métodos completos
 - ✅ Form Requests: Validaciones implementadas
 - ✅ Rutas: Registradas en web.php con middleware
+- ✅ Frontend: Todas las vistas Blade completadas
 - ✅ Permisos: Agregados a RoleSeeder y ejecutados
 - ✅ Sidebar: Actualizado con nuevas secciones (17/02/2026)
 - ❌ Vistas Blade: **PENDIENTES DE CREAR**

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Aula;
 use App\Models\Curso;
 use App\Models\CursoMateria;
 use App\Models\Materia;
@@ -22,6 +23,8 @@ class RelacionesAcademicasSeeder extends Seeder
 
         // 1. Crear Paralelos para cada curso
         $cursos = Curso::all();
+        $aulas = Aula::whereIn('nombre', ['Aula 101', 'Aula 102', 'Aula 103', 'Aula 201', 'Aula 202', 'Aula 203'])->get();
+        $aulaIndex = 0;
 
         foreach ($cursos as $curso) {
             // Crear paralelos A, B y C para cada curso
@@ -30,14 +33,18 @@ class RelacionesAcademicasSeeder extends Seeder
                 'periodo_academico_id' => $periodo->id,
                 'nombre' => 'A',
                 'cupo_maximo' => 30,
+                'aula_id' => $aulas[$aulaIndex % $aulas->count()]->id ?? null,
             ]);
+            $aulaIndex++;
 
             Paralelo::create([
                 'curso_id' => $curso->id,
                 'periodo_academico_id' => $periodo->id,
                 'nombre' => 'B',
                 'cupo_maximo' => 30,
+                'aula_id' => $aulas[$aulaIndex % $aulas->count()]->id ?? null,
             ]);
+            $aulaIndex++;
 
             // Solo algunos cursos tienen paralelo C
             if ($curso->orden <= 10) { // Solo Básica
@@ -46,7 +53,9 @@ class RelacionesAcademicasSeeder extends Seeder
                     'periodo_academico_id' => $periodo->id,
                     'nombre' => 'C',
                     'cupo_maximo' => 30,
+                    'aula_id' => $aulas[$aulaIndex % $aulas->count()]->id ?? null,
                 ]);
+                $aulaIndex++;
             }
         }
 
