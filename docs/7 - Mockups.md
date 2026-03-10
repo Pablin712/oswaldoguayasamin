@@ -599,6 +599,7 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
   - Backend completado:
     - ✅ Controlador: HorarioController (11 métodos)
       - index(), create(), store(), edit(), update(), destroy() - CRUD estándar
+      - edit() devuelve JSON para peticiones AJAX (usado por modal)
       - verParalelo() - Horario completo del paralelo (grid)
       - verDocente() - Horario del docente
       - verAula() - Horario del aula
@@ -610,18 +611,33 @@ Para vistas que no usen tablas (cards, listas, calendarios, burbujas, etc.):
     - ✅ Validación: Sistema de detección de conflictos (mismo docente/aula/estudiantes)
   - Frontend completado: ✅
     - ✅ index.blade.php - Tabla con enhanced-table, filtros avanzados, cards de acceso rápido
-    - ✅ create.blade.php - Formulario con validación de conflictos
-    - ✅ edit.blade.php - Edición con validación
-    - ✅ show.blade.php - Vista de detalles
+      - Incluye tres modales al final con @include
+      - Botón "Nuevo Horario" con @click="$dispatch('open-modal', 'create-horario')"
+      - Acciones editar/eliminar con $dispatch a modales
+    - ✅ create.blade.php - **MODAL** de creación (componente x-modal)
+      - Incluido en index.blade.php, no vista separada
+      - Formulario con x-searchable-select para todos los campos
+      - Validación de conflictos integrada
+    - ✅ edit.blade.php - **MODAL** de edición (componente x-modal)
+      - Incluido en index.blade.php, no vista separada
+      - Usa fetch async para cargar datos desde /horarios/{id}/edit
+      - Pre-llena campos con datos del horario a editar
+    - ✅ delete.blade.php - **MODAL** de confirmación (componente x-modal)
+      - Incluido en index.blade.php, no vista separada
+      - Alpine.js para gestión de estado
+      - Advertencia visual y confirmación
+    - ✅ show.blade.php - Vista de detalles (página separada)
     - ✅ paralelo.blade.php - Grid semanal por paralelo (azul)
     - ✅ docente.blade.php - Grid semanal por docente (verde)
     - ✅ aula.blade.php - Grid semanal por aula con disponibilidad (púrpura)
     - Características especiales:
       - 🍎 Receso visual de 30 min (10:20-10:50) en color naranja
       - Bloques de 40 min con descansos de 10 min
-      - Acciones con iconos SVG
+      - **Modales para create/edit/delete** (siguiendo patrón estándar del sistema)
+      - Acciones con iconos SVG que disparan modales
       - Exportación a CSV, Excel, PDF, JSON
       - Permisos con @canany correctamente implementados
+      - Patrón consistente con eventos, tareas, materias
 
 ---
 
